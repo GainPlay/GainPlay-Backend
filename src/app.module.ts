@@ -8,10 +8,8 @@ import { validationSchema } from "src/config/validation.schema";
 import { ExamplesModule } from "@/models/examples/examples.module";
 
 @Module({
+  providers: [AppService],
   controllers: [AppController],
-  providers: [
-    AppService
-  ],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
