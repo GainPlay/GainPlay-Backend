@@ -1,0 +1,40 @@
+#!/usr/bin/env sh
+printf "\nValidating eslint:\n"
+ESLINT="$(git rev-parse --show-toplevel)/node_modules/.bin/eslint"
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+if [[ "$STAGED_FILES" = "" ]]; then
+  exit 0
+fi
+
+PASS=true
+
+# Check for eslint
+which eslint &> /dev/null
+if [[ ! -x "$ESLINT" ]]; then
+  printf "\nPlease install ESlint\n"
+  exit 1
+fi
+
+for FILE in $STAGED_FILES
+do
+  "$ESLINT" "$FILE"
+
+  if [[ "$?" == 0 ]]; then
+    printf "\nESLint Passed: $FILE\n"
+  else
+    printf "\nESLint Failed: $FILE\n"
+    PASS=false
+  fi
+done
+
+printf "\neslint validation completed!\n"
+
+if ! $PASS; then
+  printf "\nCOMMIT FAILED: Your commit contains files that should pass ESLint but do not. Please fix the ESLint errors and try again.\nif you still want to commit your changes like this run git commit --no-verify\n"
+  exit 1
+else
+  printf "\nCOMMIT SUCCEEDED\n"
+fi
+
+exit $?

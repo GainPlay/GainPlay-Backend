@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+FORCE_PUSH_MESSAGE="if you still want to push your changes like this run git push --no-verify"
+
+printf "\nValidating ESLint...\n"
+bun run lint
+ESLINT_EXIT_CODE=$?
+if [ $ESLINT_EXIT_CODE -ne 0 ]; then
+  printf "\nESLint failed. Aborting push.\n$FORCE_PUSH_MESSAGE\n"
+  exit 1
+fi
+
+printf "\nValidating project build...\n"
+bun run build
+if [ $? -ne 0 ]; then
+  printf "\nBuild failed. Aborting push.\n$FORCE_PUSH_MESSAGE\n"
+  exit 1
+fi

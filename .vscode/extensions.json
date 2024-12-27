@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "prisma.prisma",
+    "dbaeumer.vscode-eslint",
+    "github.copilot",
+    "github.copilot-chat",
+    "eamodio.gitlens",
+    "pkief.material-icon-theme",
+    "esbenp.prettier-vscode",
+    "gruntfuggly.todo-tree",
+    "cweijan.vscode-office",
+    "DavidAnson.vscode-markdownlint",
+    "adpyke.vscode-sql-formatter"
+  ]
+}
