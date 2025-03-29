@@ -6,6 +6,7 @@ import { AppController } from "@/app.controller";
 import { PrismaModule } from "database/prisma.module";
 import { validationSchema } from "src/config/validation.schema";
 import { ExamplesModule } from "@/models/examples/examples.module";
+import { WorkoutModule } from './workout/workout.module';
 
 @Module({
   providers: [AppService],
@@ -19,6 +20,7 @@ import { ExamplesModule } from "@/models/examples/examples.module";
     PrismaModule,
     ExamplesModule,
     AuthModule,
+    WorkoutModule,
   ],
 })
 export class AppModule {}
