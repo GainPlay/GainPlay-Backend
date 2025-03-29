@@ -8,9 +8,7 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<users> {
     const user = await this.usersRepository.findOneByEmail(email);
-    if (!user) {
-      throw new NotFoundException(`User with email ${email} not found`);
-    }
+
     return user;
   }
 
@@ -27,7 +25,6 @@ export class UsersService {
   }
 
   async updateUser(userId: number, userData: Partial<users>): Promise<users> {
-    // Verify user exists before updating
     await this.findById(userId);
     return this.usersRepository.update(userId, userData);
   }
