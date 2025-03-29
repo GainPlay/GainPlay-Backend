@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { EXCERCISES } from "./constants"; // Assuming this file contains the exercises data
 
 @Injectable()
 export class GeminiService {
@@ -19,11 +20,12 @@ export class GeminiService {
       ## **Available Exercises**
       Below is a table of available exercises:  
 
+      ${EXCERCISES}
 
       ## **User Profile Data**
       The user has provided the following details about their physical status and goals:  
       ${userProfile}
-      
+
       ## **Task**
       Based on the above data:
       - Select **appropriate exercises** from the provided list that match the user’s fitness level and goals.
