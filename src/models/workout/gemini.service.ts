@@ -49,7 +49,7 @@ export class GeminiService {
         - **Flexibility**: No rest required
       - Format the response in the following structure:
 
-      [ { "exercise_id": <exercise_id>, "target_sets": <number_of_sets>, "target_reps": <number_of_reps>, "rest_time_seconds": <rest_time_in_seconds> }, ... ]
+      [ { "exerciseId": <exercise_id>, "targetSets": <number_of_sets>, "targetReps": <number_of_reps>, "restTimeSeconds": <rest_time_in_seconds> }, ... ]
 
       
       Ensure that:
@@ -77,7 +77,7 @@ export class GeminiService {
       try {
         const workoutWithNames = workoutArray.map((workout) => ({
           ...workout,
-          exercise_name:
+          exerciseName:
             this.exerciseMap[workout.exercise_id] || "Unknown Exercise",
         }));
 
