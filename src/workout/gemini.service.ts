@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Injectable } from "@nestjs/common";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 @Injectable()
 export class GeminiService {
@@ -8,7 +8,7 @@ export class GeminiService {
   constructor() {
     // Initialize the Gemini API client
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    this.model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    this.model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
   }
 
   async generateWorkout(userProfile: any): Promise<any> {
@@ -48,18 +48,18 @@ export class GeminiService {
       const result = await this.model.generateContent(prompt);
       const response = result.response;
       const text = response.text();
-      
+
       // Extract the JSON from the response
       // Sometimes AI models might add explanation text despite instructions
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]);
       }
-      
+
       return JSON.parse(text);
     } catch (error) {
-      console.error('Error generating workout with Gemini:', error);
-      throw new Error('Failed to generate workout program');
+      console.error("Error generating workout with Gemini:", error);
+      throw new Error("Failed to generate workout program");
     }
   }
 }
