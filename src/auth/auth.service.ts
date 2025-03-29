@@ -14,7 +14,7 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<User> {
-    const user: User = await this.usersService.findOneByEmail(email);
+    const user: User = await this.usersService.findByEmail(email);
     if (!user) {
       throw new BadRequestException("User not found");
     }
@@ -31,7 +31,7 @@ export class AuthService {
   }
 
   async register(user: RegisterRequestDto): Promise<AccessToken> {
-    const existingUser = await this.usersService.findOneByEmail(user.email);
+    const existingUser = await this.usersService.findByEmail(user.email);
     if (existingUser) {
       throw new BadRequestException("email already exists");
     }
@@ -46,7 +46,7 @@ export class AuthService {
       created_at: undefined,
       password_hash: hashedPassword,
     };
-    await this.usersService.create(newUser);
+    await this.usersService.createUser(newUser);
     return this.login(newUser);
   }
 }

@@ -1,30 +1,34 @@
 import { users } from "@prisma/client";
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "database/prisma.service";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { UsersRepository } from "@/models/users/users.repository";
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
-  async findOneByEmail(email: string): Promise<users | null> {
-    return this.prisma.users.findUnique({ where: { email } });
+  async findByEmail(email: string): Promise<users> {
+    const user = await this.usersRepository.findOneByEmail(email);
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+    return user;
   }
 
-  async findOneById(id: number): Promise<users | null> {
-    return this.prisma.users.findUnique({ where: { id } });
+  async findById(id: number): Promise<users> {
+    const user = await this.usersRepository.findOneById(id);
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    return user;
   }
 
-  async create(userData: Omit<users, "id">): Promise<users> {
-    return this.prisma.users.create({ data: userData });
+  async createUser(userData: Omit<users, "id">): Promise<users> {
+    return this.usersRepository.create(userData);
   }
 
-  async update(
-    userId: number,
-    userInformation: Partial<users>,
-  ): Promise<users> {
-    return this.prisma.users.update({
-      where: { id: userId },
-      data: userInformation,
-    });
+  async updateUser(userId: number, userData: Partial<users>): Promise<users> {
+    // Verify user exists before updating
+    await this.findById(userId);
+    return this.usersRepository.update(userId, userData);
   }
 }
