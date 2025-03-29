@@ -39,5 +39,4 @@ export const EXCERCISES = `[
     "difficulty_level": 4,
     "muscle_group": "Full Body"
   }
-]
-`
+]`

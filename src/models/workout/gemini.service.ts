@@ -57,13 +57,22 @@ export class GeminiService {
       const text = response.text();
 
       // Extract the JSON from the response
-      // Sometimes AI models might add explanation text despite instructions
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        return JSON.parse(jsonMatch[0]);
-      }
+      // Handle both array and object responses, and strip markdown code blocks
+      let jsonText = text;
 
-      return JSON.parse(text);
+      // Remove markdown code block formatting if present
+      jsonText = jsonText.replace(/```json\s+|\s+```/g, "");
+
+      try {
+        return JSON.parse(jsonText);
+      } catch (firstError) {
+        // If direct parsing fails, try to extract JSON from the text
+        const jsonMatch = text.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
+        if (jsonMatch) {
+          return JSON.parse(jsonMatch[0]);
+        }
+        throw firstError;
+      }
     } catch (error) {
       console.error("Error generating workout with Gemini:", error);
       throw new Error("Failed to generate workout program");
