@@ -5,11 +5,21 @@ import { EXCERCISES } from "./constants"; // Assuming this file contains the exe
 @Injectable()
 export class GeminiService {
   private model;
+  private exerciseMap: Record<number, string>; // Lookup table for exercises
 
   constructor() {
     // Initialize the Gemini API client
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     this.model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const exerciseArray = JSON.parse(EXCERCISES);
+    this.exerciseMap = exerciseArray.reduce(
+      (acc, exercise) => {
+        acc[exercise.id] = exercise.name;
+        return acc;
+      },
+      {} as Record<number, string>
+    );
   }
 
   async generateWorkout(userProfile: any): Promise<any> {
@@ -48,7 +58,6 @@ export class GeminiService {
       - Include **compound movements** for strength training, **high-rep circuits** for fat loss, and **dynamic/static stretches** for flexibility.
 
       **Output only the JSON response. Do not include explanations.**
-
     `;
 
     try {
@@ -63,8 +72,16 @@ export class GeminiService {
       // Remove markdown code block formatting if present
       jsonText = jsonText.replace(/```json\s+|\s+```/g, "");
 
+      const workoutArray = JSON.parse(jsonText);
+
       try {
-        return JSON.parse(jsonText);
+        const workoutWithNames = workoutArray.map((workout) => ({
+          ...workout,
+          exercise_name:
+            this.exerciseMap[workout.exercise_id] || "Unknown Exercise",
+        }));
+
+        return workoutWithNames;
       } catch (firstError) {
         // If direct parsing fails, try to extract JSON from the text
         const jsonMatch = text.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
