@@ -78,7 +78,7 @@ export class GeminiService {
         const workoutWithNames = workoutArray.map((workout) => ({
           ...workout,
           exerciseName:
-            this.exerciseMap[workout.exercise_id] || "Unknown Exercise",
+            this.exerciseMap[workout.exerciseId] || "Unknown Exercise",
         }));
 
         return workoutWithNames;
