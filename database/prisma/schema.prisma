@@ -7,8 +7,163 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+model avatars {
+  id           Int            @id @default(autoincrement())
+  name         String?        @db.VarChar
+  image_url    String?        @db.VarChar
+  price        Int?
+  created_at   DateTime?      @default(now()) @db.Timestamp(6)
+  user_avatars user_avatars[]
+}
+
+model badges {
+  id          Int           @id @default(autoincrement())
+  name        String?       @db.VarChar
+  icon        String?       @db.VarChar
+  description String?
+  created_at  DateTime?     @default(now()) @db.Timestamp(6)
+  user_badges user_badges[]
+}
+
+model exercise_sets {
+  id                  Int                @id @default(autoincrement())
+  workout_exercise_id Int?
+  set_number          Int?
+  reps                Int?
+  completed           Boolean?           @default(false)
+  completed_at        DateTime?          @db.Timestamp(6)
+  workout_exercises   workout_exercises? @relation(fields: [workout_exercise_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model exercise_templates {
+  id                Int                 @id @default(autoincrement())
+  exercise_id       Int?
+  target_sets       Int?
+  target_reps       Int?
+  rest_time_seconds Int?
+  created_at        DateTime?           @default(now()) @db.Timestamp(6)
+  exercises         exercises?          @relation(fields: [exercise_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  workout_exercises workout_exercises[]
+}
+
+model exercises {
+  id                 Int                  @id @default(autoincrement())
+  name               String?              @unique @db.VarChar
+  description        String?
+  category           String?              @db.VarChar
+  difficulty_level   Int?
+  muscle_group       String?              @db.VarChar
+  exercise_templates exercise_templates[]
+  workout_exercises  workout_exercises[]
+}
+
+model friendships {
+  id                                 Int       @id @default(autoincrement())
+  user_id                            Int?
+  friend_id                          Int?
+  status                             String?   @db.VarChar
+  created_at                         DateTime? @default(now()) @db.Timestamp(6)
+  updated_at                         DateTime? @default(now()) @db.Timestamp(6)
+  users_friendships_friend_idTousers users?    @relation("friendships_friend_id_to_users", fields: [friend_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_friendships_user_idTousers   users?    @relation("friendships_user_id_to_users", fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users                              users?    @relation(fields: [usersId], references: [id])
+  usersId                            Int?
+
+  @@unique([user_id, friend_id], map: "friendships_user_id_friend_id_idx")
+}
+
+model goals {
+  id          Int          @id @default(autoincrement())
+  name        String?      @unique @db.VarChar
+  description String?
+  created_at  DateTime?    @default(now()) @db.Timestamp(6)
+  user_goals  user_goals[]
+}
+
+model user_avatars {
+  id           Int       @id @default(autoincrement())
+  user_id      Int?
+  avatar_id    Int?
+  is_current   Boolean?  @default(false)
+  purchased_at DateTime? @default(now()) @db.Timestamp(6)
+  avatars      avatars?  @relation(fields: [avatar_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users        users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([user_id, avatar_id], map: "user_avatars_user_id_avatar_id_idx")
+}
+
+model user_badges {
+  id        Int       @id @default(autoincrement())
+  user_id   Int?
+  badge_id  Int?
+  earned_at DateTime? @default(now()) @db.Timestamp(6)
+  badges    badges?   @relation(fields: [badge_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users     users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([user_id, badge_id], map: "user_badges_user_id_badge_id_idx")
+}
+
+model user_goals {
+  id         Int       @id @default(autoincrement())
+  user_id    Int?
+  goal_id    Int?
+  value      Int?
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @default(now()) @db.Timestamp(6)
+  goals      goals?    @relation(fields: [goal_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([user_id, goal_id], map: "user_goals_user_id_goal_id_idx")
+}
+
+model user_settings {
+  id                 Int       @id @default(autoincrement())
+  user_id            Int?      @unique
+  exercise_frequency Int?
+  fitness_level      Int?
+  created_at         DateTime? @default(now()) @db.Timestamp(6)
+  updated_at         DateTime? @default(now()) @db.Timestamp(6)
+  users              users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id                                         Int            @id @default(autoincrement())
+  name                                       String?        @db.VarChar
+  email                                      String?        @unique @db.VarChar
+  password_hash                              String?        @db.VarChar
+  avatar_url                                 String?        @db.VarChar
+  coins                                      Int?           @default(500)
+  level                                      Int?           @default(1)
+  experience                                 Int?           @default(0)
+  created_at                                 DateTime?      @default(now()) @db.Timestamp(6)
+  friendships_friendships_friend_id_to_users friendships[]  @relation("friendships_friend_id_to_users")
+  friendships_friendships_user_id_to_users   friendships[]  @relation("friendships_user_id_to_users")
+  user_avatars                               user_avatars[]
+  user_badges                                user_badges[]
+  user_goals                                 user_goals[]
+  user_settings                              user_settings?
+  workouts                                   workouts[]
+  friendships                                friendships[]
+}
+
+model workout_exercises {
+  id                 Int                 @id @default(autoincrement())
+  workout_id         Int?
+  exercise_id        Int?
+  template_id        Int?
+  total_reps         Int?                @default(0)
+  exercise_sets      exercise_sets[]
+  exercises          exercises?          @relation(fields: [exercise_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  exercise_templates exercise_templates? @relation(fields: [template_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  workouts           workouts?           @relation(fields: [workout_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model workouts {
+  id                Int                 @id @default(autoincrement())
+  user_id           Int?
+  started_at        DateTime?           @default(now()) @db.Timestamp(6)
+  completed_at      DateTime?           @db.Timestamp(6)
+  coins_earned      Int?
+  workout_exercises workout_exercises[]
+  users             users?              @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
