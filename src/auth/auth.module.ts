@@ -4,13 +4,14 @@ import { UsersModule } from "@/models/users/users.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtStrategy } from "@/auth/strategies/jwt.strategy";
 import { LocalStrategy } from "@/auth/strategies/local.strategy";
+import { GoogleStrategy } from "@/auth/strategies/google.strategy";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 
 @Module({
   controllers: [AuthController],
   exports: [AuthService, JwtModule],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
   imports: [
     UsersModule,
     JwtModule.registerAsync({

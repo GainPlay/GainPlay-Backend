@@ -4,11 +4,11 @@ import { AppService } from "@/app.service";
 import { ConfigModule } from "@nestjs/config";
 import { AuthModule } from "@/auth/auth.module";
 import { AppController } from "@/app.controller";
-import { JwtGuard } from "@/auth/guards/jwt.guard";
 import { PrismaModule } from "database/prisma.module";
 import { UsersModule } from "@/models/users/users.module";
 import { validationSchema } from "src/config/validation.schema";
 import { WorkoutModule } from "@/models/workout/workout.module";
+import { GlobalAuthGuard } from "@/auth/guards/globalAuth.guard";
 
 @Module({
   controllers: [AppController],
@@ -16,7 +16,7 @@ import { WorkoutModule } from "@/models/workout/workout.module";
     AppService,
     {
       provide: APP_GUARD,
-      useClass: JwtGuard,
+      useClass: GlobalAuthGuard,
     },
   ],
   imports: [

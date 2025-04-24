@@ -2,7 +2,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Post,
+  Req,
   Request,
   UseGuards,
 } from "@nestjs/common";
@@ -30,5 +32,18 @@ export class AuthController {
     @Body() registerBody: RegisterRequestDto,
   ): Promise<RegisterResponseDTO | BadRequestException> {
     return await this.authService.register(registerBody);
+  }
+
+  @Get("google")
+  @UseGuards(AuthGuard("google"))
+  async googleAuth() {
+    // The request is forwarded to Google
+  }
+
+  @Get("google/callback")
+  @UseGuards(AuthGuard("google"))
+  async googleAuthCallback(@Req() req) {
+    console.log(req.user);
+    return this.authService.login(req.user);
   }
 }
