@@ -8,7 +8,7 @@ export class WorkoutController {
   constructor(private readonly geminiService: GeminiService) {}
 
   @Post('generate')
-  async generateWorkout(@Body() userProfile: UserProfileDto): Promise<WorkoutResponseDto> {
+  async generateWorkout(@Body() userProfile: string): Promise<WorkoutResponseDto> {
     try {
       return await this.geminiService.generateWorkout(userProfile);
     } catch (error) {

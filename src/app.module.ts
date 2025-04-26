@@ -7,8 +7,14 @@ import { AppController } from "@/app.controller";
 import { PrismaModule } from "database/prisma.module";
 import { UsersModule } from "@/models/users/users.module";
 import { validationSchema } from "src/config/validation.schema";
+<<<<<<< HEAD
 import { WorkoutModule } from "@/models/workout/workout.module";
 import { GlobalAuthGuard } from "@/auth/guards/globalAuth.guard";
+=======
+import { ExamplesModule } from "@/models/examples/examples.module";
+import { WorkoutModule } from '@/models/workout/workout.module';
+import { GoalsModule } from "@/models/goal/goals.module";
+>>>>>>> f0a3126e893be3f9ba3ed7ebd113a6a7bbc13c22
 
 @Module({
   controllers: [AppController],
@@ -28,7 +34,11 @@ import { GlobalAuthGuard } from "@/auth/guards/globalAuth.guard";
     PrismaModule,
     AuthModule,
     WorkoutModule,
+<<<<<<< HEAD
     UsersModule,
+=======
+    GoalsModule
+>>>>>>> f0a3126e893be3f9ba3ed7ebd113a6a7bbc13c22
   ],
 })
 export class AppModule {}
