@@ -27,18 +27,17 @@ export default tsEslint.config(
       "@typescript-eslint/interface-name-prefix": "off",
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
+      "perfectionist/sort-imports": [
+        "error",
+        {
+          newlinesBetween: "ignore",
+        },
+      ],
       "prettier/prettier": [
         "error",
         {
           endOfLine: "auto",
           arrowParens: "avoid",
-        },
-      ],
-      "perfectionist/sort-imports": [
-        "error",
-        {
-          environment: "bun",
-          newlinesBetween: "ignore",
         },
       ],
     },
