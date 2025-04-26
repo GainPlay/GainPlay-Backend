@@ -1,8 +1,5 @@
 import { Public } from "src/auth/decorators";
-import {
-  Get,
-  Controller,
-} from "@nestjs/common";
+import { Get, Controller } from "@nestjs/common";
 import { GoalsService } from "./goals.service";
 
 @Controller("goals")
