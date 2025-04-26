@@ -8,6 +8,7 @@ import { validationSchema } from "src/config/validation.schema";
 import { ExamplesModule } from "@/models/examples/examples.module";
 import { WorkoutModule } from '@/models/workout/workout.module';
 import { GoalsModule } from "@/models/goal/goals.module";
+import { UserGoalsModule } from "@/models/user_goal/user-goals.module";
 
 @Module({
   providers: [AppService],
@@ -22,7 +23,8 @@ import { GoalsModule } from "@/models/goal/goals.module";
     ExamplesModule,
     AuthModule,
     WorkoutModule,
-    GoalsModule
+    GoalsModule,
+    UserGoalsModule,
   ],
 })
 export class AppModule {}
