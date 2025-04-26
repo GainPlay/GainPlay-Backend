@@ -171,7 +171,13 @@ export class UserSettingsService {
     } else {
       // Create new settings
       return this.prisma.user_settings.create({
-        data: { ...data, users: { connect: { id: userId } } },
+        data: { 
+          users: { connect: { id: userId } },
+          exercise_frequency: data.exercise_frequency as number | null,
+          fitness_level: data.fitness_level as number | null,
+          created_at: data.created_at as Date | string | null,
+          updated_at: data.updated_at as Date | string | null,
+        },
         include: {
           users: {
             select: {
