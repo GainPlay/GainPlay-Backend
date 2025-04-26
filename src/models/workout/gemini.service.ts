@@ -18,7 +18,7 @@ export class GeminiService {
         acc[exercise.id] = exercise.name;
         return acc;
       },
-      {} as Record<number, string>
+      {} as Record<number, string>,
     );
   }
 
@@ -75,7 +75,7 @@ export class GeminiService {
       const workoutArray = JSON.parse(jsonText);
 
       try {
-        const workoutWithNames = workoutArray.map((workout) => ({
+        const workoutWithNames = workoutArray.map(workout => ({
           ...workout,
           exerciseName:
             this.exerciseMap[workout.exerciseId] || "Unknown Exercise",
