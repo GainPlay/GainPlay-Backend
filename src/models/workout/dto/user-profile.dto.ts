@@ -3,7 +3,7 @@ export class UserProfileDto {
   gender: string;
   height: number; // in cm
   weight: number; // in kg
-  fitnessLevel: 'beginner' | 'intermediate' | 'advanced';
+  fitnessLevel: "beginner" | "intermediate" | "advanced";
   goals: string[];
   limitations?: string[];
   preferredWorkoutDays: number;

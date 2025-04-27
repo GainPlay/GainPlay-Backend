@@ -1,10 +1,9 @@
-import { Module } from '@nestjs/common';
-import { WorkoutController } from './workout.controller';
-import { GeminiService } from './gemini.service';
+import { Module } from "@nestjs/common";
+import { GeminiService } from "./gemini.service";
+import { WorkoutController } from "./workout.controller";
 
 @Module({
+  providers: [GeminiService],
   controllers: [WorkoutController],
-    providers: [GeminiService],
-
 })
 export class WorkoutModule {}
