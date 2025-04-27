@@ -10,6 +10,7 @@ import { UsersModule } from "@/models/users/users.module";
 import { WorkoutModule } from "@/models/workout/workout.module";
 import { validationSchema } from "src/config/validation.schema";
 import { GlobalAuthGuard } from "@/auth/guards/globalAuth.guard";
+import { UserGoalsModule } from "@/models/user_goal/user-goals.module";
 
 @Module({
   controllers: [AppController],
@@ -31,6 +32,7 @@ import { GlobalAuthGuard } from "@/auth/guards/globalAuth.guard";
     WorkoutModule,
     UsersModule,
     GoalsModule,
+    UserGoalsModule,
   ],
 })
 export class AppModule {}
