@@ -12,6 +12,7 @@ import { validationSchema } from "src/config/validation.schema";
 import { GlobalAuthGuard } from "@/auth/guards/globalAuth.guard";
 import { UserGoalsModule } from "@/models/user_goal/user-goals.module";
 import { UserSettingsModule } from "@/models/user_setting/user-settings.module";
+import { BadgesModule } from "@/models/badge/badges.module";
 @Module({
   controllers: [AppController],
   providers: [
@@ -32,6 +33,7 @@ import { UserSettingsModule } from "@/models/user_setting/user-settings.module";
     WorkoutModule,
     UsersModule,
     GoalsModule,
+    BadgesModule,
     UserGoalsModule,
     UserSettingsModule,
   ],
