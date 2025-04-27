@@ -26,4 +26,8 @@ export class ExerciseService {
     await this.findById(exerciseId);
     return this.exerciseRepository.update(exerciseId, exerciseData);
   }
+
+  async deleteExercise(exerciseId: number): Promise<void> {
+    await this.exerciseRepository.delete(exerciseId); 
+  }
 }

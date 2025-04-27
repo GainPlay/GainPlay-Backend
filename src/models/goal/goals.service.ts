@@ -29,7 +29,6 @@ export class GoalsService {
   }
   
   async deleteGoal(goalId: number): Promise<void> {
-    const goal = await this.findById(goalId);  // Check if the goal exists first
-    await this.goalsRepository.delete(goalId); // Assuming delete method exists in your repository
+    await this.goalsRepository.delete(goalId); 
   }
 }

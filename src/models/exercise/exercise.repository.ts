@@ -27,4 +27,10 @@ export class ExerciseRepository {
       data: exerciseInformation,
     });
   }
+
+  async delete(id: number): Promise<void> {
+    await this.prisma.goals.delete({
+      where: { id },
+    });
+  }
 }
