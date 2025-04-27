@@ -20,9 +20,9 @@ export class UserSettingsController {
   @Post()
   create(@Body() createUserSettingsDto: CreateUserSettingsDto) {
     const data = {
-      exercise_frequency: createUserSettingsDto.exercise_frequency,
       fitness_level: createUserSettingsDto.fitness_level,
       users: { connect: { id: createUserSettingsDto.user_id } },
+      exercise_frequency: createUserSettingsDto.exercise_frequency,
     };
     return this.userSettingsService.create(data);
   }
@@ -45,7 +45,7 @@ export class UserSettingsController {
   @Patch(":id")
   update(
     @Param("id", ParseIntPipe) id: number,
-    @Body() updateUserSettingsDto: UpdateUserSettingsDto
+    @Body() updateUserSettingsDto: UpdateUserSettingsDto,
   ) {
     return this.userSettingsService.update(id, updateUserSettingsDto);
   }
@@ -53,18 +53,18 @@ export class UserSettingsController {
   @Patch("user/:userId")
   updateByUserId(
     @Param("userId", ParseIntPipe) userId: number,
-    @Body() updateUserSettingsDto: UpdateUserSettingsDto
+    @Body() updateUserSettingsDto: UpdateUserSettingsDto,
   ) {
     return this.userSettingsService.updateByUserId(
       userId,
-      updateUserSettingsDto
+      updateUserSettingsDto,
     );
   }
 
   @Put("user/:userId")
   upsert(
     @Param("userId", ParseIntPipe) userId: number,
-    @Body() updateUserSettingsDto: UpdateUserSettingsDto
+    @Body() updateUserSettingsDto: UpdateUserSettingsDto,
   ) {
     return this.userSettingsService.upsert(userId, updateUserSettingsDto);
   }
