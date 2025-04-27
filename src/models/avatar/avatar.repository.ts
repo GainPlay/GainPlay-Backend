@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { avatars } from '@prisma/client';
-import { CreateAvatarDto, UpdateAvatarDto } from './avatar.dto';
+import { avatars } from "@prisma/client";
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "database/prisma.service";
+import { CreateAvatarDto } from "@/models/avatar/dto/create-avatar-dto";
+import { UpdateAvatarDto } from "@/models/avatar/dto/update-avatar.dto";
 
 @Injectable()
 export class AvatarRepository {
@@ -25,8 +26,8 @@ export class AvatarRepository {
 
   async update(id: number, data: UpdateAvatarDto): Promise<avatars> {
     return this.prisma.avatars.update({
-      where: { id },
       data,
+      where: { id },
     });
   }
 
