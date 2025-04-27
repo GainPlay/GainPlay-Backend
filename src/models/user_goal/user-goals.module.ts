@@ -6,8 +6,8 @@ import { PrismaModule } from "database/prisma.module";
 
 @Module({
   imports: [PrismaModule],
-  controllers: [UserGoalsController, UserGoalsRepository],
-  providers: [UserGoalsService],
+  controllers: [UserGoalsController],
+  providers: [UserGoalsService, UserGoalsRepository],
   exports: [UserGoalsService],
 })
 export class UserGoalsModule {}
