@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Body, Put, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Put, NotFoundException, Delete } from '@nestjs/common';
 import { GoalsService } from './goals.service';
 import { goals } from '@prisma/client';
 
@@ -29,6 +29,15 @@ export class GoalsController {
   async updateGoal(@Param('id') id: number, @Body() goalData: Partial<goals>): Promise<goals> {
     try {
       return await this.goalsService.updateGoal(id, goalData);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
+  @Delete(':id')
+  async deleteGoal(@Param('id') id: number): Promise<void> {
+    try {
+      await this.goalsService.deleteGoal(id);
     } catch (error) {
       throw new NotFoundException(error.message);
     }

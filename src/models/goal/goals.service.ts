@@ -26,5 +26,10 @@ export class GoalsService {
     async updateGoal(goalId: number, goalData: Partial<goals>): Promise<goals> {
       await this.findById(goalId);
       return this.goalsRepository.update(goalId, goalData);
-    }
+  }
+  
+  async deleteGoal(goalId: number): Promise<void> {
+    const goal = await this.findById(goalId);  // Check if the goal exists first
+    await this.goalsRepository.delete(goalId); // Assuming delete method exists in your repository
+  }
 }

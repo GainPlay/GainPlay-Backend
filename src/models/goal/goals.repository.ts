@@ -27,4 +27,10 @@ export class GoalsRepository {
       data: goalsInformation,
     });
   }
+
+  async delete(id: number): Promise<void> {
+    await this.prisma.goals.delete({
+      where: { id },
+    });
+  }
 }
