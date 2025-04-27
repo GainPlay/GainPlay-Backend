@@ -1,44 +1,17 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { PrismaService } from "database/prisma.service";
-import { Prisma } from "@prisma/client";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { UserGoalsRepository } from './user-goals.repository';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserGoalsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private userGoalsRepository: UserGoalsRepository) {}
 
   async findAll() {
-    return this.prisma.user_goals.findMany({
-      include: {
-        goals: true,
-        users: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar_url: true,
-            level: true,
-          },
-        },
-      },
-    });
+    return this.userGoalsRepository.findAll();
   }
 
   async findOne(id: number) {
-    const userGoal = await this.prisma.user_goals.findUnique({
-      where: { id },
-      include: {
-        goals: true,
-        users: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar_url: true,
-            level: true,
-          },
-        },
-      },
-    });
+    const userGoal = await this.userGoalsRepository.findById(id);
 
     if (!userGoal) {
       throw new NotFoundException(`User goal with ID ${id} not found`);
@@ -48,75 +21,34 @@ export class UserGoalsService {
   }
 
   async findByUser(userId: number) {
-    return this.prisma.user_goals.findMany({
-      where: { user_id: userId },
-      include: { goals: true },
-    });
+    return this.userGoalsRepository.findByUserId(userId);
   }
 
   async create(data: Prisma.user_goalsCreateInput) {
-    return this.prisma.user_goals.create({
-      data,
-      include: {
-        goals: true,
-        users: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar_url: true,
-            level: true,
-          },
-        },
-      },
-    });
+    return this.userGoalsRepository.create(data);
   }
 
   async update(id: number, data: Prisma.user_goalsUpdateInput) {
     await this.findOne(id); // Verify the record exists
-
-    return this.prisma.user_goals.update({
-      where: { id },
-      data: { ...data, updated_at: new Date() },
-      include: {
-        goals: true,
-        users: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar_url: true,
-            level: true,
-          },
-        },
-      },
+    
+    return this.userGoalsRepository.update(id, {
+      ...data,
+      updated_at: new Date(),
     });
   }
 
   async remove(id: number) {
     await this.findOne(id); // Verify the record exists
-
-    return this.prisma.user_goals.delete({ where: { id } });
+    
+    return this.userGoalsRepository.delete(id);
   }
 
   async updateValue(id: number, value: number) {
     await this.findOne(id); // Verify the record exists
-
-    return this.prisma.user_goals.update({
-      where: { id },
-      data: { value, updated_at: new Date() },
-      include: {
-        goals: true,
-        users: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar_url: true,
-            level: true,
-          },
-        },
-      },
+    
+    return this.userGoalsRepository.update(id, {
+      value,
+      updated_at: new Date(),
     });
   }
 }
