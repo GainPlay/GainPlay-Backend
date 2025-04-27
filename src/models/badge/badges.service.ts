@@ -1,37 +1,29 @@
+import { BadgesRepository } from '@/models/badge/badges.repository';
 import { Injectable } from '@nestjs/common';
 import { badges, Prisma } from '@prisma/client';
-import { PrismaService } from 'database/prisma.service';
 
 @Injectable()
 export class BadgesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private badgesRepository: BadgesRepository) {}
 
   async findAll(): Promise<badges[]> {
-    return this.prisma.badges.findMany();
+    return this.badgesRepository.findAll();
   }
 
   async findOne(id: number): Promise<badges | null> {
-    return this.prisma.badges.findUnique({
-      where: { id },
-    });
+    return this.badgesRepository.findOne(id);
   }
 
   async create(data: Prisma.badgesCreateInput): Promise<badges> {
-    return this.prisma.badges.create({
-      data,
-    });
+    return this.badgesRepository.create(data);
   }
 
   async update(id: number, data: Prisma.badgesUpdateInput): Promise<badges> {
-    return this.prisma.badges.update({
-      where: { id },
-      data,
-    });
+    return this.badgesRepository.update(id, data);
   }
 
   async remove(id: number): Promise<badges> {
-    return this.prisma.badges.delete({
-      where: { id },
-    });
+    return this.badgesRepository.remove(id);
   }
 }
+
