@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "database/prisma.service";
 import { GeminiService } from "./gemini.service";
 
 @Injectable()
 export class WorkoutService {
   constructor(
     private prisma: PrismaService,
-    private geminiService: GeminiService
+    private geminiService: GeminiService,
   ) {}
 
   async generateAndSaveWorkout(userId: number) {
@@ -17,8 +17,8 @@ export class WorkoutService {
     const workout = await this.prisma.workouts.create({
       data: {
         user_id: userId,
-        started_at: new Date(),
         coins_earned: 0, // You can set this later when the workout is completed
+        started_at: new Date(),
       },
     });
 
@@ -26,18 +26,18 @@ export class WorkoutService {
     const workoutExercisesData = [];
 
     // Flatten the schedule to get all exercises
-    workoutResponse.program.schedule.forEach((day) => {
-      day.exercises.forEach((exercise) => {
+    workoutResponse.program.schedule.forEach(day => {
+      day.exercises.forEach(exercise => {
         // You'll need to find the exercise ID based on the exercise name
         // This assumes you have a way to map exercise names to IDs
         const exerciseData = {
-          workout_id: workout.id,
           exercise_id: null, // We'll set this in the next step
-          exercise_name: exercise.name,
+          notes: exercise.notes,
+          workout_id: workout.id,
+          rest_time: exercise.rest,
           target_sets: exercise.sets,
           target_reps: exercise.reps,
-          rest_time: exercise.rest,
-          notes: exercise.notes,
+          exercise_name: exercise.name,
         };
 
         workoutExercisesData.push(exerciseData);
@@ -58,18 +58,18 @@ export class WorkoutService {
       if (exercise) {
         const workoutExercise = await this.prisma.workout_exercises.create({
           data: {
+            total_reps: 0, // Will be updated as user completes sets
             workout_id: workout.id,
             exercise_id: exercise.id,
-            total_reps: 0, // Will be updated as user completes sets
           },
         });
 
         createdWorkoutExercises.push({
           ...workoutExercise,
+          notes: exerciseData.notes,
+          rest_time: exerciseData.rest_time,
           target_sets: exerciseData.target_sets,
           target_reps: exerciseData.target_reps,
-          rest_time: exerciseData.rest_time,
-          notes: exerciseData.notes,
         });
       }
     }

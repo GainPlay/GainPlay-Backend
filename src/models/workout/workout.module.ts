@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
-import { WorkoutController } from "./workout.controller";
-import { WorkoutService } from "./workout.service";
-import { GeminiService } from "./gemini.service";
-import { UserGoalsModule } from "../user-goals/user-goals.module";
-import { UserSettingsModule } from "../user-settings/user-settings.module";
 import { PrismaModule } from "database/prisma.module";
+import { GeminiService } from "./gemini.service";
+import { WorkoutService } from "./workout.service";
+import { WorkoutController } from "./workout.controller";
+import { UserGoalsModule } from "../user_goal/user-goals.module";
+import { UserSettingsModule } from "../user_setting/user-settings.module";
 
 @Module({
-  imports: [PrismaModule, UserGoalsModule, UserSettingsModule],
   controllers: [WorkoutController],
   providers: [WorkoutService, GeminiService],
+  imports: [PrismaModule, UserGoalsModule, UserSettingsModule],
 })
 export class WorkoutModule {}
