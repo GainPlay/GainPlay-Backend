@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'database/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma } from "@prisma/client";
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "database/prisma.service";
 
 @Injectable()
 export class UserGoalsRepository {
@@ -15,8 +15,8 @@ export class UserGoalsRepository {
             id: true,
             name: true,
             email: true,
-            avatar_url: true,
             level: true,
+            avatar_url: true,
           },
         },
       },
@@ -33,8 +33,8 @@ export class UserGoalsRepository {
             id: true,
             name: true,
             email: true,
-            avatar_url: true,
             level: true,
+            avatar_url: true,
           },
         },
       },
@@ -60,8 +60,8 @@ export class UserGoalsRepository {
             id: true,
             name: true,
             email: true,
-            avatar_url: true,
             level: true,
+            avatar_url: true,
           },
         },
       },
@@ -70,8 +70,8 @@ export class UserGoalsRepository {
 
   async update(id: number, data: Prisma.user_goalsUpdateInput) {
     return this.prisma.user_goals.update({
-      where: { id },
       data,
+      where: { id },
       include: {
         goals: true,
         users: {
@@ -79,8 +79,8 @@ export class UserGoalsRepository {
             id: true,
             name: true,
             email: true,
-            avatar_url: true,
             level: true,
+            avatar_url: true,
           },
         },
       },

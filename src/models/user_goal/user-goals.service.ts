@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { UserGoalsRepository } from './user-goals.repository';
-import { Prisma } from '@prisma/client';
+import { Prisma } from "@prisma/client";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { UserGoalsRepository } from "./user-goals.repository";
 
 @Injectable()
 export class UserGoalsService {
@@ -30,7 +30,7 @@ export class UserGoalsService {
 
   async update(id: number, data: Prisma.user_goalsUpdateInput) {
     await this.findOne(id); // Verify the record exists
-    
+
     return this.userGoalsRepository.update(id, {
       ...data,
       updated_at: new Date(),
@@ -39,13 +39,13 @@ export class UserGoalsService {
 
   async remove(id: number) {
     await this.findOne(id); // Verify the record exists
-    
+
     return this.userGoalsRepository.delete(id);
   }
 
   async updateValue(id: number, value: number) {
     await this.findOne(id); // Verify the record exists
-    
+
     return this.userGoalsRepository.update(id, {
       value,
       updated_at: new Date(),
