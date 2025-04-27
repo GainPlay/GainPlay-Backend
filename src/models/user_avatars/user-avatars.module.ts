@@ -1,0 +1,14 @@
+import { Module } from "@nestjs/common";
+import { PrismaModule } from "database/prisma.module";
+import { UsersModule } from "@/models/users/users.module";
+import { UserAvatarsService } from "@/models/user_avatars/user-avatars.service";
+import { UserAvatarsController } from "@/models/user_avatars/user-avatars.controller";
+import { UserAvatarsRepository } from "@/models/user_avatars/user-avatars.repository";
+
+@Module({
+  exports: [UserAvatarsService],
+  controllers: [UserAvatarsController],
+  providers: [UserAvatarsService, UserAvatarsRepository],
+  imports: [PrismaModule, UsersModule, UserAvatarsModule],
+})
+export class UserAvatarsModule {}
