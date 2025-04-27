@@ -11,4 +11,9 @@ export class AppController {
   healthCheck() {
     return this.appService.healthCheck();
   }
+
+  @Get("jwt")
+  testJwt() {
+    return this.appService.healthCheck();
+  }
 }

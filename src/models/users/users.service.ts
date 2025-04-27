@@ -1,0 +1,31 @@
+import { users } from "@prisma/client";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { UsersRepository } from "@/models/users/users.repository";
+
+@Injectable()
+export class UsersService {
+  constructor(private readonly usersRepository: UsersRepository) {}
+
+  async findByEmail(email: string): Promise<users> {
+    const user = await this.usersRepository.findOneByEmail(email);
+
+    return user;
+  }
+
+  async findById(id: number): Promise<users> {
+    const user = await this.usersRepository.findOneById(id);
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    return user;
+  }
+
+  async createUser(userData: Omit<users, "id">): Promise<users> {
+    return this.usersRepository.create(userData);
+  }
+
+  async updateUser(userId: number, userData: Partial<users>): Promise<users> {
+    await this.findById(userId);
+    return this.usersRepository.update(userId, userData);
+  }
+}
