@@ -1,42 +1,17 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { PrismaService } from "database/prisma.service";
-import { Prisma } from "@prisma/client";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { UserSettingsRepository } from './user-settings.repository';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserSettingsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private userSettingsRepository: UserSettingsRepository) {}
 
   async findAll() {
-    return this.prisma.user_settings.findMany({
-      include: {
-        users: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar_url: true,
-            level: true,
-          },
-        },
-      },
-    });
+    return this.userSettingsRepository.findAll();
   }
 
   async findOne(id: number) {
-    const userSettings = await this.prisma.user_settings.findUnique({
-      where: { id },
-      include: {
-        users: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar_url: true,
-            level: true,
-          },
-        },
-      },
-    });
+    const userSettings = await this.userSettingsRepository.findById(id);
 
     if (!userSettings) {
       throw new NotFoundException(`User settings with ID ${id} not found`);
@@ -46,25 +21,10 @@ export class UserSettingsService {
   }
 
   async findByUser(userId: number) {
-    const userSettings = await this.prisma.user_settings.findUnique({
-      where: { user_id: userId },
-      include: {
-        users: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar_url: true,
-            level: true,
-          },
-        },
-      },
-    });
+    const userSettings = await this.userSettingsRepository.findByUserId(userId);
 
     if (!userSettings) {
-      throw new NotFoundException(
-        `User settings for user ID ${userId} not found`
-      );
+      throw new NotFoundException(`User settings for user ID ${userId} not found`);
     }
 
     return userSettings;
@@ -72,123 +32,69 @@ export class UserSettingsService {
 
   async create(data: Prisma.user_settingsCreateInput) {
     // Check if settings already exist for this user
-    const existingSettings = await this.prisma.user_settings.findUnique({
-      where: { user_id: Number(data.users.connect.id) },
-    });
+    const existingSettings = await this.userSettingsRepository.findByUserId(
+      Number(data.users.connect.id)
+    );
 
     if (existingSettings) {
-      throw new Error(
-        `Settings already exist for user ID ${data.users.connect.id}`
-      );
+      throw new Error(`Settings already exist for user ID ${data.users.connect.id}`);
     }
 
-    return this.prisma.user_settings.create({
-      data,
-      include: {
-        users: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar_url: true,
-            level: true,
-          },
-        },
-      },
-    });
+    return this.userSettingsRepository.create(data);
   }
 
   async update(id: number, data: Prisma.user_settingsUpdateInput) {
     await this.findOne(id); // Verify the record exists
-
-    return this.prisma.user_settings.update({
-      where: { id },
-      data: { ...data, updated_at: new Date() },
-      include: {
-        users: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar_url: true,
-            level: true,
-          },
-        },
-      },
+    
+    return this.userSettingsRepository.update(id, {
+      ...data,
+      updated_at: new Date(),
     });
   }
 
   async updateByUserId(userId: number, data: Prisma.user_settingsUpdateInput) {
-    const userSettings = await this.prisma.user_settings.findUnique({
-      where: { user_id: userId },
-    });
+    const userSettings = await this.userSettingsRepository.findByUserId(userId);
 
     if (!userSettings) {
-      throw new NotFoundException(
-        `User settings for user ID ${userId} not found`
-      );
+      throw new NotFoundException(`User settings for user ID ${userId} not found`);
     }
-
-    return this.prisma.user_settings.update({
-      where: { user_id: userId },
-      data: { ...data, updated_at: new Date() },
-      include: {
-        users: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            avatar_url: true,
-            level: true,
-          },
-        },
-      },
+    
+    return this.userSettingsRepository.updateByUserId(userId, {
+      ...data,
+      updated_at: new Date(),
     });
   }
 
   async remove(id: number) {
     await this.findOne(id); // Verify the record exists
-
-    return this.prisma.user_settings.delete({ where: { id } });
+    
+    return this.userSettingsRepository.delete(id);
   }
 
   async upsert(userId: number, data: Prisma.user_settingsUpdateInput) {
     // Check if user exists
-    const user = await this.prisma.users.findUnique({ where: { id: userId } });
+    const user = await this.userSettingsRepository.checkUserExists(userId);
 
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
     // Try to find existing settings
-    const existingSettings = await this.prisma.user_settings.findUnique({
-      where: { user_id: userId },
-    });
+    const existingSettings = await this.userSettingsRepository.findByUserId(userId);
 
     if (existingSettings) {
       // Update existing settings
       return this.updateByUserId(userId, data);
     } else {
       // Create new settings
-      return this.prisma.user_settings.create({
-        data: { 
-          users: { connect: { id: userId } },
-          exercise_frequency: data.exercise_frequency as number | null,
-          fitness_level: data.fitness_level as number | null,
-          created_at: data.created_at as Date | string | null,
-          updated_at: data.updated_at as Date | string | null,
+      return this.userSettingsRepository.create({
+        users: {
+          connect: { id: userId },
         },
-        include: {
-          users: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              avatar_url: true,
-              level: true,
-            },
-          },
-        },
+        exercise_frequency: data.exercise_frequency as number | null,
+        fitness_level: data.fitness_level as number | null,
+        created_at: data.created_at as Date | string | null,
+        updated_at: data.updated_at as Date | string | null,
       });
     }
   }
