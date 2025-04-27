@@ -1,5 +1,6 @@
 import { user_avatars } from "@prisma/client";
 import { UsersService } from "@/models/users/users.service";
+import { AvatarService } from "@/models/avatar/avatar.service";
 import { UserAvatarsRepository } from "@/models/user_avatars/user-avatars.repository";
 import { CreateUserAvatarDto } from "@/models/user_avatars/dto/user-avatars-create.dto";
 import { UpdateUserAvatarDto } from "@/models/user_avatars/dto/user-avatars-update.dto";
@@ -16,7 +17,7 @@ export class UserAvatarsService {
   constructor(
     private readonly userAvatarsRepository: UserAvatarsRepository,
     private readonly usersService: UsersService,
-    private readonly avatarsService: UserAvatarsService,
+    private readonly avatarsService: AvatarService,
   ) {}
 
   async findAll(): Promise<UserAvatarResponseDto[]> {
@@ -56,7 +57,7 @@ export class UserAvatarsService {
     await this.usersService.findById(dto.user_id);
 
     // Verify avatar exists
-    await this.avatarsService.findOneById(dto.avatar_id);
+    await this.avatarsService.findOne(dto.avatar_id);
 
     // Check if user already has this avatar
     const userAvatars = await this.userAvatarsRepository.findByUserId(
