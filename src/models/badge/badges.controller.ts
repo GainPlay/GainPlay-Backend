@@ -1,7 +1,7 @@
 import { BadgesService } from '@/models/badge/badges.service';
 import { CreateBadgeDto } from '@/models/badge/dto/create-badge.dto';
 import { UpdateBadgeDto } from '@/models/badge/dto/update-badge.dto';
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Header } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 @Controller('badges')
