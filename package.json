@@ -21,6 +21,7 @@
     "prebuild": "bun runtime-check",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "fill-db": "bun run database/seeders/data/seed.ts",
     "lint": "eslint . --ignore-pattern 'dist/*' --ignore-pattern '@generated/*'",
     "lint:report": "eslint --output-file eslint_report.json --format json .",
     "premigrate": "bun --env-file=src/config/env/.env.$npm_package_config_environment tools/transfer-db-connection.ts",
