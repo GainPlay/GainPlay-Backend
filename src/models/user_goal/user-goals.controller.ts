@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  Query,
 } from "@nestjs/common";
 import { UserGoalsService } from "./user-goals.service";
 import { CreateUserGoalDto } from "./dto/create-user-goal.dto";
@@ -41,7 +40,7 @@ export class UserGoalsController {
   @Patch(":id")
   update(
     @Param("id", ParseIntPipe) id: number,
-    @Body() updateUserGoalDto: UpdateUserGoalDto
+    @Body() updateUserGoalDto: UpdateUserGoalDto,
   ) {
     return this.userGoalsService.update(id, updateUserGoalDto);
   }
@@ -49,7 +48,7 @@ export class UserGoalsController {
   @Patch(":id/value")
   updateValue(
     @Param("id", ParseIntPipe) id: number,
-    @Body() updateUserGoalValueDto: UpdateUserGoalValueDto
+    @Body() updateUserGoalValueDto: UpdateUserGoalValueDto,
   ) {
     return this.userGoalsService.updateValue(id, updateUserGoalValueDto.value);
   }

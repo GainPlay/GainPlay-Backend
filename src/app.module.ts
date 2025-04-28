@@ -7,10 +7,12 @@ import { AppController } from "@/app.controller";
 import { PrismaModule } from "database/prisma.module";
 import { GoalsModule } from "@/models/goal/goals.module";
 import { UsersModule } from "@/models/users/users.module";
+import { AvatarModule } from "@/models/avatar/avatar.module";
 import { WorkoutModule } from "@/models/workout/workout.module";
 import { validationSchema } from "src/config/validation.schema";
 import { GlobalAuthGuard } from "@/auth/guards/globalAuth.guard";
 import { UserGoalsModule } from "@/models/user_goal/user-goals.module";
+import { UserAvatarsModule } from "@/models/user_avatars/user-avatars.module";
 import { UserSettingsModule } from "@/models/user_setting/user-settings.module";
 import { BadgesModule } from "@/models/badge/badges.module";
 @Module({
@@ -36,6 +38,8 @@ import { BadgesModule } from "@/models/badge/badges.module";
     BadgesModule,
     UserGoalsModule,
     UserSettingsModule,
+    AvatarModule,
+    UserAvatarsModule,
   ],
 })
 export class AppModule {}

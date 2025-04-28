@@ -6,6 +6,11 @@ import { UsersRepository } from "@/models/users/users.repository";
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
+  async findAll(): Promise<users[]> {
+    const users = await this.usersRepository.findAll();
+    return users.map(user => user);
+  }
+
   async findByEmail(email: string): Promise<users> {
     const user = await this.usersRepository.findOneByEmail(email);
 

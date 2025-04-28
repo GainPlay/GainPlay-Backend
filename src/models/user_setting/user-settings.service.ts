@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { UserSettingsRepository } from './user-settings.repository';
-import { Prisma } from '@prisma/client';
+import { Prisma } from "@prisma/client";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { UserSettingsRepository } from "./user-settings.repository";
 
 @Injectable()
 export class UserSettingsService {
@@ -24,7 +24,9 @@ export class UserSettingsService {
     const userSettings = await this.userSettingsRepository.findByUserId(userId);
 
     if (!userSettings) {
-      throw new NotFoundException(`User settings for user ID ${userId} not found`);
+      throw new NotFoundException(
+        `User settings for user ID ${userId} not found`,
+      );
     }
 
     return userSettings;
@@ -33,11 +35,13 @@ export class UserSettingsService {
   async create(data: Prisma.user_settingsCreateInput) {
     // Check if settings already exist for this user
     const existingSettings = await this.userSettingsRepository.findByUserId(
-      Number(data.users.connect.id)
+      Number(data.users.connect.id),
     );
 
     if (existingSettings) {
-      throw new Error(`Settings already exist for user ID ${data.users.connect.id}`);
+      throw new Error(
+        `Settings already exist for user ID ${data.users.connect.id}`,
+      );
     }
 
     return this.userSettingsRepository.create(data);
@@ -45,7 +49,7 @@ export class UserSettingsService {
 
   async update(id: number, data: Prisma.user_settingsUpdateInput) {
     await this.findOne(id); // Verify the record exists
-    
+
     return this.userSettingsRepository.update(id, {
       ...data,
       updated_at: new Date(),
@@ -56,9 +60,11 @@ export class UserSettingsService {
     const userSettings = await this.userSettingsRepository.findByUserId(userId);
 
     if (!userSettings) {
-      throw new NotFoundException(`User settings for user ID ${userId} not found`);
+      throw new NotFoundException(
+        `User settings for user ID ${userId} not found`,
+      );
     }
-    
+
     return this.userSettingsRepository.updateByUserId(userId, {
       ...data,
       updated_at: new Date(),
@@ -67,7 +73,7 @@ export class UserSettingsService {
 
   async remove(id: number) {
     await this.findOne(id); // Verify the record exists
-    
+
     return this.userSettingsRepository.delete(id);
   }
 
@@ -80,7 +86,8 @@ export class UserSettingsService {
     }
 
     // Try to find existing settings
-    const existingSettings = await this.userSettingsRepository.findByUserId(userId);
+    const existingSettings =
+      await this.userSettingsRepository.findByUserId(userId);
 
     if (existingSettings) {
       // Update existing settings
@@ -88,13 +95,13 @@ export class UserSettingsService {
     } else {
       // Create new settings
       return this.userSettingsRepository.create({
+        fitness_level: data.fitness_level as number | null,
+        created_at: data.created_at as Date | string | null,
+        updated_at: data.updated_at as Date | string | null,
         users: {
           connect: { id: userId },
         },
         exercise_frequency: data.exercise_frequency as number | null,
-        fitness_level: data.fitness_level as number | null,
-        created_at: data.created_at as Date | string | null,
-        updated_at: data.updated_at as Date | string | null,
       });
     }
   }

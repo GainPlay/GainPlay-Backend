@@ -27,4 +27,8 @@ export class UsersRepository {
       data: userInformation,
     });
   }
+
+  async findAll(): Promise<users[]> {
+    return this.prisma.users.findMany();
+  }
 }

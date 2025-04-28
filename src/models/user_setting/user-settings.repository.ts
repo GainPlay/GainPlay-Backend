@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'database/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma } from "@prisma/client";
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "database/prisma.service";
 
 @Injectable()
 export class UserSettingsRepository {
@@ -14,8 +14,8 @@ export class UserSettingsRepository {
             id: true,
             name: true,
             email: true,
-            avatar_url: true,
             level: true,
+            avatar_url: true,
           },
         },
       },
@@ -31,8 +31,8 @@ export class UserSettingsRepository {
             id: true,
             name: true,
             email: true,
-            avatar_url: true,
             level: true,
+            avatar_url: true,
           },
         },
       },
@@ -48,8 +48,8 @@ export class UserSettingsRepository {
             id: true,
             name: true,
             email: true,
-            avatar_url: true,
             level: true,
+            avatar_url: true,
           },
         },
       },
@@ -65,8 +65,8 @@ export class UserSettingsRepository {
             id: true,
             name: true,
             email: true,
-            avatar_url: true,
             level: true,
+            avatar_url: true,
           },
         },
       },
@@ -75,16 +75,16 @@ export class UserSettingsRepository {
 
   async update(id: number, data: Prisma.user_settingsUpdateInput) {
     return this.prisma.user_settings.update({
-      where: { id },
       data,
+      where: { id },
       include: {
         users: {
           select: {
             id: true,
             name: true,
             email: true,
-            avatar_url: true,
             level: true,
+            avatar_url: true,
           },
         },
       },
@@ -93,16 +93,16 @@ export class UserSettingsRepository {
 
   async updateByUserId(userId: number, data: Prisma.user_settingsUpdateInput) {
     return this.prisma.user_settings.update({
-      where: { user_id: userId },
       data,
+      where: { user_id: userId },
       include: {
         users: {
           select: {
             id: true,
             name: true,
             email: true,
-            avatar_url: true,
             level: true,
+            avatar_url: true,
           },
         },
       },
