@@ -15,6 +15,7 @@ import { UserGoalsModule } from "@/models/user_goal/user-goals.module";
 import { UserAvatarsModule } from "@/models/user_avatars/user-avatars.module";
 import { UserSettingsModule } from "@/models/user_setting/user-settings.module";
 import { UserBadgesModule } from "@/models/user_badges/user-badges.module";
+import { BadgesModule } from "@/models/badge/badges.module";
 @Module({
   controllers: [AppController],
   providers: [
@@ -35,6 +36,7 @@ import { UserBadgesModule } from "@/models/user_badges/user-badges.module";
     WorkoutModule,
     UsersModule,
     GoalsModule,
+    BadgesModule,
     UserGoalsModule,
     UserBadgesModule,
     UserSettingsModule,
