@@ -17,7 +17,6 @@ export class GeminiService {
   }
 
   async generateWorkout(userId: number) {
-    // Fetch user's goals and settings
     const [userGoals, userSettings] = await Promise.all([
       this.userGoalsService.findByUser(userId),
       this.userSettingsService.findByUser(userId).catch(() => null),
@@ -27,7 +26,6 @@ export class GeminiService {
       throw new NotFoundException("User profile data not found");
     }
 
-    // Create a comprehensive user profile from database data
     const userProfile = {
       goals: userGoals.map(ug => ({
         value: ug.value,
@@ -42,7 +40,6 @@ export class GeminiService {
         : null,
     };
 
-    // Create a prompt that instructs Gemini to generate a structured workout
     const prompt = `
       You are an AI fitness coach. Your task is to create a customized workout plan based on a provided list of exercises and a user's profile data.
       
@@ -92,10 +89,8 @@ export class GeminiService {
       const response = result.response;
       const text = response.text();
 
-      // Extract the JSON from the response
       let jsonText = text;
 
-      // Remove markdown code block formatting if present
       jsonText = jsonText.replace(/```json\s+|\s+```/g, "");
 
       try {

@@ -10,23 +10,19 @@ export class WorkoutService {
   ) {}
 
   async generateAndSaveWorkout(userId: number) {
-    // First, generate the workout using Gemini
     const workoutExercises = await this.geminiService.generateWorkout(userId);
 
-    // Create a workout record in the database
     const workout = await this.prisma.workouts.create({
       data: {
         user_id: userId,
-        coins_earned: 0, // You can set this later when the workout is completed
+        coins_earned: 0,
         started_at: new Date(),
       },
     });
 
-    // Create workout_exercises records and related records
     const createdWorkoutExercises = [];
 
     for (const exercise of workoutExercises) {
-      // 1. Create or find exercise_template
       let exerciseTemplate = await this.prisma.exercise_templates.findFirst({
         where: {
           exercise_id: exercise.exerciseId,
@@ -47,22 +43,20 @@ export class WorkoutService {
         });
       }
 
-      // 2. Create workout_exercise
       const workoutExercise = await this.prisma.workout_exercises.create({
         data: {
-          total_reps: 0, // Will be updated as user completes sets
+          total_reps: 0,
           workout_id: workout.id,
           exercise_id: exercise.exerciseId,
           template_id: exerciseTemplate.id,
         },
       });
 
-      // 3. Create exercise_sets (one for each set)
       const exerciseSets = [];
       for (let i = 1; i <= exercise.targetSets; i++) {
         const set = await this.prisma.exercise_sets.create({
           data: {
-            reps: 0, // Will be updated as user completes the set
+            reps: 0,
             set_number: i,
             completed: false,
             workout_exercise_id: workoutExercise.id,
@@ -71,7 +65,6 @@ export class WorkoutService {
         exerciseSets.push(set);
       }
 
-      // Add exercise to response with template and sets
       createdWorkoutExercises.push({
         ...workoutExercise,
         sets: exerciseSets,
@@ -83,7 +76,6 @@ export class WorkoutService {
       });
     }
 
-    // Return the complete workout with associated exercises and sets
     return {
       ...workout,
       exercises: createdWorkoutExercises,
