@@ -22,9 +22,9 @@ const seed = async () => {
 
   for (const goal of goals) {
     await prisma.goals.upsert({
-      where: { id: goal.id },
       update: {}, // No update for now
       create: goal,
+      where: { id: goal.id },
     });
   }
 };
@@ -34,7 +34,7 @@ seed()
     console.log("Seed complete");
     return prisma.$disconnect();
   })
-  .catch((error) => {
+  .catch(error => {
     console.error(error);
     return prisma.$disconnect().finally(() => process.exit(1));
   });

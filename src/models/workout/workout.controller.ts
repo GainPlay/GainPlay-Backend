@@ -1,27 +1,27 @@
 import {
   Controller,
   Post,
-  Body,
   HttpException,
   HttpStatus,
+  Req,
 } from "@nestjs/common";
-import { GeminiService } from "./gemini.service";
-import { UserProfileDto } from "./dto/user-profile.dto";
-import { WorkoutResponseDto } from "./dto/workout-response.dto";
+import { WorkoutService } from "./workout.service";
 
 @Controller("workout")
 export class WorkoutController {
-  constructor(private readonly geminiService: GeminiService) {}
+  constructor(private readonly workoutService: WorkoutService) {}
 
   @Post("generate")
-  async generateWorkout(
-    @Body() userProfile: string,
-  ): Promise<WorkoutResponseDto> {
+  async generateWorkout(@Req() req) {
     try {
-      return await this.geminiService.generateWorkout(userProfile);
+      const userId = req.user.id;
+      return await this.workoutService.generateAndSaveWorkout(userId);
     } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       throw new HttpException(
-        "Failed to generate workout program",
+        error.message || "Failed to generate workout program",
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
