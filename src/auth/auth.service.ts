@@ -36,7 +36,9 @@ export class AuthService {
     if (existingUser) {
       throw new BadRequestException("email already exists");
     }
-    const hashedPassword = await bcrypt.hash(user.password_hash, 10);
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    delete user.password;
+
     const newUser: Omit<User, "id"> = {
       ...user,
       coins: 0,
