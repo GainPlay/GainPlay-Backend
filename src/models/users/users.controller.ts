@@ -1,6 +1,17 @@
 import { users } from "@prisma/client";
 import { UsersService } from "@/models/users/users.service";
-import { Controller, Get, Param, ParseIntPipe } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Req,
+  Body,
+  Param,
+  ParseIntPipe,
+  HttpException,
+  HttpStatus,
+} from "@nestjs/common";
+import { OnboardingDto } from "./dto/onboarding.dto";
 
 @Controller("users")
 export class UsersController {
@@ -14,5 +25,24 @@ export class UsersController {
   @Get(":id")
   findOne(@Param("id", ParseIntPipe) id: number): Promise<users> {
     return this.usersService.findById(id);
+  }
+
+  @Post("onboarding")
+  async updateOnboardingData(
+    @Req() req,
+    @Body() onboardingData: OnboardingDto,
+  ) {
+    try {
+      const userId = req.user.id;
+      return await this.usersService.updateOnboardingData(
+        userId,
+        onboardingData,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error.message || "Failed to update onboarding data",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
