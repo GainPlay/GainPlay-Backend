@@ -33,4 +33,18 @@ export class UsersService {
     await this.findById(userId);
     return this.usersRepository.update(userId, userData);
   }
+
+  async addBadgeToUser(userId: number, badgeId: number): Promise<users> {
+    const user = await this.usersRepository.findOneById(userId);
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
+
+    const updatedUser = await this.usersRepository.addBadgeToUser(
+      userId,
+      badgeId,
+    );
+
+    return updatedUser;
+  }
 }
