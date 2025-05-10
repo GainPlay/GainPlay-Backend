@@ -108,4 +108,20 @@ export class UsersRepository {
       });
     }
   }
+  async addBadgeToUser(userId: number, badgeId: number): Promise<users> {
+    await this.prisma.user_badges.create({
+      data: {
+        user_id: userId,
+        badge_id: badgeId,
+        earned_at: new Date(),
+      },
+    });
+
+    return this.prisma.users.findUnique({
+      where: { id: userId },
+      include: {
+        user_badges: true,
+      },
+    });
+  }
 }

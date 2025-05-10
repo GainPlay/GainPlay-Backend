@@ -45,4 +45,12 @@ export class UsersController {
       );
     }
   }
+
+  @Post(":userId/badge/:badgeId")
+  async addBadgeToUser(
+    @Param("userId", ParseIntPipe) userId: number,
+    @Param("badgeId", ParseIntPipe) badgeId: number,
+  ) {
+    return this.usersService.addBadgeToUser(userId, badgeId);
+  }
 }
