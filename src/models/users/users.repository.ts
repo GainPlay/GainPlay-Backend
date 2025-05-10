@@ -31,4 +31,32 @@ export class UsersRepository {
   async findAll(): Promise<users[]> {
     return this.prisma.users.findMany();
   }
+
+  async updateUserSettings(userId: number, settingsData: any) {
+    return this.prisma.user_settings.upsert({
+      update: settingsData,
+      where: { user_id: userId },
+      create: {
+        user_id: userId,
+        ...settingsData,
+      },
+    });
+  }
+
+  async createOrUpdateUserGoal(userId: number, goalId: number, value: number) {
+    return this.prisma.user_goals.upsert({
+      update: { value },
+      create: {
+        value,
+        user_id: userId,
+        goal_id: goalId,
+      },
+      where: {
+        user_id_goal_id: {
+          user_id: userId,
+          goal_id: goalId,
+        },
+      },
+    });
+  }
 }

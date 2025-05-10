@@ -1,6 +1,7 @@
 import { users } from "@prisma/client";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { UsersRepository } from "@/models/users/users.repository";
+import { OnboardingDto } from "./dto/onboarding.dto";
 
 @Injectable()
 export class UsersService {
@@ -32,5 +33,55 @@ export class UsersService {
   async updateUser(userId: number, userData: Partial<users>): Promise<users> {
     await this.findById(userId);
     return this.usersRepository.update(userId, userData);
+  }
+
+  async updateOnboardingData(userId: number, onboardingData: OnboardingDto) {
+    const user = await this.usersRepository.findOneById(userId);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    const userSettingsData = {
+      fitness_level: onboardingData.fitnessLevel,
+      workout_duration: onboardingData.workoutDuration,
+      exercise_frequency: onboardingData.workoutFrequency,
+      body_structure: onboardingData.bodyStructure || null,
+    };
+
+    if (onboardingData.technicalData) {
+      if (onboardingData.technicalData.age) {
+        userSettingsData["age"] = onboardingData.technicalData.age;
+      }
+      if (onboardingData.technicalData.weight) {
+        userSettingsData["weight"] = onboardingData.technicalData.weight;
+      }
+      if (onboardingData.technicalData.height) {
+        userSettingsData["height"] = onboardingData.technicalData.height;
+      }
+    }
+
+    const updatedSettings = await this.usersRepository.updateUserSettings(
+      userId,
+      userSettingsData,
+    );
+
+    const userGoals = [];
+    for (const [goalId, goalValue] of Object.entries(
+      onboardingData.fitnessGoals,
+    )) {
+      if (goalValue > 0) {
+        const userGoal = await this.usersRepository.createOrUpdateUserGoal(
+          userId,
+          parseInt(goalId),
+          goalValue,
+        );
+        userGoals.push(userGoal);
+      }
+    }
+
+    return {
+      userGoals,
+      userSettings: updatedSettings,
+    };
   }
 }
