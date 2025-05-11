@@ -121,6 +121,11 @@ model user_settings {
   user_id            Int?      @unique
   exercise_frequency Int?
   fitness_level      Int?
+  workout_duration   Int?
+  weight             Int?
+  height             Int?
+  age                Int?
+  body_structure     String?   @db.VarChar
   created_at         DateTime? @default(now()) @db.Timestamp(6)
   updated_at         DateTime? @default(now()) @db.Timestamp(6)
   users              users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
