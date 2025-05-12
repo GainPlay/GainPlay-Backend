@@ -1,12 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "database/prisma.service";
 import { GeminiService } from "./gemini.service";
+import { workouts } from "@prisma/client";
+import { UpdateWorkoutDto } from "@/models/workout/dto/updateWorkoutDto";
+import { calcWorkoutCoins } from "@/models/workout/utils/workoutUtils";
 
 @Injectable()
 export class WorkoutService {
   constructor(
     private prisma: PrismaService,
-    private geminiService: GeminiService,
+    private geminiService: GeminiService
   ) {}
 
   async generateAndSaveWorkout(userId: number) {
@@ -80,5 +83,50 @@ export class WorkoutService {
       ...workout,
       exercises: createdWorkoutExercises,
     };
+  }
+
+  async findAll(userId: number) {
+    return await this.prisma.workouts.findMany({ where: { user_id: userId } });
+  }
+
+  async findOne(id: number) {
+    return await this.prisma.workouts.findMany({ where: { id: id } });
+  }
+
+  async findcurrentWorkout(userId: number) {
+    return await this.prisma.workouts.findFirst({
+      where: {
+        user_id: userId,
+        completed_at: null,
+      },
+    });
+  }
+
+  async finishWorkout(updateWorkoutDto: UpdateWorkoutDto): Promise<workouts> {
+    const coins = calcWorkoutCoins(updateWorkoutDto);
+
+    return await this.prisma.$transaction(async (tx) => {
+      const workout = await tx.workouts.update({
+        where: {
+          id: updateWorkoutDto.id,
+        },
+        data: {
+          completed_at: new Date().toISOString(),
+          coins_earned: coins,
+        },
+      });
+
+      await tx.users.update({
+        where: {
+          id: workout.user_id,
+        },
+        data: {
+          coins: {
+            increment: coins,
+          },
+        },
+      });
+      return workout;
+    });
   }
 }
