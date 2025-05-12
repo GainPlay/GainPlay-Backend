@@ -14,7 +14,7 @@
     "runtime-check": "bun tools/runtime-check-script.ts",
     "preinstall": "bun runtime-check",
     "postinstall": "prisma generate",
-    "prestart": "bun runtime-check && bun migrate deploy && bun database/seeders/data/seed.ts",
+    "prestart": "bun runtime-check && bun migrate deploy",
     "start": "NODE_ENV=$npm_package_config_environment bun x nest start --watch",
     "start:prod": "bun dist/main.js",
     "prestart:prod": "prisma migrate deploy",
