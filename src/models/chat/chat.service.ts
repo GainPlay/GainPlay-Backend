@@ -16,7 +16,7 @@ export class ChatService {
 
     
     return {
-      answer: chatAnswer,
+      answer: chatAnswer.text,
       timestamp: new Date().toISOString(),
     };
   }

@@ -28,13 +28,15 @@ export class GeminiService {
     const prompt = `
       You are an intelligent and helpful exercise assistant. Your goal is to provide informative and encouraging responses to user questions related to workouts, fitness, nutrition, and overall well-being.
 
-      The user's question is: "${question}".
+      The user's question is: "${question.message}".
 
       Please provide a concise and helpful answer to this question, formatted as a JSON object with the following structure:
 
       {
-        "answer": "YOUR_ANSWER_HERE"
+        "text": "YOUR_ANSWER_HERE"
       }
+
+      Make it a plain, very 1 sentence answer without any code blocks or markdown formatting . 
     `;
 
     try {
