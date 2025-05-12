@@ -1,4 +1,9 @@
+import { Req } from "@nestjs/common";
+import { IsNumber, IsString } from "class-validator";
+
 export class MessageRequestDto {
-readonly userId: number;
-readonly message: string;
+@IsNumber()
+ userId: number;   
+@IsString()
+ message: string;
 }
