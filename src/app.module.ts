@@ -18,6 +18,7 @@ import { UserBadgesModule } from "@/models/user_badges/user-badges.module";
 import { BadgesModule } from "@/models/badge/badges.module";
 import { ExerciseSetsModule } from "@/models/exercise_sets/exercise-sets.module";
 import { ChatModule } from "@/models/chat/chat.module";
+import { FriendshipsModule } from "@/models/friendships/friendships.module";
 @Module({
   controllers: [AppController],
   providers: [
@@ -46,6 +47,7 @@ import { ChatModule } from "@/models/chat/chat.module";
     UserSettingsModule,
     AvatarModule,
     UserAvatarsModule,
+    FriendshipsModule,
   ],
 })
 export class AppModule {}
