@@ -1,6 +1,14 @@
-import { users } from "@prisma/client";
-import { UsersService } from "@/models/users/users.service";
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+} from "@nestjs/common";
 import { CreateFriendshipDto } from "@/models/friendships/dto/create-friendship.dto";
 import { UpdateFriendshipDto } from "@/models/friendships/dto/update-friendship.dto";
 import { FriendshipsService } from "@/models/friendships/friendships.service";
@@ -24,9 +32,9 @@ export class FriendshipsController {
     return this.friendshipsService.findOne(id);
   }
 
-  @Patch(":id")
-  async update(@Param("id", ParseIntPipe) id: number, @Body() updateFriendshipDto: UpdateFriendshipDto) {
-    return this.friendshipsService.update(id, updateFriendshipDto);
+  @Patch("")
+  async update(@Body() updateFriendshipDto: UpdateFriendshipDto) {
+    return this.friendshipsService.update(updateFriendshipDto);
   }
 
   @Delete(":id")
