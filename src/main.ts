@@ -26,13 +26,13 @@ async function bootstrap() {
       exceptionFactory: (validationErrors = []) => {
         return new ValidationException(validationErrors);
       },
-    }),
+    })
   );
 
   app.useGlobalFilters(
     new GeneralExceptionFilter(),
     new HttpExceptionFilter(),
-    new ValidationExceptionsFilter(),
+    new ValidationExceptionsFilter()
   );
 
   if (["development", "test"].includes(process.env.NODE_ENV)) {

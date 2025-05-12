@@ -4,8 +4,15 @@ import {
   HttpException,
   HttpStatus,
   Req,
+  Put,
+  Body,
+  Get,
+  ParseIntPipe,
+  Query,
+  Param,
 } from "@nestjs/common";
 import { WorkoutService } from "./workout.service";
+import { UpdateWorkoutDto } from "@/models/workout/dto/updateWorkoutDto";
 
 @Controller("workout")
 export class WorkoutController {
@@ -22,8 +29,28 @@ export class WorkoutController {
       }
       throw new HttpException(
         error.message || "Failed to generate workout program",
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
+  }
+
+  @Get()
+  async findAll(@Query("userId", ParseIntPipe) userId: number) {
+    return this.workoutService.findAll(userId);
+  }
+
+  @Get(":id")
+  async findOne(@Param("id", ParseIntPipe) id: number) {
+    return this.workoutService.findOne(id);
+  }
+
+  @Get("/currentWorkout")
+  async findcurrentWorkout(@Query("userId", ParseIntPipe) userId: number) {
+    return this.workoutService.findcurrentWorkout(userId);
+  }
+
+  @Put("/finishWorkout")
+  async finishWorkout(@Body() updateWorkoutDto: UpdateWorkoutDto) {
+    return await this.workoutService.finishWorkout(updateWorkoutDto);
   }
 }
