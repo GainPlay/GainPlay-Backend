@@ -17,6 +17,7 @@ import { UserSettingsModule } from "@/models/user_setting/user-settings.module";
 import { UserBadgesModule } from "@/models/user_badges/user-badges.module";
 import { BadgesModule } from "@/models/badge/badges.module";
 import { ExerciseSetsModule } from "@/models/exercise_sets/exercise-sets.module";
+import { FriendshipsModule } from "@/models/friendships/friendships.module";
 @Module({
   controllers: [AppController],
   providers: [
@@ -44,6 +45,7 @@ import { ExerciseSetsModule } from "@/models/exercise_sets/exercise-sets.module"
     UserSettingsModule,
     AvatarModule,
     UserAvatarsModule,
+    FriendshipsModule,
   ],
 })
 export class AppModule {}
