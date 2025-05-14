@@ -20,12 +20,12 @@ export class FriendshipsService {
     return this.friendshipsRepository.findAllDiscover(userId);
   }
 
-  async findOne(id: number): Promise<friendships> {
-    return this.friendshipsRepository.findOne(id);
+  async findOneByUsers(user_id: number, friend_id: number): Promise<friendships> {
+    return this.friendshipsRepository.findOneByUsers(user_id, friend_id);
   }
 
-  async update(updateFriendshipDto: UpdateFriendshipDto): Promise<friendships> {
-    return this.friendshipsRepository.update(updateFriendshipDto);
+  async update(id: number, updateFriendshipDto: UpdateFriendshipDto): Promise<friendships> {
+    return this.friendshipsRepository.update(id, updateFriendshipDto);
   }
 
   async remove(id: number): Promise<friendships> {

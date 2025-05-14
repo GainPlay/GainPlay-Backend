@@ -113,9 +113,14 @@ export class FriendshipsRepository {
     });
   }
 
-  async findOne(id: number): Promise<friendships> {
-    const friendship = await this.prisma.friendships.findUnique({
-      where: { id },
+  async findOneByUsers(user_id: number, friend_id: number): Promise<friendships | null> {
+    return this.prisma.friendships.findUnique({
+      where: {
+        user_id_friend_id: {
+          user_id,
+          friend_id,
+        },
+      },
       include: {
         sender: {
           select: {
@@ -139,22 +144,13 @@ export class FriendshipsRepository {
         },
       },
     });
-
-    if (!friendship) {
-      throw new NotFoundException(`Friendship with ID ${id} not found`);
-    }
-
-    return friendship;
   }
 
-  async update(updateFriendshipDto: UpdateFriendshipDto): Promise<friendships> {
+  async update(id: number, updateFriendshipDto: UpdateFriendshipDto): Promise<friendships> {
     try {
       return await this.prisma.friendships.update({
         where: {
-          user_id_friend_id: {
-            user_id: updateFriendshipDto.user_id,
-            friend_id: updateFriendshipDto.friend_id,
-          },
+          id: id,
         },
         data: {
           status: updateFriendshipDto.status,

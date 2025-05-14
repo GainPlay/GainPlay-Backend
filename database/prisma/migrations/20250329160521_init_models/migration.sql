@@ -64,7 +64,6 @@ CREATE TABLE "friendships" (
     "status" VARCHAR,
     "created_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
-    "usersId" INTEGER,
 
     CONSTRAINT "friendships_pkey" PRIMARY KEY ("id")
 );
