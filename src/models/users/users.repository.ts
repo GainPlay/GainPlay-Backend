@@ -32,6 +32,82 @@ export class UsersRepository {
     return this.prisma.users.findMany();
   }
 
+  async getUserSettings(userId: number) {
+    return this.prisma.user_settings.findUnique({
+      where: { user_id: userId },
+    });
+  }
+
+  async updateUserSettings(userId: number, settingsData: any) {
+    // First check if settings exist
+    const existingSettings = await this.getUserSettings(userId);
+
+    // Remove any fields that might cause issues
+    const safeData = { ...settingsData };
+
+    if (existingSettings) {
+      // Update existing settings with individual fields
+      return this.prisma.user_settings.update({
+        where: { user_id: userId },
+        data: {
+          age: safeData.age,
+          weight: safeData.weight,
+          height: safeData.height,
+          fitness_level: safeData.fitness_level,
+          body_structure: safeData.body_structure,
+          workout_duration: safeData.workout_duration,
+          exercise_frequency: safeData.exercise_frequency,
+        },
+      });
+    } else {
+      // Create new settings with minimal fields
+      return this.prisma.user_settings.create({
+        data: {
+          age: safeData.age,
+          weight: safeData.weight,
+          height: safeData.height,
+          fitness_level: safeData.fitness_level,
+          body_structure: safeData.body_structure,
+          workout_duration: safeData.workout_duration,
+          exercise_frequency: safeData.exercise_frequency,
+          users: {
+            connect: { id: userId },
+          },
+        },
+      });
+    }
+  }
+
+  async createOrUpdateUserGoal(userId: number, goalId: number, value: number) {
+    // First check if user_goal exists
+    const existingUserGoal = await this.prisma.user_goals.findFirst({
+      where: {
+        user_id: userId,
+        goal_id: goalId,
+      },
+    });
+
+    if (existingUserGoal) {
+      // Update existing user_goal
+      return this.prisma.user_goals.update({
+        data: { value },
+        where: { id: existingUserGoal.id },
+      });
+    } else {
+      // Create new user_goal
+      return this.prisma.user_goals.create({
+        data: {
+          value,
+          users: {
+            connect: { id: userId },
+          },
+          goals: {
+            connect: { id: goalId },
+          },
+        },
+      });
+    }
+  }
   async addBadgeToUser(userId: number, badgeId: number): Promise<users> {
     await this.prisma.user_badges.create({
       data: {
