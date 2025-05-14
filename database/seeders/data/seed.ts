@@ -158,17 +158,17 @@ async function main() {
   // Insert friendships
   // need npx prisma migrate reset before cause users ids is auto incremnt
   console.log("Adding friendships...");
-  // await prisma.friendships.createMany({
-  //   data: [
-  //     { user_id: 1, friend_id: 2, status: "accepted" },
-  //     { user_id: 1, friend_id: 3, status: "accepted" },
-  //     { user_id: 2, friend_id: 4, status: "accepted" },
-  //     { user_id: 1, friend_id: 4, status: "pending" },
-  //     { user_id: 3, friend_id: 5, status: "pending" },
-  //     { user_id: 2, friend_id: 5, status: "accepted" },
-  //   ],
-  //   skipDuplicates: true,
-  // });
+  await prisma.friendships.createMany({
+    data: [
+      { user_id: 1, friend_id: 2, status: "accepted" },
+      { user_id: 1, friend_id: 3, status: "accepted" },
+      { user_id: 2, friend_id: 4, status: "accepted" },
+      { user_id: 1, friend_id: 4, status: "pending" },
+      { user_id: 3, friend_id: 5, status: "pending" },
+      { user_id: 2, friend_id: 5, status: "accepted" },
+    ],
+    skipDuplicates: true,
+  });
 
   // Insert user_settings
   console.log("Adding user settings...");

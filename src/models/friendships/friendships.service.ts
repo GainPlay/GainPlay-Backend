@@ -1,4 +1,4 @@
-import { friendships } from "@prisma/client";
+import { friendships, users } from "@prisma/client";
 import { Injectable } from "@nestjs/common";
 import { FriendshipsRepository } from "./friendships.repository";
 import { CreateFriendshipDto } from "@/models/friendships/dto/create-friendship.dto";
@@ -14,6 +14,10 @@ export class FriendshipsService {
 
   async findAll(userId: number): Promise<friendships[]> {
     return this.friendshipsRepository.findAll(userId);
+  }
+
+  async findAllDiscover(userId: number): Promise<Partial<users>[]> {
+    return this.friendshipsRepository.findAllDiscover(userId);
   }
 
   async findOne(id: number): Promise<friendships> {

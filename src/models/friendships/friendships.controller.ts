@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-  Query,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
 import { CreateFriendshipDto } from "@/models/friendships/dto/create-friendship.dto";
 import { UpdateFriendshipDto } from "@/models/friendships/dto/update-friendship.dto";
 import { FriendshipsService } from "@/models/friendships/friendships.service";
@@ -25,6 +15,11 @@ export class FriendshipsController {
   @Get()
   async findAll(@Query("userId", ParseIntPipe) userId: number) {
     return this.friendshipsService.findAll(userId);
+  }
+
+  @Get("discover")
+  async findAllDiscover(@Query("userId", ParseIntPipe) userId: number) {
+    return this.friendshipsService.findAllDiscover(userId);
   }
 
   @Get(":id")

@@ -1,12 +1,9 @@
-import {
-  Injectable,
-  NotFoundException,
-  ConflictException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException, ConflictException } from "@nestjs/common";
 import { PrismaService } from "database/prisma.service";
-import { Prisma, friendships } from "@prisma/client";
+import { Prisma, friendships, users } from "@prisma/client";
 import { UpdateFriendshipDto } from "@/models/friendships/dto/update-friendship.dto";
 import { CreateFriendshipDto } from "@/models/friendships/dto/create-friendship.dto";
+import { SELECTION_FIELDS } from "@/models/friendships/constants/friendship.consts";
 
 @Injectable()
 export class FriendshipsRepository {
@@ -19,28 +16,29 @@ export class FriendshipsRepository {
         include: {
           sender: {
             select: {
-              id: true,
-              name: true,
-              avatar_url: true,
+              ...SELECTION_FIELDS,
+              user_goals: {
+                select: {
+                  goals: true,
+                },
+              },
             },
           },
           receiver: {
             select: {
-              id: true,
-              name: true,
-              avatar_url: true,
+              ...SELECTION_FIELDS,
+              user_goals: {
+                select: {
+                  goals: true,
+                },
+              },
             },
           },
         },
       });
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === "P2002"
-      ) {
-        throw new ConflictException(
-          "Friendship already exists between these users."
-        );
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+        throw new ConflictException("Friendship already exists between these users.");
       }
       throw error;
     }
@@ -54,16 +52,61 @@ export class FriendshipsRepository {
       include: {
         sender: {
           select: {
-            id: true,
-            name: true,
-            avatar_url: true,
+            ...SELECTION_FIELDS,
+            user_goals: {
+              select: {
+                goals: true,
+              },
+            },
           },
         },
         receiver: {
           select: {
-            id: true,
-            name: true,
-            avatar_url: true,
+            ...SELECTION_FIELDS,
+            user_goals: {
+              select: {
+                goals: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async findAllDiscover(userId: number): Promise<Partial<users>[]> {
+    return this.prisma.users.findMany({
+      where: {
+        id: {
+          not: userId, // Don't include the current user
+        },
+        AND: [
+          {
+            // Exclude users where current user is the sender in an accepted friendship
+            receivedFriendRequests: {
+              none: {
+                user_id: userId,
+                status: "accepted",
+              },
+            },
+          },
+          {
+            // Exclude users where current user is the receiver in an accepted friendship
+            sentFriendRequests: {
+              none: {
+                friend_id: userId,
+                status: "accepted",
+              },
+            },
+          },
+        ],
+      },
+      select: {
+        ...SELECTION_FIELDS,
+        coins: true,
+        user_goals: {
+          select: {
+            goals: true,
           },
         },
       },
@@ -76,16 +119,22 @@ export class FriendshipsRepository {
       include: {
         sender: {
           select: {
-            id: true,
-            name: true,
-            avatar_url: true,
+            ...SELECTION_FIELDS,
+            user_goals: {
+              select: {
+                goals: true,
+              },
+            },
           },
         },
         receiver: {
           select: {
-            id: true,
-            name: true,
-            avatar_url: true,
+            ...SELECTION_FIELDS,
+            user_goals: {
+              select: {
+                goals: true,
+              },
+            },
           },
         },
       },
@@ -112,10 +161,7 @@ export class FriendshipsRepository {
         },
       });
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === "P2025"
-      ) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
         throw new NotFoundException("Friendship not found for update");
       }
       throw error;
@@ -128,10 +174,7 @@ export class FriendshipsRepository {
         where: { id },
       });
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === "P2025"
-      ) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
         throw new NotFoundException(`Friendship with ID ${id} not found`);
       }
       throw error;
