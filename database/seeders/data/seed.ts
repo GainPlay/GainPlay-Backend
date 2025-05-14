@@ -156,21 +156,19 @@ async function main() {
   });
 
   // Insert friendships
+  // need npx prisma migrate reset before cause users ids is auto incremnt
   console.log("Adding friendships...");
-  await prisma.friendships.createMany({
-    data: [
-      { user_id: 1, friend_id: 2, status: "accepted" },
-      { user_id: 2, friend_id: 1, status: "accepted" },
-      { user_id: 1, friend_id: 3, status: "accepted" },
-      { user_id: 3, friend_id: 1, status: "accepted" },
-      { user_id: 2, friend_id: 4, status: "accepted" },
-      { user_id: 4, friend_id: 2, status: "accepted" },
-      { user_id: 1, friend_id: 4, status: "pending" },
-      { user_id: 3, friend_id: 5, status: "pending" },
-      { user_id: 5, friend_id: 2, status: "accepted" },
-      { user_id: 2, friend_id: 5, status: "accepted" },
-    ],
-  });
+  // await prisma.friendships.createMany({
+  //   data: [
+  //     { user_id: 1, friend_id: 2, status: "accepted" },
+  //     { user_id: 1, friend_id: 3, status: "accepted" },
+  //     { user_id: 2, friend_id: 4, status: "accepted" },
+  //     { user_id: 1, friend_id: 4, status: "pending" },
+  //     { user_id: 3, friend_id: 5, status: "pending" },
+  //     { user_id: 2, friend_id: 5, status: "accepted" },
+  //   ],
+  //   skipDuplicates: true,
+  // });
 
   // Insert user_settings
   console.log("Adding user settings...");
@@ -793,15 +791,13 @@ async function main() {
       },
     ],
   });
-
-  console.log("Database seeding completed successfully!");
 }
 
 main()
   .then(async () => {
     await prisma.$disconnect();
   })
-  .catch(async e => {
+  .catch(async (e) => {
     console.error("Error seeding database:", e);
     await prisma.$disconnect();
     process.exit(1);
