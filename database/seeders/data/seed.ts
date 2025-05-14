@@ -27,13 +27,41 @@ async function main() {
   console.log("Adding avatars...");
   await prisma.avatars.createMany({
     data: [
-      { name: "Basic", image_url: "https://example.com/avatars/basic.png", price: 0 },
-      { name: "Runner", image_url: "https://example.com/avatars/runner.png", price: 100 },
-      { name: "Powerlifter", image_url: "https://example.com/avatars/powerlifter.png", price: 200 },
-      { name: "Yoga Master", image_url: "https://example.com/avatars/yoga.png", price: 300 },
-      { name: "Champion", image_url: "https://example.com/avatars/champion.png", price: 500 },
-      { name: "Ninja", image_url: "https://example.com/avatars/ninja.png", price: 750 },
-      { name: "Superhero", image_url: "https://example.com/avatars/superhero.png", price: 1000 },
+      {
+        name: "Basic",
+        image_url: "https://example.com/avatars/basic.png",
+        price: 0,
+      },
+      {
+        name: "Runner",
+        image_url: "https://example.com/avatars/runner.png",
+        price: 100,
+      },
+      {
+        name: "Powerlifter",
+        image_url: "https://example.com/avatars/powerlifter.png",
+        price: 200,
+      },
+      {
+        name: "Yoga Master",
+        image_url: "https://example.com/avatars/yoga.png",
+        price: 300,
+      },
+      {
+        name: "Champion",
+        image_url: "https://example.com/avatars/champion.png",
+        price: 500,
+      },
+      {
+        name: "Ninja",
+        image_url: "https://example.com/avatars/ninja.png",
+        price: 750,
+      },
+      {
+        name: "Superhero",
+        image_url: "https://example.com/avatars/superhero.png",
+        price: 1000,
+      },
     ],
   });
 
@@ -41,13 +69,37 @@ async function main() {
   console.log("Adding badges...");
   await prisma.badges.createMany({
     data: [
-      { name: "First Workout", icon: "trophy", description: "Complete your first workout" },
-      { name: "Consistency King", icon: "calendar-check", description: "Complete 10 workouts in a month" },
-      { name: "Strength Master", icon: "dumbbell", description: "Lift 5000 kg total in a single workout" },
-      { name: "Early Bird", icon: "sunrise", description: "Complete 5 workouts before 8am" },
-      { name: "Night Owl", icon: "moon", description: "Complete 5 workouts after 8pm" },
+      {
+        name: "First Workout",
+        icon: "trophy",
+        description: "Complete your first workout",
+      },
+      {
+        name: "Consistency King",
+        icon: "calendar-check",
+        description: "Complete 10 workouts in a month",
+      },
+      {
+        name: "Strength Master",
+        icon: "dumbbell",
+        description: "Lift 5000 kg total in a single workout",
+      },
+      {
+        name: "Early Bird",
+        icon: "sunrise",
+        description: "Complete 5 workouts before 8am",
+      },
+      {
+        name: "Night Owl",
+        icon: "moon",
+        description: "Complete 5 workouts after 8pm",
+      },
       { name: "Social Butterfly", icon: "users", description: "Add 5 friends" },
-      { name: "Goal Crusher", icon: "target", description: "Complete all your fitness goals" },
+      {
+        name: "Goal Crusher",
+        icon: "target",
+        description: "Complete all your fitness goals",
+      },
     ],
   });
 
@@ -104,22 +156,19 @@ async function main() {
   });
 
   // Insert friendships
+  // need npx prisma migrate reset before cause users ids is auto incremnt
   console.log("Adding friendships...");
-  await prisma.friendships.createMany({
-    data: [
-      { user_id: 1, friend_id: 2, status: "accepted" },
-      { user_id: 2, friend_id: 1, status: "accepted" },
-      { user_id: 1, friend_id: 3, status: "accepted" },
-      { user_id: 3, friend_id: 1, status: "accepted" },
-      { user_id: 2, friend_id: 4, status: "accepted" },
-      { user_id: 4, friend_id: 2, status: "accepted" },
-      { user_id: 1, friend_id: 4, status: "pending" },
-      { user_id: 3, friend_id: 5, status: "pending" },
-      { user_id: 5, friend_id: 2, status: "accepted" },
-      { user_id: 2, friend_id: 5, status: "accepted" },
-    ],
-    skipDuplicates: true,
-  });
+  // await prisma.friendships.createMany({
+  //   data: [
+  //     { user_id: 1, friend_id: 2, status: "accepted" },
+  //     { user_id: 1, friend_id: 3, status: "accepted" },
+  //     { user_id: 2, friend_id: 4, status: "accepted" },
+  //     { user_id: 1, friend_id: 4, status: "pending" },
+  //     { user_id: 3, friend_id: 5, status: "pending" },
+  //     { user_id: 2, friend_id: 5, status: "accepted" },
+  //   ],
+  //   skipDuplicates: true,
+  // });
 
   // Insert user_settings
   console.log("Adding user settings...");
@@ -171,10 +220,22 @@ async function main() {
   await prisma.goals.createMany({
     data: [
       { name: "Weight Loss", description: "Lose specified amount of weight" },
-      { name: "Strength Gain", description: "Increase weight lifted for specific exercises" },
-      { name: "Workout Frequency", description: "Complete specified number of workouts per week" },
-      { name: "Running Distance", description: "Run a specified total distance" },
-      { name: "Consistency", description: "Work out consistently for a specified number of days" },
+      {
+        name: "Strength Gain",
+        description: "Increase weight lifted for specific exercises",
+      },
+      {
+        name: "Workout Frequency",
+        description: "Complete specified number of workouts per week",
+      },
+      {
+        name: "Running Distance",
+        description: "Run a specified total distance",
+      },
+      {
+        name: "Consistency",
+        description: "Work out consistently for a specified number of days",
+      },
     ],
   });
 
@@ -276,17 +337,57 @@ async function main() {
   console.log("Adding exercise templates...");
   await prisma.exercise_templates.createMany({
     data: [
-      { exercise_id: 1, target_sets: 3, target_reps: 12, rest_time_seconds: 60 },
+      {
+        exercise_id: 1,
+        target_sets: 3,
+        target_reps: 12,
+        rest_time_seconds: 60,
+      },
       { exercise_id: 1, target_sets: 5, target_reps: 8, rest_time_seconds: 45 },
       { exercise_id: 2, target_sets: 3, target_reps: 8, rest_time_seconds: 90 },
-      { exercise_id: 3, target_sets: 4, target_reps: 15, rest_time_seconds: 60 },
-      { exercise_id: 4, target_sets: 5, target_reps: 5, rest_time_seconds: 120 },
-      { exercise_id: 5, target_sets: 3, target_reps: 5, rest_time_seconds: 180 },
-      { exercise_id: 6, target_sets: 3, target_reps: 12, rest_time_seconds: 60 },
-      { exercise_id: 7, target_sets: 3, target_reps: 30, rest_time_seconds: 45 },
+      {
+        exercise_id: 3,
+        target_sets: 4,
+        target_reps: 15,
+        rest_time_seconds: 60,
+      },
+      {
+        exercise_id: 4,
+        target_sets: 5,
+        target_reps: 5,
+        rest_time_seconds: 120,
+      },
+      {
+        exercise_id: 5,
+        target_sets: 3,
+        target_reps: 5,
+        rest_time_seconds: 180,
+      },
+      {
+        exercise_id: 6,
+        target_sets: 3,
+        target_reps: 12,
+        rest_time_seconds: 60,
+      },
+      {
+        exercise_id: 7,
+        target_sets: 3,
+        target_reps: 30,
+        rest_time_seconds: 45,
+      },
       { exercise_id: 8, target_sets: 1, target_reps: 1, rest_time_seconds: 0 },
-      { exercise_id: 9, target_sets: 3, target_reps: 10, rest_time_seconds: 60 },
-      { exercise_id: 10, target_sets: 4, target_reps: 8, rest_time_seconds: 90 },
+      {
+        exercise_id: 9,
+        target_sets: 3,
+        target_reps: 10,
+        rest_time_seconds: 60,
+      },
+      {
+        exercise_id: 10,
+        target_sets: 4,
+        target_reps: 8,
+        rest_time_seconds: 90,
+      },
     ],
   });
 
@@ -306,7 +407,12 @@ async function main() {
         completed_at: new Date("2025-04-22 08:30:00"),
         coins_earned: 45,
       },
-      { user_id: 1, started_at: new Date("2025-04-25 18:00:00"), completed_at: null, coins_earned: null },
+      {
+        user_id: 1,
+        started_at: new Date("2025-04-25 18:00:00"),
+        completed_at: null,
+        coins_earned: null,
+      },
       {
         user_id: 2,
         started_at: new Date("2025-04-15 19:00:00"),
@@ -355,7 +461,12 @@ async function main() {
         completed_at: new Date("2025-04-22 06:45:00"),
         coins_earned: 65,
       },
-      { user_id: 4, started_at: new Date("2025-04-25 06:00:00"), completed_at: null, coins_earned: null },
+      {
+        user_id: 4,
+        started_at: new Date("2025-04-25 06:00:00"),
+        completed_at: null,
+        coins_earned: null,
+      },
       {
         user_id: 5,
         started_at: new Date("2025-04-23 20:00:00"),
@@ -517,14 +628,62 @@ async function main() {
       },
 
       // John's in-progress workout
-      { workout_exercise_id: 6, set_number: 1, reps: 0, completed: false, completed_at: null },
-      { workout_exercise_id: 6, set_number: 2, reps: 0, completed: false, completed_at: null },
-      { workout_exercise_id: 6, set_number: 3, reps: 0, completed: false, completed_at: null },
-      { workout_exercise_id: 6, set_number: 4, reps: 0, completed: false, completed_at: null },
-      { workout_exercise_id: 6, set_number: 5, reps: 0, completed: false, completed_at: null },
-      { workout_exercise_id: 7, set_number: 1, reps: 0, completed: false, completed_at: null },
-      { workout_exercise_id: 7, set_number: 2, reps: 0, completed: false, completed_at: null },
-      { workout_exercise_id: 7, set_number: 3, reps: 0, completed: false, completed_at: null },
+      {
+        workout_exercise_id: 6,
+        set_number: 1,
+        reps: 0,
+        completed: false,
+        completed_at: null,
+      },
+      {
+        workout_exercise_id: 6,
+        set_number: 2,
+        reps: 0,
+        completed: false,
+        completed_at: null,
+      },
+      {
+        workout_exercise_id: 6,
+        set_number: 3,
+        reps: 0,
+        completed: false,
+        completed_at: null,
+      },
+      {
+        workout_exercise_id: 6,
+        set_number: 4,
+        reps: 0,
+        completed: false,
+        completed_at: null,
+      },
+      {
+        workout_exercise_id: 6,
+        set_number: 5,
+        reps: 0,
+        completed: false,
+        completed_at: null,
+      },
+      {
+        workout_exercise_id: 7,
+        set_number: 1,
+        reps: 0,
+        completed: false,
+        completed_at: null,
+      },
+      {
+        workout_exercise_id: 7,
+        set_number: 2,
+        reps: 0,
+        completed: false,
+        completed_at: null,
+      },
+      {
+        workout_exercise_id: 7,
+        set_number: 3,
+        reps: 0,
+        completed: false,
+        completed_at: null,
+      },
 
       // Sample sets for other completed workouts (abbreviated for brevity)
       // Jane's first workout (partial)

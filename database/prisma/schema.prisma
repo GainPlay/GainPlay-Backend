@@ -59,15 +59,13 @@ model exercises {
 
 model friendships {
   id                                 Int       @id @default(autoincrement())
-  user_id                            Int?
-  friend_id                          Int?
-  status                             String?   @db.VarChar
+  user_id                            Int
+  friend_id                          Int
+  status                             String   @db.VarChar
   created_at                         DateTime? @default(now()) @db.Timestamp(6)
   updated_at                         DateTime? @default(now()) @db.Timestamp(6)
-  users_friendships_friend_idTousers users?    @relation("friendships_friend_id_to_users", fields: [friend_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users_friendships_user_idTousers   users?    @relation("friendships_user_id_to_users", fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users                              users?    @relation(fields: [usersId], references: [id])
-  usersId                            Int?
+  sender   users @relation("SentFriendRequests", fields: [user_id], references: [id], onDelete: Cascade)
+  receiver users @relation("ReceivedFriendRequests", fields: [friend_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, friend_id], map: "friendships_user_id_friend_id_idx")
 }
@@ -121,6 +119,11 @@ model user_settings {
   user_id            Int?      @unique
   exercise_frequency Int?
   fitness_level      Int?
+  workout_duration   Int?
+  weight             Int?
+  height             Int?
+  age                Int?
+  body_structure     String?   @db.VarChar
   created_at         DateTime? @default(now()) @db.Timestamp(6)
   updated_at         DateTime? @default(now()) @db.Timestamp(6)
   users              users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -136,14 +139,13 @@ model users {
   level                                      Int?           @default(1)
   experience                                 Int?           @default(0)
   created_at                                 DateTime?      @default(now()) @db.Timestamp(6)
-  friendships_friendships_friend_id_to_users friendships[]  @relation("friendships_friend_id_to_users")
-  friendships_friendships_user_id_to_users   friendships[]  @relation("friendships_user_id_to_users")
+  sentFriendRequests     friendships[] @relation("SentFriendRequests")
+  receivedFriendRequests friendships[] @relation("ReceivedFriendRequests")
   user_avatars                               user_avatars[]
   user_badges                                user_badges[]
   user_goals                                 user_goals[]
   user_settings                              user_settings?
   workouts                                   workouts[]
-  friendships                                friendships[]
 }
 
 model workout_exercises {
