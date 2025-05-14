@@ -13,6 +13,12 @@ import { ValidationExceptionsFilter } from "@/common/filters/validation-exceptio
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: "http://localhost:5173", // Allow requests from your frontend
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, // Allow credentials (cookies, authorization headers)
+  });
+
   app.enableCors();
   app.use(helmet());
   app.getHttpAdapter().getInstance().disable("x-powered-by");
@@ -26,14 +32,10 @@ async function bootstrap() {
       exceptionFactory: (validationErrors = []) => {
         return new ValidationException(validationErrors);
       },
-    }),
+    })
   );
 
-  app.useGlobalFilters(
-    new GeneralExceptionFilter(),
-    new HttpExceptionFilter(),
-    new ValidationExceptionsFilter(),
-  );
+  app.useGlobalFilters(new GeneralExceptionFilter(), new HttpExceptionFilter(), new ValidationExceptionsFilter());
 
   if (["development", "test"].includes(process.env.NODE_ENV)) {
     // only enable swagger in development and test
