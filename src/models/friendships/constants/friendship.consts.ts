@@ -2,7 +2,7 @@ export enum FriendshipStatus {
   PENDING = "pending",
   ACCEPTED = "accepted",
   BLOCKED = "blocked",
-  NOT_FRIENDS = "not_friends",
+  NONE = "none",
 }
 
 export const FRIENDSHIP_STATUSES_ARRAY: FriendshipStatus[] = Object.values(FriendshipStatus);
