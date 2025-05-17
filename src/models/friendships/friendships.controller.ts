@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-  Query,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Query } from "@nestjs/common";
 import { CreateFriendshipDto } from "@/models/friendships/dto/create-friendship.dto";
 import { UpdateFriendshipDto } from "@/models/friendships/dto/update-friendship.dto";
 import { FriendshipsService } from "@/models/friendships/friendships.service";
@@ -27,14 +17,22 @@ export class FriendshipsController {
     return this.friendshipsService.findAll(userId);
   }
 
-  @Get(":id")
-  async findOne(@Param("id", ParseIntPipe) id: number) {
-    return this.friendshipsService.findOne(id);
+  @Get("discover")
+  async findAllDiscover(@Query("userId", ParseIntPipe) userId: number) {
+    return this.friendshipsService.findAllDiscover(userId);
   }
 
-  @Patch("")
-  async update(@Body() updateFriendshipDto: UpdateFriendshipDto) {
-    return this.friendshipsService.update(updateFriendshipDto);
+  @Get("userId/:userId/friendId/:friendId")
+  async findOneByUsers(
+    @Param("userId", ParseIntPipe) userId: number,
+    @Param("friendId", ParseIntPipe) friendId: number
+  ) {
+    return this.friendshipsService.findOneByUsers(userId, friendId);
+  }
+
+  @Put(":id")
+  async update(@Param("id", ParseIntPipe) id: number, @Body() updateFriendshipDto: UpdateFriendshipDto) {
+    return this.friendshipsService.update(id, updateFriendshipDto);
   }
 
   @Delete(":id")

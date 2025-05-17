@@ -1,10 +1,17 @@
-import { FriendshipStatus } from "@/models/friendships/interfaces/friendships.types";
+export enum FriendshipStatus {
+  PENDING = "pending",
+  ACCEPTED = "accepted",
+  BLOCKED = "blocked",
+  NONE = "none",
+}
 
-export const FRIENDSHIP_STATUSES = {
-  PENDING: "pending",
-  ACCEPTED: "accepted",
-  DECLINED: "declined",
-  BLOCKED: "blocked",
-} as const;
+export const FRIENDSHIP_STATUSES_ARRAY: FriendshipStatus[] = Object.values(FriendshipStatus);
 
-export const FRIENDSHIP_STATUSES_ARRAY: FriendshipStatus[] = Object.values(FRIENDSHIP_STATUSES);
+export const SELECTION_FIELDS = {
+  id: true,
+  name: true,
+  avatar_url: true,
+  email: true,
+  level: true,
+  experience: true,
+};
