@@ -43,6 +43,7 @@ export class AuthService {
       ...user,
       coins: 0,
       level: 0,
+      streak: 0,
       experience: 0,
       avatar_url: "",
       created_at: undefined,
