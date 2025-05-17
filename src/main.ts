@@ -13,11 +13,7 @@ import { ValidationExceptionsFilter } from "@/common/filters/validation-exceptio
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors({
-    credentials: true, // Allow credentials (cookies, authorization headers)
-    origin: "http://localhost:5173", // Allow requests from your frontend
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  });
+  app.enableCors();
 
   app.enableCors();
   app.use(helmet());
