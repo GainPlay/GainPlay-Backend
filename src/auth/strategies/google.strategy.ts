@@ -32,6 +32,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     if (!user) {
       user = await this.usersService.createUser({
         level: 1,
+        streak: 0,
         coins: 500,
         email: email,
         experience: 0,
