@@ -109,6 +109,7 @@ async function main() {
     data: [
       {
         level: 3,
+        streak: 0,
         coins: 750,
         name: "John Doe",
         experience: 2500,
@@ -118,6 +119,7 @@ async function main() {
       },
       {
         level: 5,
+        streak: 2,
         coins: 1200,
         experience: 6700,
         name: "Jane Smith",
@@ -127,6 +129,7 @@ async function main() {
       },
       {
         level: 2,
+        streak: 5,
         coins: 500,
         experience: 1500,
         name: "Mike Johnson",
@@ -136,6 +139,7 @@ async function main() {
       },
       {
         level: 7,
+        streak: 9,
         coins: 1800,
         experience: 12000,
         name: "Sarah Williams",
@@ -145,6 +149,7 @@ async function main() {
       },
       {
         level: 1,
+        streak: 0,
         coins: 350,
         experience: 800,
         name: "David Brown",
@@ -481,8 +486,8 @@ async function main() {
   await prisma.workout_exercises.createMany({
     data: [
       // John's first workout
-      { workout_id: 1, exercise_id: 1, template_id: 1},
-      { workout_id: 1, exercise_id: 3, template_id: 4},
+      { workout_id: 1, exercise_id: 1, template_id: 1 },
+      { workout_id: 1, exercise_id: 3, template_id: 4 },
       { workout_id: 1, exercise_id: 7, template_id: 8 },
       // John's second workout
       { workout_id: 2, exercise_id: 8, template_id: 9 },
@@ -494,27 +499,27 @@ async function main() {
       { workout_id: 4, exercise_id: 4, template_id: 5 },
       { workout_id: 4, exercise_id: 5, template_id: 6 },
       { workout_id: 4, exercise_id: 10, template_id: 11 },
-      { workout_id: 5, exercise_id: 1, template_id: 2},
-      { workout_id: 5, exercise_id: 2, template_id: 3},
-      { workout_id: 5, exercise_id: 7, template_id: 8},
-      { workout_id: 6, exercise_id: 8},
-      { workout_id: 6, exercise_id: 3, template_id: 4},
-      { workout_id: 6, exercise_id: 9,  template_id: 10 },
+      { workout_id: 5, exercise_id: 1, template_id: 2 },
+      { workout_id: 5, exercise_id: 2, template_id: 3 },
+      { workout_id: 5, exercise_id: 7, template_id: 8 },
+      { workout_id: 6, exercise_id: 8 },
+      { workout_id: 6, exercise_id: 3, template_id: 4 },
+      { workout_id: 6, exercise_id: 9, template_id: 10 },
       { workout_id: 7, exercise_id: 4, template_id: 5 },
-      { workout_id: 7, exercise_id: 6, template_id: 7},
+      { workout_id: 7, exercise_id: 6, template_id: 7 },
       { workout_id: 7, exercise_id: 10, template_id: 11 },
       // Mike's workout
       { workout_id: 8, exercise_id: 1, template_id: 1 },
       { workout_id: 8, exercise_id: 7, template_id: 8 },
       // Sarah's workouts
       { workout_id: 9, exercise_id: 8, template_id: 9 },
-      { workout_id: 9, exercise_id: 3, template_id: 4},
-      { workout_id: 10, exercise_id: 1, template_id: 1},
+      { workout_id: 9, exercise_id: 3, template_id: 4 },
+      { workout_id: 10, exercise_id: 1, template_id: 1 },
       { workout_id: 10, exercise_id: 7, template_id: 8 },
       { workout_id: 11, exercise_id: 4, template_id: 5 },
       { workout_id: 11, exercise_id: 6, template_id: 7 },
       // Sarah's in-progress workout
-      {workout_id: 12, exercise_id: 8, template_id: 9 },
+      { workout_id: 12, exercise_id: 8, template_id: 9 },
       { workout_id: 12, exercise_id: 9, template_id: 10 },
       // David's workout
       { workout_id: 13, exercise_id: 1, template_id: 1 },
