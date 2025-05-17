@@ -1,16 +1,14 @@
-import { Module } from '@nestjs/common';
-import { BadgesController } from './badges.controller';
-import { BadgesService } from './badges.service';
-import { BadgesRepository } from '@/models/badge/badges.repository';
-import { PrismaService } from 'database/prisma.service';
-import { PrismaModule } from 'database/prisma.module';
+import { Module } from "@nestjs/common";
+import { PrismaModule } from "database/prisma.module";
+import { PrismaService } from "database/prisma.service";
+import { BadgesRepository } from "@/models/badge/badges.repository";
+import { BadgesService } from "./badges.service";
+import { BadgesController } from "./badges.controller";
 
 @Module({
-   imports: [PrismaModule],
+  imports: [PrismaModule],
+  exports: [BadgesService],
   controllers: [BadgesController],
   providers: [BadgesService, BadgesRepository, PrismaService],
-  exports: [BadgesService],
 })
-export class BadgesModule { }
-
-
+export class BadgesModule {}

@@ -196,8 +196,6 @@ ALTER TABLE "friendships" ADD CONSTRAINT "friendships_friend_id_fkey" FOREIGN KE
 -- AddForeignKey
 ALTER TABLE "friendships" ADD CONSTRAINT "friendships_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
--- AddForeignKey
-ALTER TABLE "friendships" ADD CONSTRAINT "friendships_usersId_fkey" FOREIGN KEY ("usersId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_avatars" ADD CONSTRAINT "user_avatars_avatar_id_fkey" FOREIGN KEY ("avatar_id") REFERENCES "avatars"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;

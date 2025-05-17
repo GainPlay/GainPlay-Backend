@@ -1,13 +1,22 @@
-import { Controller, Get, Post, Param, Body, Put, NotFoundException, Delete } from '@nestjs/common';
-import { GoalsService } from './goals.service';
-import { goals } from '@prisma/client';
+import { goals } from "@prisma/client";
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  Put,
+  NotFoundException,
+  Delete,
+} from "@nestjs/common";
+import { GoalsService } from "./goals.service";
 
-@Controller('goals')
+@Controller("goals")
 export class GoalsController {
   constructor(private readonly goalsService: GoalsService) {}
 
-  @Get(':id')
-  async getGoal(@Param('id') id: number): Promise<goals> {
+  @Get(":id")
+  async getGoal(@Param("id") id: number): Promise<goals> {
     try {
       return await this.goalsService.findById(id);
     } catch (error) {
@@ -21,12 +30,15 @@ export class GoalsController {
   }
 
   @Post()
-  async createGoal(@Body() goalData: Omit<goals, 'id'>): Promise<goals> {
+  async createGoal(@Body() goalData: Omit<goals, "id">): Promise<goals> {
     return await this.goalsService.createGoal(goalData);
   }
 
-  @Put(':id')
-  async updateGoal(@Param('id') id: number, @Body() goalData: Partial<goals>): Promise<goals> {
+  @Put(":id")
+  async updateGoal(
+    @Param("id") id: number,
+    @Body() goalData: Partial<goals>,
+  ): Promise<goals> {
     try {
       return await this.goalsService.updateGoal(id, goalData);
     } catch (error) {
@@ -34,8 +46,8 @@ export class GoalsController {
     }
   }
 
-  @Delete(':id')
-  async deleteGoal(@Param('id') id: number): Promise<void> {
+  @Delete(":id")
+  async deleteGoal(@Param("id") id: number): Promise<void> {
     try {
       await this.goalsService.deleteGoal(id);
     } catch (error) {

@@ -1,14 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ExerciseSetsRepository } from './exercise-sets.repository';
-import { CreateExerciseSetDto } from './dto/create-exercise-set.dto';
-import { UpdateExerciseSetDto } from './dto/update-exercise-set.dto';
-import { exercise_sets as ExerciseSet } from '@prisma/client';
+import { exercise_sets as ExerciseSet } from "@prisma/client";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { ExerciseSetsRepository } from "./exercise-sets.repository";
+import { CreateExerciseSetDto } from "./dto/create-exercise-set.dto";
+import { UpdateExerciseSetDto } from "./dto/update-exercise-set.dto";
 
 @Injectable()
 export class ExerciseSetsService {
   constructor(private repository: ExerciseSetsRepository) {}
 
-  async create(createExerciseSetDto: CreateExerciseSetDto): Promise<ExerciseSet> {
+  async create(
+    createExerciseSetDto: CreateExerciseSetDto,
+  ): Promise<ExerciseSet> {
     return this.repository.create(createExerciseSetDto);
   }
 
@@ -16,7 +18,9 @@ export class ExerciseSetsService {
     return this.repository.findAll();
   }
 
-  async findByWorkoutExercise(workoutExerciseId: number): Promise<ExerciseSet[]> {
+  async findByWorkoutExercise(
+    workoutExerciseId: number,
+  ): Promise<ExerciseSet[]> {
     return this.repository.findByWorkoutExercise(workoutExerciseId);
   }
 
@@ -28,7 +32,10 @@ export class ExerciseSetsService {
     return exerciseSet;
   }
 
-  async update(id: number, updateExerciseSetDto: UpdateExerciseSetDto): Promise<ExerciseSet> {
+  async update(
+    id: number,
+    updateExerciseSetDto: UpdateExerciseSetDto,
+  ): Promise<ExerciseSet> {
     await this.findOne(id); // Will throw if not found
     return this.repository.update(id, updateExerciseSetDto);
   }
@@ -43,21 +50,25 @@ export class ExerciseSetsService {
     return this.repository.markAsCompleted(id);
   }
 
-  async createMany(workoutExerciseId: number, setsCount: number, reps: number): Promise<ExerciseSet[]> {
+  async createMany(
+    workoutExerciseId: number,
+    setsCount: number,
+    reps: number,
+  ): Promise<ExerciseSet[]> {
     const createdSets: ExerciseSet[] = [];
-    
+
     for (let i = 1; i <= setsCount; i++) {
       const setData: CreateExerciseSetDto = {
-        workout_exercise_id: workoutExerciseId,
-        set_number: i,
         reps,
+        set_number: i,
         completed: false,
+        workout_exercise_id: workoutExerciseId,
       };
-      
+
       const createdSet = await this.repository.create(setData);
       createdSets.push(createdSet);
     }
-    
+
     return createdSets;
   }
 }

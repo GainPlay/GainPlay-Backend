@@ -5,13 +5,14 @@ export enum FriendshipStatus {
   NONE = "none",
 }
 
-export const FRIENDSHIP_STATUSES_ARRAY: FriendshipStatus[] = Object.values(FriendshipStatus);
+export const FRIENDSHIP_STATUSES_ARRAY: FriendshipStatus[] =
+  Object.values(FriendshipStatus);
 
 export const SELECTION_FIELDS = {
   id: true,
   name: true,
-  avatar_url: true,
   email: true,
   level: true,
+  avatar_url: true,
   experience: true,
 };

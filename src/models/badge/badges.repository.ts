@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { badges, Prisma } from '@prisma/client';
-import { PrismaService } from 'database/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { badges, Prisma } from "@prisma/client";
+import { PrismaService } from "database/prisma.service";
 
 @Injectable()
 export class BadgesRepository {
@@ -24,8 +24,8 @@ export class BadgesRepository {
 
   async update(id: number, data: Prisma.badgesUpdateInput): Promise<badges> {
     return this.prisma.badges.update({
-      where: { id },
       data,
+      where: { id },
     });
   }
 

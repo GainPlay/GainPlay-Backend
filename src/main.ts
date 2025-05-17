@@ -14,9 +14,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
+    credentials: true, // Allow credentials (cookies, authorization headers)
     origin: "http://localhost:5173", // Allow requests from your frontend
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // Allow credentials (cookies, authorization headers)
   });
 
   app.enableCors();
@@ -32,10 +32,14 @@ async function bootstrap() {
       exceptionFactory: (validationErrors = []) => {
         return new ValidationException(validationErrors);
       },
-    })
+    }),
   );
 
-  app.useGlobalFilters(new GeneralExceptionFilter(), new HttpExceptionFilter(), new ValidationExceptionsFilter());
+  app.useGlobalFilters(
+    new GeneralExceptionFilter(),
+    new HttpExceptionFilter(),
+    new ValidationExceptionsFilter(),
+  );
 
   if (["development", "test"].includes(process.env.NODE_ENV)) {
     // only enable swagger in development and test

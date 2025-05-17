@@ -1,8 +1,8 @@
-import { friendships, users } from "@prisma/client";
 import { Injectable } from "@nestjs/common";
-import { FriendshipsRepository } from "./friendships.repository";
+import { friendships, users } from "@prisma/client";
 import { CreateFriendshipDto } from "@/models/friendships/dto/create-friendship.dto";
 import { UpdateFriendshipDto } from "@/models/friendships/dto/update-friendship.dto";
+import { FriendshipsRepository } from "./friendships.repository";
 
 @Injectable()
 export class FriendshipsService {
@@ -20,11 +20,17 @@ export class FriendshipsService {
     return this.friendshipsRepository.findAllDiscover(userId);
   }
 
-  async findOneByUsers(user_id: number, friend_id: number): Promise<friendships> {
+  async findOneByUsers(
+    user_id: number,
+    friend_id: number,
+  ): Promise<friendships> {
     return this.friendshipsRepository.findOneByUsers(user_id, friend_id);
   }
 
-  async update(id: number, updateFriendshipDto: UpdateFriendshipDto): Promise<friendships> {
+  async update(
+    id: number,
+    updateFriendshipDto: UpdateFriendshipDto,
+  ): Promise<friendships> {
     return this.friendshipsRepository.update(id, updateFriendshipDto);
   }
 
