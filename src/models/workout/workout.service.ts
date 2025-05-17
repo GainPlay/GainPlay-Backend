@@ -48,7 +48,6 @@ export class WorkoutService {
 
       const workoutExercise = await this.prisma.workout_exercises.create({
         data: {
-          total_reps: 0,
           workout_id: workout.id,
           exercise_id: exercise.exerciseId,
           template_id: exerciseTemplate.id,
