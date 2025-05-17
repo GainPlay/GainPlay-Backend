@@ -1,16 +1,13 @@
+import { Injectable } from "@nestjs/common";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { UserGoalsService } from "../user_goal/user-goals.service";
-import { UserSettingsService } from "../user_setting/user-settings.service";
 import { MessageRequestDto } from "@/models/chat/dto/message-request.dto";
+import { UserSettingsService } from "../user_setting/user-settings.service";
 
 @Injectable()
 export class GeminiService {
   private model;
 
-  constructor(
-    private userSettingsService: UserSettingsService,
-  ) {
+  constructor(private userSettingsService: UserSettingsService) {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     this.model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
   }
@@ -23,7 +20,6 @@ export class GeminiService {
     // if (!userSettings) {
     //   throw new NotFoundException("User profile data not found");
     // }
-
 
     const prompt = `
       You are an intelligent and helpful exercise assistant. Your goal is to provide informative and encouraging responses to user questions related to workouts, fitness, nutrition, and overall well-being.

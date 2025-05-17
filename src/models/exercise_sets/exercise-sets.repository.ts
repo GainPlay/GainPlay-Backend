@@ -1,9 +1,9 @@
 // exercise-sets.repository.ts
-import { Injectable } from '@nestjs/common';
-import { exercise_sets as ExerciseSet } from '@prisma/client';
-import { CreateExerciseSetDto } from './dto/create-exercise-set.dto';
-import { UpdateExerciseSetDto } from './dto/update-exercise-set.dto';
-import { PrismaService } from 'database/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "database/prisma.service";
+import { exercise_sets as ExerciseSet } from "@prisma/client";
+import { CreateExerciseSetDto } from "./dto/create-exercise-set.dto";
+import { UpdateExerciseSetDto } from "./dto/update-exercise-set.dto";
 
 @Injectable()
 export class ExerciseSetsRepository {
@@ -25,17 +25,19 @@ export class ExerciseSetsRepository {
     });
   }
 
-  async findByWorkoutExercise(workoutExerciseId: number): Promise<ExerciseSet[]> {
+  async findByWorkoutExercise(
+    workoutExerciseId: number,
+  ): Promise<ExerciseSet[]> {
     return this.prisma.exercise_sets.findMany({
+      orderBy: { set_number: "asc" },
       where: { workout_exercise_id: workoutExerciseId },
-      orderBy: { set_number: 'asc' },
     });
   }
 
   async update(id: number, data: UpdateExerciseSetDto): Promise<ExerciseSet> {
     return this.prisma.exercise_sets.update({
-      where: { id },
       data,
+      where: { id },
     });
   }
 

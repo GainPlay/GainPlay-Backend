@@ -1,5 +1,5 @@
 import { workout_exercises } from "@prisma/client";
-import { IsDateString, IsEmpty, IsInt, IsNotEmpty } from "class-validator";
+import { IsDateString, IsInt, IsNotEmpty } from "class-validator";
 
 export class UpdateWorkoutDto {
   @IsNotEmpty()

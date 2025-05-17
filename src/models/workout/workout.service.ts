@@ -1,15 +1,15 @@
+import { workouts } from "@prisma/client";
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "database/prisma.service";
-import { GeminiService } from "./gemini.service";
-import { workouts } from "@prisma/client";
-import { UpdateWorkoutDto } from "@/models/workout/dto/updateWorkoutDto";
 import { calcWorkoutCoins } from "@/models/workout/utils/workoutUtils";
+import { UpdateWorkoutDto } from "@/models/workout/dto/updateWorkoutDto";
+import { GeminiService } from "./gemini.service";
 
 @Injectable()
 export class WorkoutService {
   constructor(
     private prisma: PrismaService,
-    private geminiService: GeminiService
+    private geminiService: GeminiService,
   ) {}
 
   async generateAndSaveWorkout(userId: number) {
@@ -105,14 +105,14 @@ export class WorkoutService {
   async finishWorkout(updateWorkoutDto: UpdateWorkoutDto): Promise<workouts> {
     const coins = calcWorkoutCoins(updateWorkoutDto);
 
-    return await this.prisma.$transaction(async (tx) => {
+    return await this.prisma.$transaction(async tx => {
       const workout = await tx.workouts.update({
         where: {
           id: updateWorkoutDto.id,
         },
         data: {
-          completed_at: new Date().toISOString(),
           coins_earned: coins,
+          completed_at: new Date().toISOString(),
         },
       });
 

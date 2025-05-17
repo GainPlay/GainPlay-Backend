@@ -1,3 +1,4 @@
+import { UpdateWorkoutDto } from "@/models/workout/dto/updateWorkoutDto";
 import {
   Controller,
   Post,
@@ -12,7 +13,6 @@ import {
   Param,
 } from "@nestjs/common";
 import { WorkoutService } from "./workout.service";
-import { UpdateWorkoutDto } from "@/models/workout/dto/updateWorkoutDto";
 
 @Controller("workout")
 export class WorkoutController {
@@ -29,7 +29,7 @@ export class WorkoutController {
       }
       throw new HttpException(
         error.message || "Failed to generate workout program",
-        HttpStatus.INTERNAL_SERVER_ERROR
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }

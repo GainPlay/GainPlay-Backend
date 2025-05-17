@@ -1,9 +1,13 @@
-import { Injectable, NotFoundException, ConflictException } from "@nestjs/common";
 import { PrismaService } from "database/prisma.service";
 import { Prisma, friendships, users } from "@prisma/client";
+import { SELECTION_FIELDS } from "@/models/friendships/constants/friendship.consts";
 import { UpdateFriendshipDto } from "@/models/friendships/dto/update-friendship.dto";
 import { CreateFriendshipDto } from "@/models/friendships/dto/create-friendship.dto";
-import { SELECTION_FIELDS } from "@/models/friendships/constants/friendship.consts";
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from "@nestjs/common";
 
 @Injectable()
 export class FriendshipsRepository {
@@ -37,8 +41,13 @@ export class FriendshipsRepository {
         },
       });
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-        throw new ConflictException("Friendship already exists between these users.");
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2002"
+      ) {
+        throw new ConflictException(
+          "Friendship already exists between these users.",
+        );
       }
       throw error;
     }
@@ -76,6 +85,15 @@ export class FriendshipsRepository {
 
   async findAllDiscover(userId: number): Promise<Partial<users>[]> {
     return this.prisma.users.findMany({
+      select: {
+        ...SELECTION_FIELDS,
+        coins: true,
+        user_goals: {
+          select: {
+            goals: true,
+          },
+        },
+      },
       where: {
         id: {
           not: userId, // Don't include the current user
@@ -101,19 +119,13 @@ export class FriendshipsRepository {
           },
         ],
       },
-      select: {
-        ...SELECTION_FIELDS,
-        coins: true,
-        user_goals: {
-          select: {
-            goals: true,
-          },
-        },
-      },
     });
   }
 
-  async findOneByUsers(user_id: number, friend_id: number): Promise<friendships | null> {
+  async findOneByUsers(
+    user_id: number,
+    friend_id: number,
+  ): Promise<friendships | null> {
     return this.prisma.friendships.findUnique({
       where: {
         user_id_friend_id: {
@@ -146,7 +158,10 @@ export class FriendshipsRepository {
     });
   }
 
-  async update(id: number, updateFriendshipDto: UpdateFriendshipDto): Promise<friendships> {
+  async update(
+    id: number,
+    updateFriendshipDto: UpdateFriendshipDto,
+  ): Promise<friendships> {
     try {
       return await this.prisma.friendships.update({
         where: {
@@ -157,7 +172,10 @@ export class FriendshipsRepository {
         },
       });
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2025"
+      ) {
         throw new NotFoundException("Friendship not found for update");
       }
       throw error;
@@ -170,7 +188,10 @@ export class FriendshipsRepository {
         where: { id },
       });
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2025"
+      ) {
         throw new NotFoundException(`Friendship with ID ${id} not found`);
       }
       throw error;

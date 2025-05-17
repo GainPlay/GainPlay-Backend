@@ -1,10 +1,18 @@
-import { BadgesService } from '@/models/badge/badges.service';
-import { CreateBadgeDto } from '@/models/badge/dto/create-badge.dto';
-import { UpdateBadgeDto } from '@/models/badge/dto/update-badge.dto';
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Header } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { BadgesService } from "@/models/badge/badges.service";
+import { CreateBadgeDto } from "@/models/badge/dto/create-badge.dto";
+import { UpdateBadgeDto } from "@/models/badge/dto/update-badge.dto";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+} from "@nestjs/common";
 
-@Controller('badges')
+@Controller("badges")
 export class BadgesController {
   constructor(private readonly badgesService: BadgesService) {}
 
@@ -13,8 +21,8 @@ export class BadgesController {
     return this.badgesService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  @Get(":id")
+  async findOne(@Param("id", ParseIntPipe) id: number) {
     return this.badgesService.findOne(id);
   }
 
@@ -23,17 +31,16 @@ export class BadgesController {
     return this.badgesService.create(createBadgeDto);
   }
 
-  @Patch(':id')
+  @Patch(":id")
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
     @Body() updateBadgeDto: UpdateBadgeDto,
   ) {
     return this.badgesService.update(id, updateBadgeDto);
   }
 
-  @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  @Delete(":id")
+  async remove(@Param("id", ParseIntPipe) id: number) {
     return this.badgesService.remove(id);
   }
 }
-

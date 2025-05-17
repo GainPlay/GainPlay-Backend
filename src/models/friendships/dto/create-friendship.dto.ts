@@ -1,6 +1,6 @@
-import { FRIENDSHIP_STATUSES_ARRAY } from "@/models/friendships/constants/friendship.consts";
+import { IsInt, IsString, IsIn, Validate } from "class-validator";
 import { UserNotFriend } from "@/models/friendships/dto/validators";
-import { IsOptional, IsInt, IsString, IsIn, Validate } from "class-validator";
+import { FRIENDSHIP_STATUSES_ARRAY } from "@/models/friendships/constants/friendship.consts";
 
 export class CreateFriendshipDto {
   @IsInt()
