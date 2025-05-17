@@ -1,6 +1,6 @@
-import { ExerciseRepository } from "@/models/exercise/exercise.repository";
-import { Injectable, NotFoundException } from "@nestjs/common";
 import { exercises } from "@prisma/client";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { ExerciseRepository } from "@/models/exercise/exercise.repository";
 
 @Injectable()
 export class ExerciseService {
@@ -14,20 +14,25 @@ export class ExerciseService {
     return exercise;
   }
 
-  async findAll():Promise<exercises[]> {
+  async findAll(): Promise<exercises[]> {
     return await this.exerciseRepository.findAll();
   }
 
-  async createExercise(exerciseData: Omit<exercises, "id">): Promise<exercises> {
+  async createExercise(
+    exerciseData: Omit<exercises, "id">,
+  ): Promise<exercises> {
     return this.exerciseRepository.create(exerciseData);
   }
 
-  async updateExercise(exerciseId: number, exerciseData: Partial<exercises>): Promise<exercises> {
+  async updateExercise(
+    exerciseId: number,
+    exerciseData: Partial<exercises>,
+  ): Promise<exercises> {
     await this.findById(exerciseId);
     return this.exerciseRepository.update(exerciseId, exerciseData);
   }
 
   async deleteExercise(exerciseId: number): Promise<void> {
-    await this.exerciseRepository.delete(exerciseId); 
+    await this.exerciseRepository.delete(exerciseId);
   }
 }

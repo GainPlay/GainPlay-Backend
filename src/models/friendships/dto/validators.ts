@@ -1,6 +1,10 @@
-import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from "class-validator";
+import {
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  ValidationArguments,
+} from "class-validator";
 
-@ValidatorConstraint({ name: "UserNotFriend", async: false })
+@ValidatorConstraint({ async: false, name: "UserNotFriend" })
 export class UserNotFriend implements ValidatorConstraintInterface {
   validate(_: any, args: ValidationArguments): boolean {
     const object = args.object as any;

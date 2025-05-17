@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { user_badges, Prisma } from '@prisma/client';
-import { UserBadgesRepository } from './user-badges.repository';
+import { user_badges, Prisma } from "@prisma/client";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { UserBadgesRepository } from "./user-badges.repository";
 
 @Injectable()
 export class UserBadgesService {
@@ -30,7 +30,10 @@ export class UserBadgesService {
     return this.userBadgesRepository.create(data);
   }
 
-  async update(id: number, data: Prisma.user_badgesUpdateInput): Promise<user_badges> {
+  async update(
+    id: number,
+    data: Prisma.user_badgesUpdateInput,
+  ): Promise<user_badges> {
     await this.findOne(id); // Check if exists
     return this.userBadgesRepository.update(id, data);
   }
@@ -40,9 +43,15 @@ export class UserBadgesService {
     return this.userBadgesRepository.remove(id);
   }
 
-  async assignBadgeToUser(userId: number, badgeId: number): Promise<user_badges> {
+  async assignBadgeToUser(
+    userId: number,
+    badgeId: number,
+  ): Promise<user_badges> {
     // Check if the user already has this badge
-    const existingBadge = await this.userBadgesRepository.findByUserAndBadge(userId, badgeId);
+    const existingBadge = await this.userBadgesRepository.findByUserAndBadge(
+      userId,
+      badgeId,
+    );
     if (existingBadge) {
       return existingBadge;
     }

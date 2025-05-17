@@ -1,5 +1,5 @@
-import { IsInt, IsDate, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type } from "class-transformer";
+import { IsInt, IsDate, IsOptional } from "class-validator";
 
 export class UserBadgeDto {
   @IsInt()

@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { user_badges, Prisma } from '@prisma/client';
-import { PrismaService } from 'database/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { user_badges, Prisma } from "@prisma/client";
+import { PrismaService } from "database/prisma.service";
 
 @Injectable()
 export class UserBadgesRepository {
@@ -28,7 +28,10 @@ export class UserBadgesRepository {
     });
   }
 
-  async findByUserAndBadge(userId: number, badgeId: number): Promise<user_badges | null> {
+  async findByUserAndBadge(
+    userId: number,
+    badgeId: number,
+  ): Promise<user_badges | null> {
     return this.prisma.user_badges.findFirst({
       where: {
         user_id: userId,
@@ -43,10 +46,13 @@ export class UserBadgesRepository {
     });
   }
 
-  async update(id: number, data: Prisma.user_badgesUpdateInput): Promise<user_badges> {
+  async update(
+    id: number,
+    data: Prisma.user_badgesUpdateInput,
+  ): Promise<user_badges> {
     return this.prisma.user_badges.update({
-      where: { id },
       data,
+      where: { id },
     });
   }
 
@@ -56,4 +62,3 @@ export class UserBadgesRepository {
     });
   }
 }
-

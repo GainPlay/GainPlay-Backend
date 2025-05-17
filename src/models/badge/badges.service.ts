@@ -1,6 +1,6 @@
-import { BadgesRepository } from '@/models/badge/badges.repository';
-import { Injectable } from '@nestjs/common';
-import { badges, Prisma } from '@prisma/client';
+import { Injectable } from "@nestjs/common";
+import { badges, Prisma } from "@prisma/client";
+import { BadgesRepository } from "@/models/badge/badges.repository";
 
 @Injectable()
 export class BadgesService {
@@ -26,4 +26,3 @@ export class BadgesService {
     return this.badgesRepository.remove(id);
   }
 }
-
