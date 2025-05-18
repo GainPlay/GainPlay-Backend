@@ -27,6 +27,11 @@ export class UsersController {
     return this.usersService.findById(id);
   }
 
+  @Get(":email/mail")
+  findOneByMail(@Param("email") email: string): Promise<users> {
+    return this.usersService.findByEmail(email);
+  }
+
   @Post("onboarding")
   async updateOnboardingData(
     @Req() req,
