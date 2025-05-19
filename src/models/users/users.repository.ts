@@ -38,6 +38,7 @@ export class UsersRepository {
       data: {
         name: body.userData.name,
         email: body.userData.email,
+        // avatar_url: body.userData.avatar,
       },
     });
   }
