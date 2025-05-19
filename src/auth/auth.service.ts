@@ -1,8 +1,10 @@
+// Update the auth service to assign default avatar on registration
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
 import { users as User } from "@prisma/client";
 import { AccessToken } from "@/auth/interfaces";
 import { UsersService } from "@/models/users/users.service";
+import { AvatarService } from "@/models/avatar/avatar.service";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { RegisterRequestDto } from "./dtos/register-request.dto";
 
@@ -11,6 +13,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private avatarService: AvatarService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<User> {
@@ -41,15 +44,25 @@ export class AuthService {
 
     const newUser: Omit<User, "id"> = {
       ...user,
-      coins: 0,
-      level: 0,
+      level: 1,
       streak: 0,
+      coins: 500, // Start with 500 coins so they can purchase avatars
       experience: 0,
       avatar_url: "",
       created_at: undefined,
       password_hash: hashedPassword,
     };
+
     const generatedUser = await this.usersService.createUser(newUser);
+
+    // Assign default avatar to the new user
+    try {
+      await this.avatarService.assignDefaultAvatarToUser(generatedUser.id);
+    } catch (error) {
+      console.error("Failed to assign default avatar:", error);
+      // Continue with registration even if avatar assignment fails
+    }
+
     return this.login(generatedUser);
   }
 }

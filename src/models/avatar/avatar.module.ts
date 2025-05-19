@@ -1,13 +1,13 @@
 import { Module } from "@nestjs/common";
 import { PrismaModule } from "database/prisma.module";
 import { AvatarService } from "@/models/avatar/avatar.service";
-import { AvatarController } from "@/models/avatar/avatar.controller";
 import { AvatarRepository } from "@/models/avatar/avatar.repository";
+import { AvatarsController } from "@/models/avatar/avatar.controller";
 
 @Module({
   imports: [PrismaModule],
   exports: [AvatarService],
-  controllers: [AvatarController],
+  controllers: [AvatarsController],
   providers: [AvatarService, AvatarRepository],
 })
 export class AvatarModule {}
