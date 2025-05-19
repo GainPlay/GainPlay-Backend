@@ -58,4 +58,11 @@ export class UsersController {
   ) {
     return this.usersService.addBadgeToUser(userId, badgeId);
   }
+  @Post(":userId/updateUser")
+  async updateUserSettings(
+    @Param("userId", ParseIntPipe) userId: number,
+    @Body() userData: any,
+  ) {
+    return this.usersService.updateUser(userId, userData);
+  }
 }
