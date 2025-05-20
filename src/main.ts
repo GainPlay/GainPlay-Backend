@@ -13,9 +13,11 @@ import { ValidationExceptionsFilter } from "@/common/filters/validation-exceptio
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors();
-
-  app.enableCors();
+  app.enableCors({
+    origin: "http://localhost:5173", // your frontend origin
+    credentials: true,
+  });
+  
   app.use(helmet());
   app.getHttpAdapter().getInstance().disable("x-powered-by");
   app.use(morganLogger);

@@ -13,19 +13,15 @@ export class WorkoutService {
   ) {}
 
   async generateAndSaveWorkout(userId: number) {
-    const workoutExercises = await this.geminiService.generateWorkout(userId);
+    const generatedWorkoutExercises = await this.geminiService.generateWorkout(userId);
 
-    const workout = await this.prisma.workouts.create({
+     const workout = await this.prisma.workouts.create({
       data: {
         user_id: userId,
-        coins_earned: 0,
-        started_at: new Date(),
       },
     });
 
-    const createdWorkoutExercises = [];
-
-    for (const exercise of workoutExercises) {
+    for (const exercise of generatedWorkoutExercises) {
       let exerciseTemplate = await this.prisma.exercise_templates.findFirst({
         where: {
           exercise_id: exercise.exerciseId,
@@ -54,52 +50,69 @@ export class WorkoutService {
         },
       });
 
-      const exerciseSets = [];
       for (let i = 1; i <= exercise.targetSets; i++) {
-        const set = await this.prisma.exercise_sets.create({
+        await this.prisma.exercise_sets.create({
           data: {
-            reps: 0,
+            reps: exercise.targetReps,
+            completed_reps: 0,
             set_number: i,
-            completed: false,
             workout_exercise_id: workoutExercise.id,
           },
         });
-        exerciseSets.push(set);
       }
-
-      createdWorkoutExercises.push({
-        ...workoutExercise,
-        sets: exerciseSets,
-        notes: exercise.notes,
-        target_sets: exercise.targetSets,
-        target_reps: exercise.targetReps,
-        rest_time: exercise.restTimeSeconds,
-        exercise_name: exercise.exerciseName,
-      });
     }
 
-    return {
-      ...workout,
-      exercises: createdWorkoutExercises,
-    };
+    return this.findcurrentWorkout(userId);
   }
 
   async findAll(userId: number) {
-    return await this.prisma.workouts.findMany({ where: { user_id: userId } });
+    return await this.prisma.workouts.findMany({
+      where: { user_id: userId },
+      include: {
+        workout_exercises: {
+          include: {
+            exercise_sets: true,
+            exercises: true,
+            exercise_templates: true,
+          },
+        },
+      },
+    });
   }
-
+  
   async findOne(id: number) {
-    return await this.prisma.workouts.findMany({ where: { id: id } });
+    return await this.prisma.workouts.findUnique({
+      where: { id },
+      include: {
+        workout_exercises: {
+          include: {
+            exercise_sets: true,
+            exercises: true,
+            exercise_templates: true,
+          },
+        },
+      },
+    });
   }
-
+  
   async findcurrentWorkout(userId: number) {
     return await this.prisma.workouts.findFirst({
       where: {
         user_id: userId,
         completed_at: null,
       },
+      include: {
+        workout_exercises: {
+          include: {
+            exercise_sets: true,
+            exercises: true,
+            exercise_templates: true,
+          },
+        },
+      },
     });
   }
+  
 
   async finishWorkout(updateWorkoutDto: UpdateWorkoutDto): Promise<workouts> {
     const coins = calcWorkoutCoins(updateWorkoutDto);

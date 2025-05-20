@@ -51,8 +51,8 @@ export class ExerciseSetsRepository {
     return this.prisma.exercise_sets.update({
       where: { id },
       data: {
-        completed: true,
-        completed_at: new Date(),
+        // completed: true,
+        // completed_at: new Date(),
       },
     });
   }

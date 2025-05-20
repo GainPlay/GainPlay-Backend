@@ -11,6 +11,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
 } from "@nestjs/common";
 
 @Controller("friendships")
@@ -23,12 +24,14 @@ export class FriendshipsController {
   }
 
   @Get()
-  async findAll(@Query("userId", ParseIntPipe) userId: number) {
+  async findAll(@Req() req) {
+    const userId = req.user.id;
     return this.friendshipsService.findAll(userId);
   }
 
   @Get("discover")
-  async findAllDiscover(@Query("userId", ParseIntPipe) userId: number) {
+  async findAllDiscover(@Req() req) {
+    const userId = req.user.id;
     return this.friendshipsService.findAllDiscover(userId);
   }
 

@@ -35,7 +35,8 @@ export class WorkoutController {
   }
 
   @Get()
-  async findAll(@Query("userId", ParseIntPipe) userId: number) {
+  async findAll(@Req() req) {
+    const userId = req.user.id;
     return this.workoutService.findAll(userId);
   }
 
@@ -45,7 +46,8 @@ export class WorkoutController {
   }
 
   @Get("/currentWorkout")
-  async findcurrentWorkout(@Query("userId", ParseIntPipe) userId: number) {
+  async findcurrentWorkout(@Req() req) {
+    const userId = req.user.id;
     return this.workoutService.findcurrentWorkout(userId);
   }
 

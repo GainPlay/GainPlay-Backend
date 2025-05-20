@@ -524,6 +524,8 @@ async function main() {
       // David's workout
       { workout_id: 13, exercise_id: 1, template_id: 1 },
     ],
+
+    
   });
 
   // Insert exercise_sets
@@ -531,270 +533,53 @@ async function main() {
   await prisma.exercise_sets.createMany({
     data: [
       // John's first workout
-      {
-        reps: 12,
-        set_number: 1,
-        completed: true,
-        workout_exercise_id: 1,
-        completed_at: new Date("2025-04-20 08:35:00"),
-      },
-      {
-        reps: 12,
-        set_number: 2,
-        completed: true,
-        workout_exercise_id: 1,
-        completed_at: new Date("2025-04-20 08:40:00"),
-      },
-      {
-        reps: 12,
-        set_number: 3,
-        completed: true,
-        workout_exercise_id: 1,
-        completed_at: new Date("2025-04-20 08:45:00"),
-      },
-      {
-        reps: 15,
-        set_number: 1,
-        completed: true,
-        workout_exercise_id: 2,
-        completed_at: new Date("2025-04-20 08:50:00"),
-      },
-      {
-        reps: 15,
-        set_number: 2,
-        completed: true,
-        workout_exercise_id: 2,
-        completed_at: new Date("2025-04-20 08:55:00"),
-      },
-      {
-        reps: 15,
-        set_number: 3,
-        completed: true,
-        workout_exercise_id: 2,
-        completed_at: new Date("2025-04-20 09:00:00"),
-      },
-      {
-        reps: 15,
-        set_number: 4,
-        completed: true,
-        workout_exercise_id: 2,
-        completed_at: new Date("2025-04-20 09:05:00"),
-      },
-      {
-        reps: 30,
-        set_number: 1,
-        completed: true,
-        workout_exercise_id: 3,
-        completed_at: new Date("2025-04-20 09:10:00"),
-      },
-      {
-        reps: 30,
-        set_number: 2,
-        completed: true,
-        workout_exercise_id: 3,
-        completed_at: new Date("2025-04-20 09:12:00"),
-      },
-      {
-        reps: 30,
-        set_number: 3,
-        completed: true,
-        workout_exercise_id: 3,
-        completed_at: new Date("2025-04-20 09:15:00"),
-      },
-
+      { reps: 12, set_number: 1, workout_exercise_id: 1, completed_reps: 0 },
+      { reps: 12, set_number: 2, workout_exercise_id: 1, completed_reps: 0 },
+      { reps: 12, set_number: 3, workout_exercise_id: 1, completed_reps: 0 },
+      { reps: 15, set_number: 1, workout_exercise_id: 2, completed_reps: 0 },
+      { reps: 15, set_number: 2, workout_exercise_id: 2, completed_reps: 0 },
+      { reps: 15, set_number: 3, workout_exercise_id: 2, completed_reps: 0 },
+      { reps: 15, set_number: 4, workout_exercise_id: 2, completed_reps: 0 },
+      { reps: 30, set_number: 1, workout_exercise_id: 3, completed_reps: 0 },
+      { reps: 30, set_number: 2, workout_exercise_id: 3, completed_reps: 0 },
+      { reps: 30, set_number: 3, workout_exercise_id: 3, completed_reps: 0 },
+    
       // John's second workout
-      {
-        reps: 1,
-        set_number: 1,
-        completed: true,
-        workout_exercise_id: 4,
-        completed_at: new Date("2025-04-22 08:15:00"),
-      },
-      {
-        reps: 10,
-        set_number: 1,
-        completed: true,
-        workout_exercise_id: 5,
-        completed_at: new Date("2025-04-22 08:20:00"),
-      },
-      {
-        reps: 10,
-        set_number: 2,
-        completed: true,
-        workout_exercise_id: 5,
-        completed_at: new Date("2025-04-22 08:25:00"),
-      },
-      {
-        reps: 10,
-        set_number: 3,
-        completed: true,
-        workout_exercise_id: 5,
-        completed_at: new Date("2025-04-22 08:30:00"),
-      },
-
+      { reps: 1, set_number: 1, workout_exercise_id: 4, completed_reps: 0 },
+      { reps: 10, set_number: 1, workout_exercise_id: 5, completed_reps: 0 },
+      { reps: 10, set_number: 2, workout_exercise_id: 5, completed_reps: 0 },
+      { reps: 10, set_number: 3, workout_exercise_id: 5, completed_reps: 0 },
+    
       // John's in-progress workout
-      {
-        reps: 0,
-        set_number: 1,
-        completed: false,
-        completed_at: null,
-        workout_exercise_id: 6,
-      },
-      {
-        reps: 0,
-        set_number: 2,
-        completed: false,
-        completed_at: null,
-        workout_exercise_id: 6,
-      },
-      {
-        reps: 0,
-        set_number: 3,
-        completed: false,
-        completed_at: null,
-        workout_exercise_id: 6,
-      },
-      {
-        reps: 0,
-        set_number: 4,
-        completed: false,
-        completed_at: null,
-        workout_exercise_id: 6,
-      },
-      {
-        reps: 0,
-        set_number: 5,
-        completed: false,
-        completed_at: null,
-        workout_exercise_id: 6,
-      },
-      {
-        reps: 0,
-        set_number: 1,
-        completed: false,
-        completed_at: null,
-        workout_exercise_id: 7,
-      },
-      {
-        reps: 0,
-        set_number: 2,
-        completed: false,
-        completed_at: null,
-        workout_exercise_id: 7,
-      },
-      {
-        reps: 0,
-        set_number: 3,
-        completed: false,
-        completed_at: null,
-        workout_exercise_id: 7,
-      },
-
-      // Sample sets for other completed workouts (abbreviated for brevity)
+      { reps: 0, set_number: 1, workout_exercise_id: 6, completed_reps: 0 },
+      { reps: 0, set_number: 2, workout_exercise_id: 6, completed_reps: 0 },
+      { reps: 0, set_number: 3, workout_exercise_id: 6, completed_reps: 0 },
+      { reps: 0, set_number: 4, workout_exercise_id: 6, completed_reps: 0 },
+      { reps: 0, set_number: 5, workout_exercise_id: 6, completed_reps: 0 },
+      { reps: 0, set_number: 1, workout_exercise_id: 7, completed_reps: 0 },
+      { reps: 0, set_number: 2, workout_exercise_id: 7, completed_reps: 0 },
+      { reps: 0, set_number: 3, workout_exercise_id: 7, completed_reps: 0 },
+    
       // Jane's first workout (partial)
-      {
-        reps: 5,
-        set_number: 1,
-        completed: true,
-        workout_exercise_id: 8,
-        completed_at: new Date("2025-04-15 19:15:00"),
-      },
-      {
-        reps: 5,
-        set_number: 2,
-        completed: true,
-        workout_exercise_id: 8,
-        completed_at: new Date("2025-04-15 19:20:00"),
-      },
-      {
-        reps: 5,
-        set_number: 3,
-        completed: true,
-        workout_exercise_id: 8,
-        completed_at: new Date("2025-04-15 19:25:00"),
-      },
-      {
-        reps: 5,
-        set_number: 4,
-        completed: true,
-        workout_exercise_id: 8,
-        completed_at: new Date("2025-04-15 19:30:00"),
-      },
-      {
-        reps: 5,
-        set_number: 5,
-        completed: true,
-        workout_exercise_id: 8,
-        completed_at: new Date("2025-04-15 19:35:00"),
-      },
-      {
-        reps: 5,
-        set_number: 1,
-        completed: true,
-        workout_exercise_id: 9,
-        completed_at: new Date("2025-04-15 19:45:00"),
-      },
-      {
-        reps: 5,
-        set_number: 2,
-        completed: true,
-        workout_exercise_id: 9,
-        completed_at: new Date("2025-04-15 19:50:00"),
-      },
-      {
-        reps: 5,
-        set_number: 3,
-        completed: true,
-        workout_exercise_id: 9,
-        completed_at: new Date("2025-04-15 19:55:00"),
-      },
-
+      { reps: 5, set_number: 1, workout_exercise_id: 8, completed_reps: 0 },
+      { reps: 5, set_number: 2, workout_exercise_id: 8, completed_reps: 0 },
+      { reps: 5, set_number: 3, workout_exercise_id: 8, completed_reps: 0 },
+      { reps: 5, set_number: 4, workout_exercise_id: 8, completed_reps: 0 },
+      { reps: 5, set_number: 5, workout_exercise_id: 8, completed_reps: 0 },
+      { reps: 5, set_number: 1, workout_exercise_id: 9, completed_reps: 0 },
+      { reps: 5, set_number: 2, workout_exercise_id: 9, completed_reps: 0 },
+      { reps: 5, set_number: 3, workout_exercise_id: 9, completed_reps: 0 },
+    
       // Mike's workout (partial)
-      {
-        reps: 12,
-        set_number: 1,
-        completed: true,
-        workout_exercise_id: 18,
-        completed_at: new Date("2025-04-19 12:15:00"),
-      },
-      {
-        reps: 12,
-        set_number: 2,
-        completed: true,
-        workout_exercise_id: 18,
-        completed_at: new Date("2025-04-19 12:20:00"),
-      },
-      {
-        reps: 12,
-        set_number: 3,
-        completed: true,
-        workout_exercise_id: 18,
-        completed_at: new Date("2025-04-19 12:25:00"),
-      },
-
+      { reps: 12, set_number: 1, workout_exercise_id: 18, completed_reps: 0 },
+      { reps: 12, set_number: 2, workout_exercise_id: 18, completed_reps: 0 },
+      { reps: 12, set_number: 3, workout_exercise_id: 18, completed_reps: 0 },
+    
       // David's workout
-      {
-        reps: 12,
-        set_number: 1,
-        completed: true,
-        workout_exercise_id: 27,
-        completed_at: new Date("2025-04-23 20:10:00"),
-      },
-      {
-        reps: 12,
-        set_number: 2,
-        completed: true,
-        workout_exercise_id: 27,
-        completed_at: new Date("2025-04-23 20:20:00"),
-      },
-      {
-        reps: 12,
-        set_number: 3,
-        completed: true,
-        workout_exercise_id: 27,
-        completed_at: new Date("2025-04-23 20:30:00"),
-      },
-    ],
+      { reps: 12, set_number: 1, workout_exercise_id: 27, completed_reps: 0 },
+      { reps: 12, set_number: 2, workout_exercise_id: 27, completed_reps: 0 },
+      { reps: 12, set_number: 3, workout_exercise_id: 27, completed_reps: 0 },
+    ]
   });
 }
 
