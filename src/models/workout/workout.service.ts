@@ -85,9 +85,62 @@ export class WorkoutService {
   }
 
   async findAll(userId: number) {
-    return await this.prisma.workouts.findMany({ where: { user_id: userId } });
+    return await this.prisma.workouts.findMany({
+      select: {
+        started_at: true,
+        workout_exercises: {
+          select: {
+            exercises: {
+              select: {
+                name: true,
+                
+              }
+            },
+            exercise_sets: true,
+          },
+        },
+      },
+      where: { user_id: userId }
+    });
   }
+  // date: string;
+  // exercises: {
+  //   name: string;
+  //   sets: { completed: boolean; reps: number }[];
+  //   totalReps: number;
+  //   xpEarned?: number;
+  // }[];
 
+  // model workouts {
+  //   id                Int                 @id @default(autoincrement())
+  //   user_id           Int?
+  //   started_at        DateTime?           @default(now()) @db.Timestamp(6)
+  //   completed_at      DateTime?           @db.Timestamp(6)
+  //   coins_earned      Int?
+  //   workout_exercises workout_exercises[]
+  //   users             users?              @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  // }
+//   model exercises {
+//     id                 Int                  @id @default(autoincrement())
+//     name               String?              @unique @db.VarChar
+//     description        String?
+//     category           String?              @db.VarChar
+//     difficulty_level   Int?
+//     muscle_group       String?              @db.VarChar
+//     exercise_templates exercise_templates[]
+//     workout_exercises  workout_exercises[]
+// }
+  
+// model exercise_sets {
+//   id                  Int                @id @default(autoincrement())
+//   workout_exercise_id Int?
+//   set_number          Int?
+//   reps                Int?
+//   completed           Boolean?           @default(false)
+//   completed_at        DateTime?          @db.Timestamp(6)
+//   workout_exercises   workout_exercises? @relation(fields: [workout_exercise_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+// }
+  
   async findOne(id: number) {
     return await this.prisma.workouts.findMany({ where: { id: id } });
   }
