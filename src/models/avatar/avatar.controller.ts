@@ -1,47 +1,88 @@
-import { AvatarService } from "@/models/avatar/avatar.service";
-import { CreateAvatarDto } from "@/models/avatar/dto/create-avatar-dto";
-import { UpdateAvatarDto } from "@/models/avatar/dto/update-avatar.dto";
-import { AvatarResponseDto } from "@/models/avatar/dto/avatar-response.dto";
 import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
   Param,
-  Delete,
   ParseIntPipe,
+  Req,
+  HttpException,
+  HttpStatus,
 } from "@nestjs/common";
+import { AvatarService } from "./avatar.service";
 
 @Controller("avatars")
-export class AvatarController {
+export class AvatarsController {
   constructor(private readonly avatarService: AvatarService) {}
 
-  @Post()
-  create(@Body() createAvatarDto: CreateAvatarDto): Promise<AvatarResponseDto> {
-    return this.avatarService.create(createAvatarDto);
-  }
-
   @Get()
-  findAll(): Promise<AvatarResponseDto[]> {
-    return this.avatarService.findAll();
+  async getAllAvatars() {
+    try {
+      return await this.avatarService.findAll();
+    } catch (error) {
+      throw new HttpException(
+        error.message || "Failed to get avatars",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  @Get(":id")
-  findOne(@Param("id", ParseIntPipe) id: number): Promise<AvatarResponseDto> {
-    return this.avatarService.findOne(id);
+  @Get("user")
+  async getUserAvatars(@Req() req) {
+    try {
+      // Make sure userId is properly extracted and converted to a number
+      const userId = parseInt(req.user.id);
+      if (isNaN(userId)) {
+        throw new HttpException("Invalid user ID", HttpStatus.BAD_REQUEST);
+      }
+
+      return await this.avatarService.getUserAvatars(userId);
+    } catch (error) {
+      throw new HttpException(
+        error.message || "Failed to get user avatars",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  @Patch(":id")
-  update(
-    @Param("id", ParseIntPipe) id: number,
-    @Body() updateAvatarDto: UpdateAvatarDto,
-  ): Promise<AvatarResponseDto> {
-    return this.avatarService.update(id, updateAvatarDto);
+  @Post("purchase/:avatarId")
+  async purchaseAvatar(
+    @Req() req,
+    @Param("avatarId", ParseIntPipe) avatarId: number,
+  ) {
+    try {
+      // Make sure userId is properly extracted and converted to a number
+      const userId = parseInt(req.user.id);
+      if (isNaN(userId)) {
+        throw new HttpException("Invalid user ID", HttpStatus.BAD_REQUEST);
+      }
+
+      return await this.avatarService.purchaseAvatar(userId, avatarId);
+    } catch (error) {
+      throw new HttpException(
+        error.message || "Failed to purchase avatar",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  @Delete(":id")
-  remove(@Param("id", ParseIntPipe) id: number): Promise<AvatarResponseDto> {
-    return this.avatarService.remove(id);
+  @Post("set-current/:avatarId")
+  async setCurrentAvatar(
+    @Req() req,
+    @Param("avatarId", ParseIntPipe) avatarId: number,
+  ) {
+    try {
+      // Make sure userId is properly extracted and converted to a number
+      const userId = parseInt(req.user.id);
+      if (isNaN(userId)) {
+        throw new HttpException("Invalid user ID", HttpStatus.BAD_REQUEST);
+      }
+
+      return await this.avatarService.setCurrentAvatar(userId, avatarId);
+    } catch (error) {
+      throw new HttpException(
+        error.message || "Failed to set current avatar",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
