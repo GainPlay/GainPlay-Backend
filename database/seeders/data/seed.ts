@@ -115,7 +115,7 @@ async function main() {
         experience: 2500,
         email: "john@example.com",
         avatar_url: "https://example.com/avatars/john.png",
-        password_hash: "$2a$10$7JfKzVJ5A4KD9.uB9HtfYehZB7TF3kYvQMW5A8PF",
+        password_hash: "123",
       },
       {
         level: 5,

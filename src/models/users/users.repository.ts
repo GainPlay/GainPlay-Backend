@@ -7,7 +7,18 @@ export class UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findOneByEmail(email: string): Promise<users | null> {
-    return this.prisma.users.findUnique({ where: { email } });
+    return this.prisma.users.findUnique({
+      include: {
+        user_settings: true,
+        user_badges: true,
+        user_goals: {
+          include: {
+            goals: true,
+          },
+        },
+      },
+      where: { email }
+    });
   }
 
   async findOneById(id: number): Promise<users | null> {
@@ -20,11 +31,15 @@ export class UsersRepository {
 
   async update(
     userId: number,
-    userInformation: Partial<users>,
+    body: any,
   ): Promise<users> {
     return this.prisma.users.update({
       where: { id: userId },
-      data: userInformation,
+      data: {
+        name: body.userData.name,
+        email: body.userData.email,
+        // avatar_url: body.userData.avatar,
+      },
     });
   }
 
@@ -41,22 +56,18 @@ export class UsersRepository {
   async updateUserSettings(userId: number, settingsData: any) {
     // First check if settings exist
     const existingSettings = await this.getUserSettings(userId);
-
     // Remove any fields that might cause issues
-    const safeData = { ...settingsData };
+    const safeData = { ...settingsData.userData };
+    console.log('safeData', safeData);
 
     if (existingSettings) {
       // Update existing settings with individual fields
       return this.prisma.user_settings.update({
         where: { user_id: userId },
         data: {
-          age: safeData.age,
-          weight: safeData.weight,
-          height: safeData.height,
-          fitness_level: safeData.fitness_level,
-          body_structure: safeData.body_structure,
-          workout_duration: safeData.workout_duration,
-          exercise_frequency: safeData.exercise_frequency,
+          age: parseInt(safeData.age),
+          weight: parseInt(safeData.weight),
+          height: parseInt(safeData.height),
         },
       });
     } else {
