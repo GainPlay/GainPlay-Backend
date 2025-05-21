@@ -35,11 +35,12 @@ export class FriendshipsController {
     return this.friendshipsService.findAllDiscover(userId);
   }
 
-  @Get("userId/:userId/friendId/:friendId")
+  @Get("friendId/:friendId")
   async findOneByUsers(
-    @Param("userId", ParseIntPipe) userId: number,
+    @Req() req,
     @Param("friendId", ParseIntPipe) friendId: number,
   ) {
+    const userId = req.user.id;
     return this.friendshipsService.findOneByUsers(userId, friendId);
   }
 

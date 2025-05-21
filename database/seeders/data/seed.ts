@@ -403,12 +403,16 @@ async function main() {
       {
         user_id: 1,
         coins_earned: 50,
+        experience_earned: 150,
+        score: 80,
         started_at: new Date("2025-04-20 08:30:00"),
         completed_at: new Date("2025-04-20 09:15:00"),
       },
       {
         user_id: 1,
         coins_earned: 45,
+        experience_earned: 120,
+        score: 75,
         started_at: new Date("2025-04-22 07:45:00"),
         completed_at: new Date("2025-04-22 08:30:00"),
       },
@@ -416,53 +420,71 @@ async function main() {
         user_id: 1,
         completed_at: null,
         coins_earned: null,
+        experience_earned: null,
+        score: null,
         started_at: new Date("2025-04-25 18:00:00"),
       },
       {
         user_id: 2,
         coins_earned: 75,
+        experience_earned: 200,
+        score: 90,
         started_at: new Date("2025-04-15 19:00:00"),
         completed_at: new Date("2025-04-15 20:30:00"),
       },
       {
         user_id: 2,
         coins_earned: 60,
+        experience_earned: 170,
+        score: 85,
         started_at: new Date("2025-04-18 18:30:00"),
         completed_at: new Date("2025-04-18 19:45:00"),
       },
       {
         user_id: 2,
         coins_earned: 80,
+        experience_earned: 210,
+        score: 92,
         started_at: new Date("2025-04-21 06:00:00"),
         completed_at: new Date("2025-04-21 07:15:00"),
       },
       {
         user_id: 2,
         coins_earned: 70,
+        experience_earned: 185,
+        score: 88,
         started_at: new Date("2025-04-24 17:30:00"),
         completed_at: new Date("2025-04-24 19:00:00"),
       },
       {
         user_id: 3,
         coins_earned: 30,
+        experience_earned: 80,
+        score: 60,
         started_at: new Date("2025-04-19 12:00:00"),
         completed_at: new Date("2025-04-19 12:45:00"),
       },
       {
         user_id: 4,
         coins_earned: 55,
+        experience_earned: 160,
+        score: 82,
         started_at: new Date("2025-04-16 05:30:00"),
         completed_at: new Date("2025-04-16 06:30:00"),
       },
       {
         user_id: 4,
         coins_earned: 60,
+        experience_earned: 170,
+        score: 85,
         started_at: new Date("2025-04-19 06:00:00"),
         completed_at: new Date("2025-04-19 07:00:00"),
       },
       {
         user_id: 4,
         coins_earned: 65,
+        experience_earned: 180,
+        score: 87,
         started_at: new Date("2025-04-22 05:45:00"),
         completed_at: new Date("2025-04-22 06:45:00"),
       },
@@ -470,11 +492,15 @@ async function main() {
         user_id: 4,
         completed_at: null,
         coins_earned: null,
+        experience_earned: null,
+        score: null,
         started_at: new Date("2025-04-25 06:00:00"),
       },
       {
         user_id: 5,
         coins_earned: 25,
+        experience_earned: 60,
+        score: 50,
         started_at: new Date("2025-04-23 20:00:00"),
         completed_at: new Date("2025-04-23 20:30:00"),
       },
@@ -524,8 +550,6 @@ async function main() {
       // David's workout
       { workout_id: 13, exercise_id: 1, template_id: 1 },
     ],
-
-    
   });
 
   // Insert exercise_sets
@@ -543,13 +567,13 @@ async function main() {
       { reps: 30, set_number: 1, workout_exercise_id: 3, completed_reps: 0 },
       { reps: 30, set_number: 2, workout_exercise_id: 3, completed_reps: 0 },
       { reps: 30, set_number: 3, workout_exercise_id: 3, completed_reps: 0 },
-    
+
       // John's second workout
       { reps: 1, set_number: 1, workout_exercise_id: 4, completed_reps: 0 },
       { reps: 10, set_number: 1, workout_exercise_id: 5, completed_reps: 0 },
       { reps: 10, set_number: 2, workout_exercise_id: 5, completed_reps: 0 },
       { reps: 10, set_number: 3, workout_exercise_id: 5, completed_reps: 0 },
-    
+
       // John's in-progress workout
       { reps: 0, set_number: 1, workout_exercise_id: 6, completed_reps: 0 },
       { reps: 0, set_number: 2, workout_exercise_id: 6, completed_reps: 0 },
@@ -559,7 +583,7 @@ async function main() {
       { reps: 0, set_number: 1, workout_exercise_id: 7, completed_reps: 0 },
       { reps: 0, set_number: 2, workout_exercise_id: 7, completed_reps: 0 },
       { reps: 0, set_number: 3, workout_exercise_id: 7, completed_reps: 0 },
-    
+
       // Jane's first workout (partial)
       { reps: 5, set_number: 1, workout_exercise_id: 8, completed_reps: 0 },
       { reps: 5, set_number: 2, workout_exercise_id: 8, completed_reps: 0 },
@@ -569,17 +593,17 @@ async function main() {
       { reps: 5, set_number: 1, workout_exercise_id: 9, completed_reps: 0 },
       { reps: 5, set_number: 2, workout_exercise_id: 9, completed_reps: 0 },
       { reps: 5, set_number: 3, workout_exercise_id: 9, completed_reps: 0 },
-    
+
       // Mike's workout (partial)
       { reps: 12, set_number: 1, workout_exercise_id: 18, completed_reps: 0 },
       { reps: 12, set_number: 2, workout_exercise_id: 18, completed_reps: 0 },
       { reps: 12, set_number: 3, workout_exercise_id: 18, completed_reps: 0 },
-    
+
       // David's workout
       { reps: 12, set_number: 1, workout_exercise_id: 27, completed_reps: 0 },
       { reps: 12, set_number: 2, workout_exercise_id: 27, completed_reps: 0 },
       { reps: 12, set_number: 3, workout_exercise_id: 27, completed_reps: 0 },
-    ]
+    ],
   });
 
   // Avatars
@@ -697,7 +721,7 @@ main()
   .then(async () => {
     await prisma.$disconnect();
   })
-  .catch(async e => {
+  .catch(async (e) => {
     console.error("Error seeding database:", e);
     await prisma.$disconnect();
     process.exit(1);
