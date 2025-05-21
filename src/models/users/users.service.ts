@@ -14,7 +14,6 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<users> {
     const user = await this.usersRepository.findOneByEmail(email);
-
     return user;
   }
 
@@ -31,7 +30,7 @@ export class UsersService {
   }
 
   async updateUser(userId: number, userData: Partial<users>): Promise<users> {
-    await this.usersRepository.updateUserSettings(userId,userData)
+    await this.usersRepository.updateUserSettings(userId, userData);
     return this.usersRepository.update(userId, userData);
   }
 

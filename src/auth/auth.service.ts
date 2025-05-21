@@ -58,6 +58,11 @@ export class AuthService {
     // Assign default avatar to the new user
     try {
       await this.avatarService.assignDefaultAvatarToUser(generatedUser.id);
+      // Re-fetch the user to get the updated avatar_url
+      const updatedUser = await this.usersService.findById(generatedUser.id);
+      if (updatedUser) {
+        generatedUser.avatar_url = updatedUser.avatar_url;
+      }
     } catch (error) {
       console.error("Failed to assign default avatar:", error);
       // Continue with registration even if avatar assignment fails

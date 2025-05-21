@@ -29,7 +29,7 @@ export class AuthController {
 
   @Post("register")
   async register(
-    @Body() registerBody: RegisterRequestDto
+    @Body() registerBody: RegisterRequestDto,
   ): Promise<RegisterResponseDTO | BadRequestException> {
     return await this.authService.register(registerBody);
   }
