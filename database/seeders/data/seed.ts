@@ -115,7 +115,7 @@ async function main() {
         experience: 2500,
         email: "john@example.com",
         avatar_url: "https://example.com/avatars/john.png",
-        password_hash: "$2a$10$7JfKzVJ5A4KD9.uB9HtfYehZB7TF3kYvQMW5A8PF",
+        password_hash: "123",
       },
       {
         level: 5,
@@ -581,6 +581,116 @@ async function main() {
       { reps: 12, set_number: 3, workout_exercise_id: 27, completed_reps: 0 },
     ]
   });
+
+  // Avatars
+  const styles = [
+    "adventurer",
+    "adventurer-neutral",
+    "avataaars",
+    "big-ears",
+    "big-ears-neutral",
+    "bottts",
+    "croodles",
+    "fun-emoji",
+    "lorelei",
+    "micah",
+    "miniavs",
+    "personas",
+    "pixel-art",
+  ];
+
+  // Free avatars (given to all users)
+  const freeAvatars = [
+    {
+      price: 0,
+      name: "Default Avatar",
+      image_url: "https://api.dicebear.com/6.x/avataaars/svg?seed=default",
+    },
+    {
+      price: 0,
+      name: "Starter Hero",
+      image_url: "https://api.dicebear.com/6.x/adventurer/svg?seed=gainplay1",
+    },
+    {
+      price: 0,
+      name: "Fitness Buddy",
+      image_url: "https://api.dicebear.com/6.x/big-ears/svg?seed=fitness",
+    },
+  ];
+
+  // Purchasable avatars
+  const purchasableAvatars = [];
+
+  // Generate 3 avatars for each style
+  styles.forEach((style, styleIndex) => {
+    for (let i = 1; i <= 3; i++) {
+      const seed = `gainplay-${style}-${i}`;
+      purchasableAvatars.push({
+        name: `${style.charAt(0).toUpperCase() + style.slice(1)} ${i}`,
+        image_url: `https://api.dicebear.com/6.x/${style}/svg?seed=${seed}`,
+        // Price increases with rarity - between 100 and 500 coins
+        price: 100 + styleIndex * 30 + i * 20,
+      });
+    }
+  });
+
+  // Premium special avatars with corrected parameters
+  const premiumAvatars = [
+    {
+      price: 500,
+      name: "Fitness Pro",
+      image_url:
+        "https://api.dicebear.com/6.x/avataaars/svg?seed=fitnesspro&clothesColor=3c4f5c&clothes=overall&hairColor=2c1b18&facialHairColor=2c1b18&facialHair=beardMajestic&eyes=surprised&eyebrows=raisedExcited",
+    },
+    {
+      price: 550,
+      name: "Gym Master",
+      image_url:
+        "https://api.dicebear.com/6.x/avataaars/svg?seed=gymmaster&clothesColor=ff0000&clothes=hoodie&top=shortCurly&hairColor=000000&facialHairColor=000000&facialHair=beardLight&eyes=default&eyebrows=default",
+    },
+    {
+      price: 600,
+      name: "Cardio King",
+      image_url:
+        "https://api.dicebear.com/6.x/avataaars/svg?seed=cardioking&clothesColor=0000ff&clothes=shirtScoopNeck&top=shortWaved&hairColor=a52a2a&facialHairColor=a52a2a&eyes=happy&eyebrows=default",
+    },
+    {
+      price: 650,
+      name: "Yoga Guru",
+      image_url:
+        "https://api.dicebear.com/6.x/avataaars/svg?seed=yogaguru&clothesColor=ffc0cb&clothes=graphicShirt&top=longHair&hairColor=ffd700&facialHairColor=ffd700&eyes=hearts&eyebrows=raised",
+    },
+  ];
+
+  // Combine all avatars
+  const allAvatars = [...freeAvatars, ...purchasableAvatars, ...premiumAvatars];
+
+  // Insert avatars into database
+  console.log(`Adding ${allAvatars.length} avatars to the database...`);
+
+  for (const avatar of allAvatars) {
+    // First check if avatar exists by name
+    const existingAvatar = await prisma.avatars.findFirst({
+      where: { name: avatar.name },
+    });
+
+    if (existingAvatar) {
+      // Update existing avatar
+      await prisma.avatars.update({
+        data: avatar,
+        where: { id: existingAvatar.id },
+      });
+      console.log(`Updated avatar: ${avatar.name}`);
+    } else {
+      // Create new avatar
+      await prisma.avatars.create({
+        data: avatar,
+      });
+      console.log(`Created avatar: ${avatar.name}`);
+    }
+  }
+
+  console.log("Avatars added successfully!");
 }
 
 main()

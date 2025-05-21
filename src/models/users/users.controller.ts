@@ -27,6 +27,11 @@ export class UsersController {
     return this.usersService.findById(id);
   }
 
+  @Get(":email/mail")
+  findOneByMail(@Param("email") email: string): Promise<users> {
+    return this.usersService.findByEmail(email);
+  }
+
   @Post("onboarding")
   async updateOnboardingData(
     @Req() req,
@@ -52,5 +57,12 @@ export class UsersController {
     @Param("badgeId", ParseIntPipe) badgeId: number,
   ) {
     return this.usersService.addBadgeToUser(userId, badgeId);
+  }
+  @Post(":userId/updateUser")
+  async updateUserSettings(
+    @Param("userId", ParseIntPipe) userId: number,
+    @Body() userData: any,
+  ) {
+    return this.usersService.updateUser(userId, userData);
   }
 }
