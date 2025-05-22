@@ -55,7 +55,6 @@ export class UsersRepository {
     const existingSettings = await this.getUserSettings(userId);
     // Remove any fields that might cause issues
     const safeData = { ...settingsData.userData };
-    console.log("safeData", safeData);
 
     if (existingSettings) {
       // Update existing settings with individual fields

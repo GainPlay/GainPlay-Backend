@@ -14,8 +14,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors();
-
-  app.enableCors();
   app.use(helmet());
   app.getHttpAdapter().getInstance().disable("x-powered-by");
   app.use(morganLogger);
