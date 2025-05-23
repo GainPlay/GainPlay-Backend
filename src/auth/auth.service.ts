@@ -55,6 +55,8 @@ export class AuthService {
 
     const generatedUser = await this.usersService.createUser(newUser);
 
+    await this.avatarService.assignDefaultAvatarToUser(generatedUser.id);
+
     return this.login(generatedUser);
   }
 }
