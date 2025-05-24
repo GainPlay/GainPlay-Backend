@@ -17,9 +17,9 @@ export class ChallengeRepository {
   async updateUserAfterChallenge(userId: number, coins: number) {
     return this.prisma.users.update({
       where: { id: userId },
-       data: {
+      data: {
         coins,
       },
     });
-  }  
+  }
 }
