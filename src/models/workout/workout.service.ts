@@ -1,4 +1,3 @@
-import { workouts } from "@prisma/client";
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "database/prisma.service";
 import { calculateWorkoutRewards } from "@/models/workout/utils/workoutUtils";
@@ -8,12 +7,14 @@ import { GeminiService } from "./gemini.service";
 export class WorkoutService {
   constructor(
     private prisma: PrismaService,
-    private geminiService: GeminiService
+    private geminiService: GeminiService,
   ) {}
 
   async generateAndSaveWorkout(userId: number) {
-    const generatedWorkoutExercises = await this.geminiService.generateWorkout(userId);
+    const generatedWorkoutExercises =
+      await this.geminiService.generateWorkout(userId);
 
+    console.log("Generated Workout Exercises:", generatedWorkoutExercises);
     const workout = await this.prisma.workouts.create({
       data: {
         user_id: userId,
@@ -52,9 +53,9 @@ export class WorkoutService {
       for (let i = 1; i <= exercise.targetSets; i++) {
         await this.prisma.exercise_sets.create({
           data: {
-            reps: exercise.targetReps,
-            completed_reps: 0,
             set_number: i,
+            completed_reps: 0,
+            reps: exercise.targetReps,
             workout_exercise_id: workoutExercise.id,
           },
         });
@@ -66,54 +67,54 @@ export class WorkoutService {
 
   async findAll(userId: number) {
     const workouts = await this.prisma.workouts.findMany({
+      where: { user_id: userId },
       select: {
         started_at: true,
         experience_earned: true,
         workout_exercises: {
           select: {
+            exercise_sets: true,
             exercises: {
               select: {
                 name: true,
-                
-              }
+              },
             },
-            exercise_sets: true,  
           },
-          
         },
       },
-      where: { user_id: userId }
     });
 
-    return workouts.map((workout) => {
+    return workouts.map(workout => {
       return {
         date: workout.started_at,
-        exercises: workout.workout_exercises.map((exercise) => {
+        exercises: workout.workout_exercises.map(exercise => {
           return {
             name: exercise.exercises.name,
-            sets: exercise.exercise_sets.map((set) => {
+            xpEarned: workout.experience_earned,
+            totalReps: exercise.exercise_sets.reduce(
+              (total, set) => total + (set.completed_reps || 0),
+              0,
+            ),
+            sets: exercise.exercise_sets.map(set => {
               return {
-                completed: set.completed_reps >= set.reps,
                 reps: set.reps,
+                completed: set.completed_reps >= set.reps,
               };
             }),
-            totalReps: exercise.exercise_sets.reduce((total, set) => total + (set.completed_reps || 0), 0),
-            xpEarned: workout.experience_earned,
-          }
-         })
-      }
-    })
-    
+          };
+        }),
+      };
+    });
   }
-  
+
   async findOne(id: number) {
     return await this.prisma.workouts.findUnique({
       where: { id },
       include: {
         workout_exercises: {
           include: {
-            exercise_sets: true,
             exercises: true,
+            exercise_sets: true,
             exercise_templates: true,
           },
         },
@@ -130,8 +131,8 @@ export class WorkoutService {
       include: {
         workout_exercises: {
           include: {
-            exercise_sets: true,
             exercises: true,
+            exercise_sets: true,
             exercise_templates: true,
           },
         },
@@ -139,19 +140,22 @@ export class WorkoutService {
     });
   }
 
-  async finishWorkout(finishedWorkout: any): Promise<{ coins: number; experience_earned: number; score: number }> {
-    const { coins, experience_earned, score } = calculateWorkoutRewards(finishedWorkout);
+  async finishWorkout(
+    finishedWorkout: any,
+  ): Promise<{ coins: number; experience_earned: number; score: number }> {
+    const { coins, score, experience_earned } =
+      calculateWorkoutRewards(finishedWorkout);
 
-    await this.prisma.$transaction(async (tx) => {
+    await this.prisma.$transaction(async tx => {
       // Update the completed workout
       const workout = await tx.workouts.update({
         where: {
           id: finishedWorkout.id,
         },
         data: {
-          coins_earned: coins,
-          experience_earned,
           score,
+          experience_earned,
+          coins_earned: coins,
           completed_at: new Date().toISOString(),
         },
       });
@@ -185,17 +189,17 @@ export class WorkoutService {
       await this.duplicateWorkout(finishedWorkout);
     });
 
-    return { coins, experience_earned, score };
+    return { coins, score, experience_earned };
   }
 
   async duplicateWorkout(finishedWorkout: any): Promise<any> {
     // Create the new workout (not yet completed)
     const newWorkout = await this.prisma.workouts.create({
       data: {
-        user_id: finishedWorkout.user_id,
-        started_at: new Date(),
         completed_at: null,
         coins_earned: null,
+        started_at: new Date(),
+        user_id: finishedWorkout.user_id,
       },
     });
 
@@ -213,10 +217,10 @@ export class WorkoutService {
       for (const set of we.exercise_sets) {
         await this.prisma.exercise_sets.create({
           data: {
-            workout_exercise_id: newWorkoutExercise.id,
-            set_number: set.set_number,
             reps: set.reps,
             completed_reps: 0,
+            set_number: set.set_number,
+            workout_exercise_id: newWorkoutExercise.id,
           },
         });
       }
