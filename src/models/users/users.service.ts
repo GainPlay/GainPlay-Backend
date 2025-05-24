@@ -79,8 +79,6 @@ export class UsersService {
       }
     }
 
-    console.log("userGoals", userGoals);
-
     return {
       userGoals,
       userSettings: updatedSettings,

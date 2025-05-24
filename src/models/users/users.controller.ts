@@ -39,7 +39,6 @@ export class UsersController {
   ) {
     try {
       const userId = req.user.id;
-      console.log("data", onboardingData);
       return await this.usersService.updateOnboardingData(
         userId,
         onboardingData,
