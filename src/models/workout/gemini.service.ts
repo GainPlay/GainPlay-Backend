@@ -25,10 +25,6 @@ export class GeminiService {
       this.exerciseService.findAll(),
     ]);
 
-    console.log("User Goals:", userGoals);
-    console.log("User Settings:", userSettings);
-    console.log("Available Exercises Count:", exercises.length);
-
     if (!userGoals?.length && !userSettings) {
       throw new NotFoundException("User profile data not found");
     }
@@ -57,14 +53,6 @@ export class GeminiService {
 
     // Optional: Filter exercises based on user's fitness level
     const userFitnessLevel = userSettings?.fitness_level || 3;
-    const appropriateExercises = ExerciseFormatter.filterByDifficulty(
-      exercises,
-      Math.max(1, userFitnessLevel - 1),
-      Math.min(5, userFitnessLevel + 1),
-    );
-
-    console.log("User Profile Data:", userProfile);
-    console.log("Filtered Exercises Count:", appropriateExercises.length);
 
     const prompt = `
       You are an AI fitness coach. Your task is to create a customized workout plan based on a provided list of exercises and a user's profile data.
