@@ -48,20 +48,14 @@ export class AuthService {
       streak: 0,
       coins: 500, // Start with 500 coins so they can purchase avatars
       experience: 0,
-      avatar_url: "",
       created_at: undefined,
       password_hash: hashedPassword,
+      avatar_url: "https://api.dicebear.com/6.x/avataaars/svg?seed=default",
     };
 
     const generatedUser = await this.usersService.createUser(newUser);
 
-    // Assign default avatar to the new user
-    try {
-      await this.avatarService.assignDefaultAvatarToUser(generatedUser.id);
-    } catch (error) {
-      console.error("Failed to assign default avatar:", error);
-      // Continue with registration even if avatar assignment fails
-    }
+    await this.avatarService.assignDefaultAvatarToUser(generatedUser.id);
 
     return this.login(generatedUser);
   }

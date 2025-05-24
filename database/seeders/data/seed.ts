@@ -23,48 +23,6 @@ async function main() {
   await prisma.friendships.deleteMany({});
   await prisma.users.deleteMany({});
 
-  // Insert avatars
-  console.log("Adding avatars...");
-  await prisma.avatars.createMany({
-    data: [
-      {
-        price: 0,
-        name: "Basic",
-        image_url: "https://example.com/avatars/basic.png",
-      },
-      {
-        price: 100,
-        name: "Runner",
-        image_url: "https://example.com/avatars/runner.png",
-      },
-      {
-        price: 200,
-        name: "Powerlifter",
-        image_url: "https://example.com/avatars/powerlifter.png",
-      },
-      {
-        price: 300,
-        name: "Yoga Master",
-        image_url: "https://example.com/avatars/yoga.png",
-      },
-      {
-        price: 500,
-        name: "Champion",
-        image_url: "https://example.com/avatars/champion.png",
-      },
-      {
-        price: 750,
-        name: "Ninja",
-        image_url: "https://example.com/avatars/ninja.png",
-      },
-      {
-        price: 1000,
-        name: "Superhero",
-        image_url: "https://example.com/avatars/superhero.png",
-      },
-    ],
-  });
-
   // Insert badges
   console.log("Adding badges...");
   await prisma.badges.createMany({
@@ -113,9 +71,9 @@ async function main() {
         coins: 750,
         name: "John Doe",
         experience: 2500,
+        password_hash: "123",
         email: "john@example.com",
         avatar_url: "https://example.com/avatars/john.png",
-        password_hash: "123",
       },
       {
         level: 5,
@@ -401,106 +359,106 @@ async function main() {
   await prisma.workouts.createMany({
     data: [
       {
+        score: 80,
         user_id: 1,
         coins_earned: 50,
         experience_earned: 150,
-        score: 80,
         started_at: new Date("2025-04-20 08:30:00"),
         completed_at: new Date("2025-04-20 09:15:00"),
       },
       {
+        score: 75,
         user_id: 1,
         coins_earned: 45,
         experience_earned: 120,
-        score: 75,
         started_at: new Date("2025-04-22 07:45:00"),
         completed_at: new Date("2025-04-22 08:30:00"),
       },
       {
         user_id: 1,
+        score: null,
         completed_at: null,
         coins_earned: null,
         experience_earned: null,
-        score: null,
         started_at: new Date("2025-04-25 18:00:00"),
       },
       {
+        score: 90,
         user_id: 2,
         coins_earned: 75,
         experience_earned: 200,
-        score: 90,
         started_at: new Date("2025-04-15 19:00:00"),
         completed_at: new Date("2025-04-15 20:30:00"),
       },
       {
+        score: 85,
         user_id: 2,
         coins_earned: 60,
         experience_earned: 170,
-        score: 85,
         started_at: new Date("2025-04-18 18:30:00"),
         completed_at: new Date("2025-04-18 19:45:00"),
       },
       {
+        score: 92,
         user_id: 2,
         coins_earned: 80,
         experience_earned: 210,
-        score: 92,
         started_at: new Date("2025-04-21 06:00:00"),
         completed_at: new Date("2025-04-21 07:15:00"),
       },
       {
+        score: 88,
         user_id: 2,
         coins_earned: 70,
         experience_earned: 185,
-        score: 88,
         started_at: new Date("2025-04-24 17:30:00"),
         completed_at: new Date("2025-04-24 19:00:00"),
       },
       {
+        score: 60,
         user_id: 3,
         coins_earned: 30,
         experience_earned: 80,
-        score: 60,
         started_at: new Date("2025-04-19 12:00:00"),
         completed_at: new Date("2025-04-19 12:45:00"),
       },
       {
+        score: 82,
         user_id: 4,
         coins_earned: 55,
         experience_earned: 160,
-        score: 82,
         started_at: new Date("2025-04-16 05:30:00"),
         completed_at: new Date("2025-04-16 06:30:00"),
       },
       {
+        score: 85,
         user_id: 4,
         coins_earned: 60,
         experience_earned: 170,
-        score: 85,
         started_at: new Date("2025-04-19 06:00:00"),
         completed_at: new Date("2025-04-19 07:00:00"),
       },
       {
+        score: 87,
         user_id: 4,
         coins_earned: 65,
         experience_earned: 180,
-        score: 87,
         started_at: new Date("2025-04-22 05:45:00"),
         completed_at: new Date("2025-04-22 06:45:00"),
       },
       {
         user_id: 4,
+        score: null,
         completed_at: null,
         coins_earned: null,
         experience_earned: null,
-        score: null,
         started_at: new Date("2025-04-25 06:00:00"),
       },
       {
+        score: 50,
         user_id: 5,
         coins_earned: 25,
         experience_earned: 60,
-        score: 50,
         started_at: new Date("2025-04-23 20:00:00"),
         completed_at: new Date("2025-04-23 20:30:00"),
       },
@@ -623,45 +581,65 @@ async function main() {
     "pixel-art",
   ];
 
-  // Free avatars (given to all users)
+  // Free avatars (given to all users) - Common rarity
   const freeAvatars = [
     {
       price: 0,
+      rarity: "common",
       name: "Default Avatar",
       image_url: "https://api.dicebear.com/6.x/avataaars/svg?seed=default",
     },
     {
       price: 0,
+      rarity: "common",
       name: "Starter Hero",
       image_url: "https://api.dicebear.com/6.x/adventurer/svg?seed=gainplay1",
     },
     {
       price: 0,
+      rarity: "common",
       name: "Fitness Buddy",
       image_url: "https://api.dicebear.com/6.x/big-ears/svg?seed=fitness",
     },
   ];
 
-  // Purchasable avatars
+  // Purchasable avatars with different rarities
   const purchasableAvatars = [];
 
-  // Generate 3 avatars for each style
+  // Generate 3 avatars for each style with different rarities
   styles.forEach((style, styleIndex) => {
     for (let i = 1; i <= 3; i++) {
       const seed = `gainplay-${style}-${i}`;
+
+      // Determine rarity and price based on avatar number and style
+      let rarity = "common";
+      let basePrice = 100;
+
+      if (i === 1) {
+        rarity = "common";
+        basePrice = 100;
+      } else if (i === 2) {
+        rarity = "rare";
+        basePrice = 200;
+      } else if (i === 3) {
+        rarity = "epic";
+        basePrice = 350;
+      }
+
       purchasableAvatars.push({
+        rarity: rarity,
+        price: basePrice + styleIndex * 20, // Style variation in price
         name: `${style.charAt(0).toUpperCase() + style.slice(1)} ${i}`,
         image_url: `https://api.dicebear.com/6.x/${style}/svg?seed=${seed}`,
-        // Price increases with rarity - between 100 and 500 coins
-        price: 100 + styleIndex * 30 + i * 20,
       });
     }
   });
 
-  // Premium special avatars with corrected parameters
+  // Premium special avatars - Legendary rarity
   const premiumAvatars = [
     {
       price: 500,
+      rarity: "legendary",
       name: "Fitness Pro",
       image_url:
         "https://api.dicebear.com/6.x/avataaars/svg?seed=fitnesspro&clothesColor=3c4f5c&clothes=overall&hairColor=2c1b18&facialHairColor=2c1b18&facialHair=beardMajestic&eyes=surprised&eyebrows=raisedExcited",
@@ -669,11 +647,13 @@ async function main() {
     {
       price: 550,
       name: "Gym Master",
+      rarity: "legendary",
       image_url:
         "https://api.dicebear.com/6.x/avataaars/svg?seed=gymmaster&clothesColor=ff0000&clothes=hoodie&top=shortCurly&hairColor=000000&facialHairColor=000000&facialHair=beardLight&eyes=default&eyebrows=default",
     },
     {
       price: 600,
+      rarity: "legendary",
       name: "Cardio King",
       image_url:
         "https://api.dicebear.com/6.x/avataaars/svg?seed=cardioking&clothesColor=0000ff&clothes=shirtScoopNeck&top=shortWaved&hairColor=a52a2a&facialHairColor=a52a2a&eyes=happy&eyebrows=default",
@@ -681,6 +661,7 @@ async function main() {
     {
       price: 650,
       name: "Yoga Guru",
+      rarity: "legendary",
       image_url:
         "https://api.dicebear.com/6.x/avataaars/svg?seed=yogaguru&clothesColor=ffc0cb&clothes=graphicShirt&top=longHair&hairColor=ffd700&facialHairColor=ffd700&eyes=hearts&eyebrows=raised",
     },
@@ -699,29 +680,40 @@ async function main() {
     });
 
     if (existingAvatar) {
-      // Update existing avatar
+      // Update existing avatar with new rarity field
       await prisma.avatars.update({
         data: avatar,
         where: { id: existingAvatar.id },
       });
-      console.log(`Updated avatar: ${avatar.name}`);
+      console.log(`Updated avatar: ${avatar.name} (${avatar.rarity})`);
     } else {
       // Create new avatar
       await prisma.avatars.create({
         data: avatar,
       });
-      console.log(`Created avatar: ${avatar.name}`);
+      console.log(`Created avatar: ${avatar.name} (${avatar.rarity})`);
     }
   }
 
-  console.log("Avatars added successfully!");
+  console.log("Avatars added successfully with rarity levels!");
+
+  // Log summary by rarity
+  const rarityCounts = allAvatars.reduce((acc, avatar) => {
+    acc[avatar.rarity] = (acc[avatar.rarity] || 0) + 1;
+    return acc;
+  }, {});
+
+  console.log("Avatar distribution by rarity:");
+  Object.entries(rarityCounts).forEach(([rarity, count]) => {
+    console.log(`- ${rarity}: ${count} avatars`);
+  });
 }
 
 main()
   .then(async () => {
     await prisma.$disconnect();
   })
-  .catch(async (e) => {
+  .catch(async e => {
     console.error("Error seeding database:", e);
     await prisma.$disconnect();
     process.exit(1);
