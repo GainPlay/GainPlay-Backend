@@ -65,20 +65,47 @@ export class WorkoutService {
   }
 
   async findAll(userId: number) {
-    return await this.prisma.workouts.findMany({
-      where: { user_id: userId },
-      include: {
+    const workouts = await this.prisma.workouts.findMany({
+      select: {
+        started_at: true,
+        experience_earned: true,
         workout_exercises: {
-          include: {
-            exercise_sets: true,
-            exercises: true,
-            exercise_templates: true,
+          select: {
+            exercises: {
+              select: {
+                name: true,
+                
+              }
+            },
+            exercise_sets: true,  
           },
+          
         },
       },
+      where: { user_id: userId }
     });
-  }
 
+    return workouts.map((workout) => {
+      return {
+        date: workout.started_at,
+        exercises: workout.workout_exercises.map((exercise) => {
+          return {
+            name: exercise.exercises.name,
+            sets: exercise.exercise_sets.map((set) => {
+              return {
+                completed: set.completed_reps >= set.reps,
+                reps: set.reps,
+              };
+            }),
+            totalReps: exercise.exercise_sets.reduce((total, set) => total + (set.completed_reps || 0), 0),
+            xpEarned: workout.experience_earned,
+          }
+         })
+      }
+    })
+    
+  }
+  
   async findOne(id: number) {
     return await this.prisma.workouts.findUnique({
       where: { id },
