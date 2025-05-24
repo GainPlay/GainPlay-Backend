@@ -39,6 +39,7 @@ export class UsersController {
   ) {
     try {
       const userId = req.user.id;
+      console.log("data", onboardingData);
       return await this.usersService.updateOnboardingData(
         userId,
         onboardingData,
@@ -58,7 +59,7 @@ export class UsersController {
   ) {
     return this.usersService.addBadgeToUser(userId, badgeId);
   }
-  
+
   @Post(":userId/updateUser")
   async updateUserSettings(
     @Param("userId", ParseIntPipe) userId: number,

@@ -31,7 +31,7 @@ export class UsersService {
   }
 
   async updateUser(userId: number, userData: Partial<users>): Promise<users> {
-    await this.usersRepository.updateUserSettings(userId,userData)
+    await this.usersRepository.updateUserSettings(userId, userData);
     return this.usersRepository.update(userId, userData);
   }
 
@@ -78,6 +78,8 @@ export class UsersService {
         userGoals.push(userGoal);
       }
     }
+
+    console.log("userGoals", userGoals);
 
     return {
       userGoals,

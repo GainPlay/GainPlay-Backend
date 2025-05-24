@@ -51,35 +51,40 @@ export class UsersRepository {
   }
 
   async updateUserSettings(userId: number, settingsData: any) {
-    // First check if settings exist
     const existingSettings = await this.getUserSettings(userId);
-    // Remove any fields that might cause issues
-    const safeData = { ...settingsData.userData };
 
     if (existingSettings) {
-      // Update existing settings with individual fields
+      // Update existing settings
       return this.prisma.user_settings.update({
         where: { user_id: userId },
         data: {
-          age: parseInt(safeData.age),
-          weight: parseInt(safeData.weight),
-          height: parseInt(safeData.height),
+          fitness_level: settingsData.fitness_level,
+          body_structure: settingsData.body_structure,
+          workout_duration: settingsData.workout_duration,
+          exercise_frequency: settingsData.exercise_frequency,
+          age: settingsData.age
+            ? parseInt(settingsData.age.toString())
+            : undefined,
+          weight: settingsData.weight
+            ? parseInt(settingsData.weight.toString())
+            : undefined,
+          height: settingsData.height
+            ? parseInt(settingsData.height.toString())
+            : undefined,
         },
       });
     } else {
-      // Create new settings with minimal fields
+      // Create new settings
       return this.prisma.user_settings.create({
         data: {
-          age: safeData.age,
-          weight: safeData.weight,
-          height: safeData.height,
-          fitness_level: safeData.fitness_level,
-          body_structure: safeData.body_structure,
-          workout_duration: safeData.workout_duration,
-          exercise_frequency: safeData.exercise_frequency,
-          users: {
-            connect: { id: userId },
-          },
+          user_id: userId,
+          age: settingsData.age,
+          weight: settingsData.weight,
+          height: settingsData.height,
+          fitness_level: settingsData.fitness_level,
+          body_structure: settingsData.body_structure,
+          workout_duration: settingsData.workout_duration,
+          exercise_frequency: settingsData.exercise_frequency,
         },
       });
     }
