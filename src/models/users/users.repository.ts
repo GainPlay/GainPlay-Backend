@@ -8,16 +8,16 @@ export class UsersRepository {
 
   async findOneByEmail(email: string): Promise<users | null> {
     return this.prisma.users.findUnique({
+      where: { email },
       include: {
-        user_settings: true,
         user_badges: true,
+        user_settings: true,
         user_goals: {
           include: {
             goals: true,
           },
         },
       },
-      where: { email },
     });
   }
 
