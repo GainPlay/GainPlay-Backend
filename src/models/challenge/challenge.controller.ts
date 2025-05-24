@@ -1,13 +1,11 @@
 import { ChallengeService } from "@/models/challenge/challenge.service";
 import { Challenge } from "@/models/challenge/type";
 import {
-  Body,
   Controller,
   Get,
   Param,
   ParseIntPipe,
-  Post,
-  Put
+  Post
 } from "@nestjs/common";
 
 @Controller("daily-challenge")
