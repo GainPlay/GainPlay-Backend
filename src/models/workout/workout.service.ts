@@ -97,6 +97,8 @@ export class WorkoutService {
               }
             },
             exercise_sets: true,
+            xpEarned: true,
+            
           },
         },
       },
