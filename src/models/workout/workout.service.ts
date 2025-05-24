@@ -1,31 +1,26 @@
 import { workouts } from "@prisma/client";
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "database/prisma.service";
-import { calcWorkoutCoins } from "@/models/workout/utils/workoutUtils";
-import { UpdateWorkoutDto } from "@/models/workout/dto/updateWorkoutDto";
+import { calculateWorkoutRewards } from "@/models/workout/utils/workoutUtils";
 import { GeminiService } from "./gemini.service";
 
 @Injectable()
 export class WorkoutService {
   constructor(
     private prisma: PrismaService,
-    private geminiService: GeminiService,
+    private geminiService: GeminiService
   ) {}
 
   async generateAndSaveWorkout(userId: number) {
-    const workoutExercises = await this.geminiService.generateWorkout(userId);
+    const generatedWorkoutExercises = await this.geminiService.generateWorkout(userId);
 
     const workout = await this.prisma.workouts.create({
       data: {
         user_id: userId,
-        coins_earned: 0,
-        started_at: new Date(),
       },
     });
 
-    const createdWorkoutExercises = [];
-
-    for (const exercise of workoutExercises) {
+    for (const exercise of generatedWorkoutExercises) {
       let exerciseTemplate = await this.prisma.exercise_templates.findFirst({
         where: {
           exercise_id: exercise.exerciseId,
@@ -54,42 +49,49 @@ export class WorkoutService {
         },
       });
 
-      const exerciseSets = [];
       for (let i = 1; i <= exercise.targetSets; i++) {
-        const set = await this.prisma.exercise_sets.create({
+        await this.prisma.exercise_sets.create({
           data: {
-            reps: 0,
+            reps: exercise.targetReps,
+            completed_reps: 0,
             set_number: i,
-            completed: false,
             workout_exercise_id: workoutExercise.id,
           },
         });
-        exerciseSets.push(set);
       }
-
-      createdWorkoutExercises.push({
-        ...workoutExercise,
-        sets: exerciseSets,
-        notes: exercise.notes,
-        target_sets: exercise.targetSets,
-        target_reps: exercise.targetReps,
-        rest_time: exercise.restTimeSeconds,
-        exercise_name: exercise.exerciseName,
-      });
     }
 
-    return {
-      ...workout,
-      exercises: createdWorkoutExercises,
-    };
+    return this.findcurrentWorkout(userId);
   }
 
   async findAll(userId: number) {
-    return await this.prisma.workouts.findMany({ where: { user_id: userId } });
+    return await this.prisma.workouts.findMany({
+      where: { user_id: userId },
+      include: {
+        workout_exercises: {
+          include: {
+            exercise_sets: true,
+            exercises: true,
+            exercise_templates: true,
+          },
+        },
+      },
+    });
   }
 
   async findOne(id: number) {
-    return await this.prisma.workouts.findMany({ where: { id: id } });
+    return await this.prisma.workouts.findUnique({
+      where: { id },
+      include: {
+        workout_exercises: {
+          include: {
+            exercise_sets: true,
+            exercises: true,
+            exercise_templates: true,
+          },
+        },
+      },
+    });
   }
 
   async findcurrentWorkout(userId: number) {
@@ -98,34 +100,99 @@ export class WorkoutService {
         user_id: userId,
         completed_at: null,
       },
+      include: {
+        workout_exercises: {
+          include: {
+            exercise_sets: true,
+            exercises: true,
+            exercise_templates: true,
+          },
+        },
+      },
     });
   }
 
-  async finishWorkout(updateWorkoutDto: UpdateWorkoutDto): Promise<workouts> {
-    const coins = calcWorkoutCoins(updateWorkoutDto);
+  async finishWorkout(finishedWorkout: any): Promise<{ coins: number; experience_earned: number; score: number }> {
+    const { coins, experience_earned, score } = calculateWorkoutRewards(finishedWorkout);
 
-    return await this.prisma.$transaction(async tx => {
+    await this.prisma.$transaction(async (tx) => {
+      // Update the completed workout
       const workout = await tx.workouts.update({
         where: {
-          id: updateWorkoutDto.id,
+          id: finishedWorkout.id,
         },
         data: {
           coins_earned: coins,
+          experience_earned,
+          score,
           completed_at: new Date().toISOString(),
         },
       });
 
+      // Update user XP and coins
       await tx.users.update({
         where: {
           id: workout.user_id,
         },
         data: {
-          coins: {
-            increment: coins,
-          },
+          coins: { increment: coins },
+          experience: { increment: experience_earned },
         },
       });
-      return workout;
+
+      // Update all sets with completed reps
+      for (const workoutExercise of finishedWorkout.workout_exercises) {
+        for (const exerciseSet of workoutExercise.exercise_sets) {
+          await tx.exercise_sets.update({
+            where: {
+              id: exerciseSet.id,
+            },
+            data: {
+              completed_reps: exerciseSet.completed_reps,
+            },
+          });
+        }
+      }
+
+      // Create a duplicate workout
+      await this.duplicateWorkout(finishedWorkout);
     });
+
+    return { coins, experience_earned, score };
+  }
+
+  async duplicateWorkout(finishedWorkout: any): Promise<any> {
+    // Create the new workout (not yet completed)
+    const newWorkout = await this.prisma.workouts.create({
+      data: {
+        user_id: finishedWorkout.user_id,
+        started_at: new Date(),
+        completed_at: null,
+        coins_earned: null,
+      },
+    });
+
+    // Loop through each workout exercise and recreate
+    for (const we of finishedWorkout.workout_exercises) {
+      const newWorkoutExercise = await this.prisma.workout_exercises.create({
+        data: {
+          workout_id: newWorkout.id,
+          exercise_id: we.exercise_id,
+          template_id: we.template_id,
+        },
+      });
+
+      // Duplicate sets (same reps, set number, but completed_reps set to 0)
+      for (const set of we.exercise_sets) {
+        await this.prisma.exercise_sets.create({
+          data: {
+            workout_exercise_id: newWorkoutExercise.id,
+            set_number: set.set_number,
+            reps: set.reps,
+            completed_reps: 0,
+          },
+        });
+      }
+    }
   }
 }
