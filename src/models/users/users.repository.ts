@@ -17,7 +17,7 @@ export class UsersRepository {
           },
         },
       },
-      where: { email }
+      where: { email },
     });
   }
 
@@ -29,10 +29,7 @@ export class UsersRepository {
     return this.prisma.users.create({ data: userData });
   }
 
-  async update(
-    userId: number,
-    body: any,
-  ): Promise<users> {
+  async update(userId: number, body: any): Promise<users> {
     return this.prisma.users.update({
       where: { id: userId },
       data: {
@@ -58,7 +55,6 @@ export class UsersRepository {
     const existingSettings = await this.getUserSettings(userId);
     // Remove any fields that might cause issues
     const safeData = { ...settingsData.userData };
-    console.log('safeData', safeData);
 
     if (existingSettings) {
       // Update existing settings with individual fields
