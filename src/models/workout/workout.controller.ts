@@ -13,6 +13,7 @@ import {
   Param,
 } from "@nestjs/common";
 import { WorkoutService } from "./workout.service";
+import { log } from "console";
 
 @Controller("workout")
 export class WorkoutController {
@@ -27,30 +28,26 @@ export class WorkoutController {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new HttpException(
-        error.message || "Failed to generate workout program",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(error.message || "Failed to generate workout program", HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   @Get()
-  async findAll(@Query("userId", ParseIntPipe) userId: number) {
+  async findAll(@Req() req) {
+    const userId = req.user.id;
     return this.workoutService.findAll(userId);
   }
 
-  @Get(":id")
-  async findOne(@Param("id", ParseIntPipe) id: number) {
-    return this.workoutService.findOne(id);
-  }
-
-  @Get("/currentWorkout")
-  async findcurrentWorkout(@Query("userId", ParseIntPipe) userId: number) {
+  @Get("/current")
+  async findcurrentWorkout(@Req() req) {
+    const userId = req.user.id;
     return this.workoutService.findcurrentWorkout(userId);
   }
 
   @Put("/finishWorkout")
-  async finishWorkout(@Body() updateWorkoutDto: UpdateWorkoutDto) {
-    return await this.workoutService.finishWorkout(updateWorkoutDto);
+  async finishWorkout(
+    @Body() finishedWorkout: any
+  ): Promise<{ coins: number; experience_earned: number; score: number }> {
+    return await this.workoutService.finishWorkout(finishedWorkout);
   }
 }
