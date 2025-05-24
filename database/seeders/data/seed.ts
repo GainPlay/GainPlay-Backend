@@ -145,21 +145,6 @@ async function main() {
     ],
   });
 
-  // Insert user_avatars
-  console.log("Adding user avatars...");
-  await prisma.user_avatars.createMany({
-    data: [
-      { user_id: 1, avatar_id: 1, is_current: false },
-      { user_id: 1, avatar_id: 2, is_current: true },
-      { user_id: 2, avatar_id: 1, is_current: false },
-      { user_id: 2, avatar_id: 3, is_current: true },
-      { user_id: 3, avatar_id: 1, is_current: true },
-      { user_id: 4, avatar_id: 1, is_current: false },
-      { user_id: 4, avatar_id: 5, is_current: true },
-      { user_id: 5, avatar_id: 1, is_current: true },
-    ],
-  });
-
   // Insert user_badges
   console.log("Adding user badges...");
   await prisma.user_badges.createMany({
@@ -707,6 +692,180 @@ async function main() {
   Object.entries(rarityCounts).forEach(([rarity, count]) => {
     console.log(`- ${rarity}: ${count} avatars`);
   });
+
+  // Insert user_avatars
+  // Create user_avatars relationships
+  console.log("Creating user avatar relationships...");
+
+  // Get all users and avatars from database
+  const users = await prisma.users.findMany({
+    where: {
+      email: {
+        in: [
+          "john@example.com",
+          "jane@example.com",
+          "mike@example.com",
+          "sarah@example.com",
+          "david@example.com",
+        ],
+      },
+    },
+  });
+
+  // Find specific avatars for assignment
+  const defaultAvatar = await prisma.avatars.findFirst({
+    where: { name: "Default Avatar" },
+  });
+  const fitnessProAvatar = await prisma.avatars.findFirst({
+    where: { name: "Fitness Pro" },
+  });
+  const gymMasterAvatar = await prisma.avatars.findFirst({
+    where: { name: "Gym Master" },
+  });
+  const yogaGuruAvatar = await prisma.avatars.findFirst({
+    where: { name: "Yoga Guru" },
+  });
+  const cardioKingAvatar = await prisma.avatars.findFirst({
+    where: { name: "Cardio King" },
+  });
+
+  const userAvatarsData = [];
+
+  // John Doe - Has default avatar (current) + Fitness Pro
+  const johnUser = users.find(u => u.email === "john@example.com");
+  if (johnUser && defaultAvatar) {
+    userAvatarsData.push({
+      is_current: true,
+      user_id: johnUser.id,
+      avatar_id: defaultAvatar.id,
+    });
+  }
+  if (johnUser && fitnessProAvatar) {
+    userAvatarsData.push({
+      is_current: false,
+      user_id: johnUser.id,
+      avatar_id: fitnessProAvatar.id,
+    });
+  }
+
+  // Jane Smith - Has Gym Master (current) + Default + Yoga Guru
+  const janeUser = users.find(u => u.email === "jane@example.com");
+  if (janeUser && defaultAvatar) {
+    userAvatarsData.push({
+      is_current: false,
+      user_id: janeUser.id,
+      avatar_id: defaultAvatar.id,
+    });
+  }
+  if (janeUser && gymMasterAvatar) {
+    userAvatarsData.push({
+      is_current: true,
+      user_id: janeUser.id,
+      avatar_id: gymMasterAvatar.id,
+    });
+  }
+  if (janeUser && yogaGuruAvatar) {
+    userAvatarsData.push({
+      is_current: false,
+      user_id: janeUser.id,
+      avatar_id: yogaGuruAvatar.id,
+    });
+  }
+
+  // Mike Johnson - Has Default Avatar (current) only
+  const mikeUser = users.find(u => u.email === "mike@example.com");
+  if (mikeUser && defaultAvatar) {
+    userAvatarsData.push({
+      is_current: true,
+      user_id: mikeUser.id,
+      avatar_id: defaultAvatar.id,
+    });
+  }
+
+  // Sarah Williams - Has Cardio King (current) + Default + Fitness Pro + Gym Master
+  const sarahUser = users.find(u => u.email === "sarah@example.com");
+  if (sarahUser && defaultAvatar) {
+    userAvatarsData.push({
+      is_current: false,
+      user_id: sarahUser.id,
+      avatar_id: defaultAvatar.id,
+    });
+  }
+  if (sarahUser && fitnessProAvatar) {
+    userAvatarsData.push({
+      is_current: false,
+      user_id: sarahUser.id,
+      avatar_id: fitnessProAvatar.id,
+    });
+  }
+  if (sarahUser && gymMasterAvatar) {
+    userAvatarsData.push({
+      is_current: false,
+      user_id: sarahUser.id,
+      avatar_id: gymMasterAvatar.id,
+    });
+  }
+  if (sarahUser && cardioKingAvatar) {
+    userAvatarsData.push({
+      is_current: true,
+      user_id: sarahUser.id,
+      avatar_id: cardioKingAvatar.id,
+    });
+  }
+
+  // David Brown - Has Default Avatar (current) + Yoga Guru
+  const davidUser = users.find(u => u.email === "david@example.com");
+  if (davidUser && defaultAvatar) {
+    userAvatarsData.push({
+      is_current: true,
+      user_id: davidUser.id,
+      avatar_id: defaultAvatar.id,
+    });
+  }
+  if (davidUser && yogaGuruAvatar) {
+    userAvatarsData.push({
+      is_current: false,
+      user_id: davidUser.id,
+      avatar_id: yogaGuruAvatar.id,
+    });
+  }
+
+  // Insert all user_avatars relationships
+  if (userAvatarsData.length > 0) {
+    await prisma.user_avatars.createMany({
+      data: userAvatarsData,
+    });
+
+    console.log(`Created ${userAvatarsData.length} user avatar relationships`);
+
+    // Log summary
+    console.log("\nUser Avatar Summary:");
+    for (const user of users) {
+      const userAvatarCount = userAvatarsData.filter(
+        ua => ua.user_id === user.id,
+      ).length;
+      const currentAvatar = userAvatarsData.find(
+        ua => ua.user_id === user.id && ua.is_current,
+      );
+      const currentAvatarName = currentAvatar
+        ? currentAvatar.avatar_id === defaultAvatar?.id
+          ? "Default Avatar"
+          : currentAvatar.avatar_id === fitnessProAvatar?.id
+            ? "Fitness Pro"
+            : currentAvatar.avatar_id === gymMasterAvatar?.id
+              ? "Gym Master"
+              : currentAvatar.avatar_id === yogaGuruAvatar?.id
+                ? "Yoga Guru"
+                : currentAvatar.avatar_id === cardioKingAvatar?.id
+                  ? "Cardio King"
+                  : "Unknown"
+        : "None";
+
+      console.log(
+        `- ${user.name}: ${userAvatarCount} avatars (Current: ${currentAvatarName})`,
+      );
+    }
+  }
 }
 
 main()
