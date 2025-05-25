@@ -1005,7 +1005,7 @@ async function main() {
       name: "Yoga Guru",
       rarity: "legendary",
       image_url:
-        "https://api.dicebear.com/6.x/avataaars/svg?seed=yogaguru&clothesColor=ffc0cb&clothes=graphicShirt&top=longHair&hairColor=ffd700&facialHairColor=ffd700&eyes=hearts&eyebrows=raised",
+        "https://api.dicebear.com/9.x/notionists/svg?seed=legendary&backgroundColor=ffffff&backgroundType=gradientLinear&brows=variant01,variant02,variant12&lips=variant01,variant16,variant30&nose=variant01,variant18&glassesProbability=50",
     },
   ];
 
