@@ -21,6 +21,7 @@ export class ChallengeController {
   async completeDailyChallenge(
     @Param("userId", ParseIntPipe) userId: number,
   ) {
+    console.log({hila: userId})
     return await this.challengeService.completeDailyChallenge(userId);
   }
 }

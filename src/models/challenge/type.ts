@@ -169,7 +169,14 @@ cron.schedule("0 0 * * *", () => {
 
 // Expose current challenge (e.g. via Express or just log it)
 export function getCurrentChallenge(): Challenge | null {
-  return todayChallenge;
+  return {
+    id: 1,
+    intervals: 5,
+    repetitions: 50,
+    exercise: "Push-ups",
+    description: "Complete 50 Push-ups Today",
+  }
+  // return todayChallenge;
 }
 
 // Example usage
