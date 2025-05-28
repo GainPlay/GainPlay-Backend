@@ -14,10 +14,48 @@ export class WorkoutService {
   ) {}
 
   async generateAndSaveWorkout(userId: number) {
+    const existingWorkout = await this.prisma.workouts.findFirst({
+      where: {
+        user_id: userId,
+        completed_at: null,
+      },
+      include: {
+        workout_exercises: {
+          select: { id: true },
+        },
+      },
+    });
+  
+    // 2. If found, delete all related sets and exercises
+    if (existingWorkout) {
+      const workoutExerciseIds = existingWorkout.workout_exercises.map((we) => we.id);
+  
+      // Delete related exercise_sets
+      await this.prisma.exercise_sets.deleteMany({
+        where: {
+          workout_exercise_id: { in: workoutExerciseIds },
+        },
+      });
+  
+      // Delete workout_exercises
+      await this.prisma.workout_exercises.deleteMany({
+        where: {
+          id: { in: workoutExerciseIds },
+        },
+      });
+  
+      // Delete the workout itself
+      await this.prisma.workouts.delete({
+        where: {
+          id: existingWorkout.id,
+        },
+      });
+    }
+
+
     const generatedWorkoutExercises =
       await this.geminiService.generateWorkout(userId);
 
-    console.log("Generated Workout Exercises:", generatedWorkoutExercises);
     const workout = await this.prisma.workouts.create({
       data: {
         user_id: userId,
