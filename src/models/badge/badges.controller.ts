@@ -10,6 +10,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Req,
 } from "@nestjs/common";
 
 @Controller("badges")
@@ -19,6 +20,26 @@ export class BadgesController {
   @Get()
   async findAll() {
     return this.badgesService.findAll();
+  }
+
+  @Get("user")
+  async getUserBadges(@Req() req) {
+    const userId = req.user.id;
+    return this.badgesService.getUserBadges(userId);
+  }
+
+  @Post("check")
+  async checkAndAwardBadges(@Req() req) {
+    const userId = req.user.id;
+    const newBadges = await this.badgesService.checkAndAwardBadges(userId);
+    return {
+      newBadges,
+      success: true,
+      message:
+        newBadges.length > 0
+          ? `Congratulations! You earned ${newBadges.length} new badge(s)!`
+          : "No new badges earned",
+    };
   }
 
   @Get(":id")
