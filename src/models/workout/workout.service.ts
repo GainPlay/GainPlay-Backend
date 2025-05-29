@@ -1,6 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "database/prisma.service";
-import { calculateWorkoutRewards } from "@/models/workout/utils/workoutUtils";
+import {
+  calculateWorkoutRewards,
+  calculateLevel,
+} from "@/models/workout/utils/workoutUtils";
 import { GeminiService } from "./gemini.service";
 
 @Injectable()
@@ -11,10 +14,48 @@ export class WorkoutService {
   ) {}
 
   async generateAndSaveWorkout(userId: number) {
+    const existingWorkout = await this.prisma.workouts.findFirst({
+      where: {
+        user_id: userId,
+        completed_at: null,
+      },
+      include: {
+        workout_exercises: {
+          select: { id: true },
+        },
+      },
+    });
+  
+    // 2. If found, delete all related sets and exercises
+    if (existingWorkout) {
+      const workoutExerciseIds = existingWorkout.workout_exercises.map((we) => we.id);
+  
+      // Delete related exercise_sets
+      await this.prisma.exercise_sets.deleteMany({
+        where: {
+          workout_exercise_id: { in: workoutExerciseIds },
+        },
+      });
+  
+      // Delete workout_exercises
+      await this.prisma.workout_exercises.deleteMany({
+        where: {
+          id: { in: workoutExerciseIds },
+        },
+      });
+  
+      // Delete the workout itself
+      await this.prisma.workouts.delete({
+        where: {
+          id: existingWorkout.id,
+        },
+      });
+    }
+
+
     const generatedWorkoutExercises =
       await this.geminiService.generateWorkout(userId);
 
-    console.log("Generated Workout Exercises:", generatedWorkoutExercises);
     const workout = await this.prisma.workouts.create({
       data: {
         user_id: userId,
@@ -140,11 +181,20 @@ export class WorkoutService {
     });
   }
 
-  async finishWorkout(
-    finishedWorkout: any,
-  ): Promise<{ coins: number; experience_earned: number; score: number }> {
+  async finishWorkout(finishedWorkout: any): Promise<{
+    coins: number;
+    experience_earned: number;
+    score: number;
+    levelUp: boolean;
+    newLevel: number;
+    progressToNextLevel: number;
+  }> {
     const { coins, score, experience_earned } =
       calculateWorkoutRewards(finishedWorkout);
+
+    let levelUp = false;
+    let newLevel = 1;
+    let progressToNextLevel = 0;
 
     await this.prisma.$transaction(async tx => {
       // Update the completed workout
@@ -160,16 +210,47 @@ export class WorkoutService {
         },
       });
 
-      // Update user XP and coins
+      // Get current user data
+      const currentUser = await tx.users.findUnique({
+        where: { id: workout.user_id },
+        select: { level: true, experience: true },
+      });
+
+      const oldLevel = currentUser.level || 1;
+      const newTotalExperience =
+        (currentUser.experience || 0) + experience_earned;
+
+      // Calculate new level
+      const levelInfo = calculateLevel(newTotalExperience);
+      newLevel = levelInfo.level;
+      progressToNextLevel = levelInfo.progressToNextLevel;
+      levelUp = newLevel > oldLevel;
+
+      // Update user XP, coins, and level
       await tx.users.update({
         where: {
           id: workout.user_id,
         },
         data: {
+          level: newLevel,
           coins: { increment: coins },
           experience: { increment: experience_earned },
         },
       });
+
+      // If user leveled up, you could add additional rewards here
+      if (levelUp) {
+        // Example: Give bonus coins for leveling up
+        const levelUpBonus = newLevel * 10; // 10 coins per level
+        await tx.users.update({
+          where: { id: workout.user_id },
+          data: { coins: { increment: levelUpBonus } },
+        });
+
+        console.log(
+          `User leveled up to ${newLevel}! Bonus: ${levelUpBonus} coins`,
+        );
+      }
 
       // Update all sets with completed reps
       for (const workoutExercise of finishedWorkout.workout_exercises) {
@@ -189,7 +270,14 @@ export class WorkoutService {
       await this.duplicateWorkout(finishedWorkout);
     });
 
-    return { coins, score, experience_earned };
+    return {
+      coins,
+      score,
+      levelUp,
+      newLevel,
+      experience_earned,
+      progressToNextLevel,
+    };
   }
 
   async duplicateWorkout(finishedWorkout: any): Promise<any> {
