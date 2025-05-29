@@ -110,7 +110,7 @@ async function main() {
 
     // Coin-based
     {
-      icon: "🪙",
+      icon: "💸",
       name: "Coin Collector",
       description: "Earn 50 coins total",
     },
