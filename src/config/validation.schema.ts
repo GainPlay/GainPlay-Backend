@@ -10,6 +10,7 @@ export const validationSchema = Joi.object({
   ACCESS_TOKEN_VALIDITY_DURATION_IN_SEC: Joi.number().default(3600),
 
   GOOGLE_CLIENT_ID: Joi.string().required(),
+  FRONTEND_URL: Joi.string().uri().required(),
   GOOGLE_CALLBACK_URL: Joi.string().required(),
   GOOGLE_CLIENT_SECRET: Joi.string().required(),
 });
