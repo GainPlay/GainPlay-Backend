@@ -52,7 +52,7 @@ export class UsersRepository {
 
   async updateUserSettings(userId: number, settingsData: any) {
     const existingSettings = await this.getUserSettings(userId);
-    console.log("Existing settingsdasasasasasasasasasasasasasasasasasasasas:", settingsData);
+
     if (existingSettings) {
       // Update existing settings
       return this.prisma.user_settings.update({
@@ -62,14 +62,14 @@ export class UsersRepository {
           body_structure: settingsData.body_structure,
           workout_duration: settingsData.workout_duration,
           exercise_frequency: settingsData.exercise_frequency,
-          age: settingsData.userData.age
-            ? parseInt(settingsData.userData.age.toString())
+          age: settingsData.age
+            ? parseInt(settingsData.age.toString())
             : undefined,
-          weight: settingsData.userData.weight
-            ? parseInt(settingsData.userData.weight.toString())
+          weight: settingsData.weight
+            ? parseInt(settingsData.weight.toString())
             : undefined,
-          height: settingsData.userData.height
-            ? parseInt(settingsData.userData.height.toString())
+          height: settingsData.height
+            ? parseInt(settingsData.height.toString())
             : undefined,
         },
       });
