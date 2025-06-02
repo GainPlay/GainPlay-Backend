@@ -138,44 +138,57 @@ export class BadgesService {
       w => w.completed_at !== null,
     );
 
-    // Calculate total reps and sets
-    let totalReps = 0;
-    let totalSets = 0;
-    const exerciseTypes = new Set<number>();
-    let upperBodyExercises = 0;
-    let lowerBodyExercises = 0;
-    let coreExercises = 0;
+    // Calculate stats from COMPLETED workouts only
+    let totalCompletedReps = 0;
+    let totalCompletedSets = 0;
+    const completedExerciseTypes = new Set<number>();
+    let completedUpperBodyExercises = 0;
+    let completedLowerBodyExercises = 0;
+    let completedCoreExercises = 0;
+    let totalCoinsEarned = 0;
 
     completedWorkouts.forEach(workout => {
-      workout.workout_exercises.forEach(we => {
-        exerciseTypes.add(we.exercise_id);
+      // Add coins earned from this workout
+      totalCoinsEarned += workout.coins_earned || 0;
 
-        // Count muscle groups
-        const muscleGroup = we.exercises?.muscle_group?.toLowerCase() || "";
-        if (
-          muscleGroup.includes("chest") ||
-          muscleGroup.includes("back") ||
-          muscleGroup.includes("shoulder") ||
-          muscleGroup.includes("arm")
-        ) {
-          upperBodyExercises++;
-        } else if (
-          muscleGroup.includes("leg") ||
-          muscleGroup.includes("glute") ||
-          muscleGroup.includes("calf")
-        ) {
-          lowerBodyExercises++;
-        } else if (
-          muscleGroup.includes("core") ||
-          muscleGroup.includes("abs")
-        ) {
-          coreExercises++;
-        }
+      workout.workout_exercises.forEach(we => {
+        let exerciseHasCompletedReps = false;
 
         we.exercise_sets.forEach(set => {
-          totalSets++;
-          totalReps += set.completed_reps || 0;
+          // Only count if reps were actually completed
+          if (set.completed_reps && set.completed_reps > 0) {
+            totalCompletedReps += set.completed_reps;
+            totalCompletedSets++;
+            exerciseHasCompletedReps = true;
+          }
         });
+
+        // Only count exercise types and muscle groups if the exercise was actually performed
+        if (exerciseHasCompletedReps) {
+          completedExerciseTypes.add(we.exercise_id);
+
+          // Count muscle groups for completed exercises only
+          const muscleGroup = we.exercises?.muscle_group?.toLowerCase() || "";
+          if (
+            muscleGroup.includes("chest") ||
+            muscleGroup.includes("back") ||
+            muscleGroup.includes("shoulder") ||
+            muscleGroup.includes("arm")
+          ) {
+            completedUpperBodyExercises++;
+          } else if (
+            muscleGroup.includes("leg") ||
+            muscleGroup.includes("glute") ||
+            muscleGroup.includes("calf")
+          ) {
+            completedLowerBodyExercises++;
+          } else if (
+            muscleGroup.includes("core") ||
+            muscleGroup.includes("abs")
+          ) {
+            completedCoreExercises++;
+          }
+        }
       });
     });
 
@@ -200,10 +213,10 @@ export class BadgesService {
         });
 
       case "Rep Rookie":
-        return totalReps >= 100;
+        return totalCompletedReps >= 100;
 
       case "Rep Warrior":
-        return totalReps >= 500;
+        return totalCompletedReps >= 500;
 
       case "Perfect Form":
         return completedWorkouts.some(w => w.score === 100);
@@ -215,35 +228,45 @@ export class BadgesService {
         return this.checkStreak(completedWorkouts, 7);
 
       case "Explorer":
-        return exerciseTypes.size >= 5;
+        return completedExerciseTypes.size >= 5;
 
       case "Adventurer":
-        return exerciseTypes.size >= 10;
+        return completedExerciseTypes.size >= 10;
 
       case "Warm Up":
-        return completedWorkouts.some(w =>
-          w.workout_exercises.every(
-            we => (we.exercises?.difficulty_level || 1) <= 2,
-          ),
+        return completedWorkouts.some(
+          w =>
+            w.workout_exercises.length > 0 &&
+            w.workout_exercises.every(
+              we => (we.exercises?.difficulty_level || 1) <= 2,
+            ),
         );
 
       case "Feeling Strong":
         return completedWorkouts.some(w =>
-          w.workout_exercises.some(we => we.exercises?.difficulty_level === 3),
+          w.workout_exercises.some(
+            we =>
+              we.exercises?.difficulty_level === 3 &&
+              we.exercise_sets.some(set => (set.completed_reps || 0) > 0),
+          ),
         );
 
       case "Beast Mode":
         return completedWorkouts.some(w =>
           w.workout_exercises.some(
-            we => (we.exercises?.difficulty_level || 0) >= 4,
+            we =>
+              (we.exercises?.difficulty_level || 0) >= 4 &&
+              we.exercise_sets.some(set => (set.completed_reps || 0) > 0),
           ),
         );
 
       case "Coin Collector":
-        return (userData.coins || 0) >= 50;
+        // Check total coins earned from workouts, not current balance
+        return totalCoinsEarned >= 50;
 
       case "Treasure Hunter":
-        return (userData.coins || 0) >= 100;
+        // Check total coins earned from workouts, not current balance
+        return totalCoinsEarned >= 100;
 
       case "Level Up":
         return (userData.level || 1) >= 2;
@@ -264,13 +287,13 @@ export class BadgesService {
         });
 
       case "Upper Body Focus":
-        return upperBodyExercises >= 5;
+        return completedUpperBodyExercises >= 5;
 
       case "Leg Day Legend":
-        return lowerBodyExercises >= 5;
+        return completedLowerBodyExercises >= 5;
 
       case "Core Crusher":
-        return coreExercises >= 5;
+        return completedCoreExercises >= 5;
 
       case "Welcome to GainPlay":
         return userData.user_settings !== null;
@@ -280,12 +303,16 @@ export class BadgesService {
 
       case "Social Butterfly":
         return (
-          userData.sentFriendRequests.length > 0 ||
-          userData.receivedFriendRequests.length > 0
+          (userData.sentFriendRequests.length > 0 ||
+            userData.receivedFriendRequests.length > 0) &&
+          (userData.sentFriendRequests.some(fr => fr.status === "accepted") ||
+            userData.receivedFriendRequests.some(
+              fr => fr.status === "accepted",
+            ))
         );
 
       case "Century Club":
-        return totalSets >= 100;
+        return totalCompletedSets >= 100;
 
       case "Dedicated":
         return completedWorkouts.length >= 10;
@@ -296,7 +323,7 @@ export class BadgesService {
           const duration =
             new Date(w.completed_at).getTime() -
             new Date(w.started_at).getTime();
-          return duration < 15 * 60 * 1000; // 15 minutes
+          return duration < 15 * 60 * 1000 && w.score > 0; // 15 minutes and actually completed
         });
 
       case "Marathon":
@@ -305,7 +332,7 @@ export class BadgesService {
           const duration =
             new Date(w.completed_at).getTime() -
             new Date(w.started_at).getTime();
-          return duration >= 30 * 60 * 1000; // 30 minutes
+          return duration >= 30 * 60 * 1000 && w.score > 0; // 30 minutes and actually completed
         });
 
       default:
