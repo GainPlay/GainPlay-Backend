@@ -28,24 +28,35 @@ export function calculateWorkoutRewards(finishedWorkout: any): {
   experience_earned: number;
   score: number;
 } {
-  let totalCompletedReps = 0;
-  let totalTargetReps = 0;
   let totalXp = 0;
   let totalCoins = 0;
   let completedSets = 0;
   let perfectSets = 0;
   let totalSets = 0;
 
+  // For accurate scoring
+  let totalSetScores = 0;
+  let scorableSets = 0;
+
   for (const workoutExercise of finishedWorkout.workout_exercises) {
     const difficulty = workoutExercise.exercises?.difficulty_level ?? 1;
 
+    // Get target reps from exercise template
+    const targetRepsPerSet =
+      workoutExercise.exercise_templates?.target_reps || 10;
+
     for (const exerciseSet of workoutExercise.exercise_sets) {
       const completedReps = exerciseSet.completed_reps ?? 0;
-      const targetReps = exerciseSet.reps ?? 0;
+      const targetReps = exerciseSet.reps ?? targetRepsPerSet;
 
-      totalCompletedReps += completedReps;
-      totalTargetReps += targetReps;
       totalSets++;
+
+      // Calculate individual set score (0-100)
+      if (targetReps > 0) {
+        const setScore = Math.min((completedReps / targetReps) * 100, 100);
+        totalSetScores += setScore;
+        scorableSets++;
+      }
 
       if (completedReps > 0) {
         // Calculate XP
@@ -77,11 +88,9 @@ export function calculateWorkoutRewards(finishedWorkout: any): {
     }
   }
 
-  // Calculate completion score
+  // Calculate completion score based on average of all set scores
   const score =
-    totalTargetReps > 0
-      ? Math.floor((totalCompletedReps / totalTargetReps) * 100)
-      : 0;
+    scorableSets > 0 ? Math.floor(totalSetScores / scorableSets) : 0;
 
   // Bonus for completing many sets (endurance bonus)
   if (completedSets >= 10) {
@@ -279,3 +288,4 @@ export class ExerciseFormatter {
     });
   }
 }
+
