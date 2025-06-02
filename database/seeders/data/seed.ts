@@ -243,7 +243,7 @@ async function main() {
         name: "Jane Smith",
         email: "jane@example.com",
         avatar_url: "https://example.com/avatars/jane.png",
-        password_hash: "$2a$10$2QjK6XJ1A4KD9.uB9HtfEeBZB7TF3kYvQMW5A8PF",
+        password_hash: "$2b$10$X2ULT/MIxxJlArtqFUfeAuwKrR1Yw9PxAcikEqXD/0BdI6X8hf0TW",
       },
       {
         level: 2,

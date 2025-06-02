@@ -99,14 +99,14 @@ export class AvatarService {
   }
 
   async setCurrentAvatar(userId: number, avatarId: number) {
-    const userAvatar = await this.repository.findUserAvatar(userId, avatarId);
-    if (!userAvatar) {
-      throw new NotFoundException("You do not own this avatar");
-    }
+    // const userAvatar = await this.repository.findUserAvatar(userId, avatarId);
+    // if (!userAvatar) {
+    //   throw new NotFoundException("You do not own this avatar");
+    // }
 
-    await this.repository.updateAllUserAvatars(userId, { is_current: false });
-    await this.repository.updateUserAvatar(userAvatar.id, { is_current: true });
+    // await this.repository.updateAllUserAvatars(userId, { is_current: false });
+   const response = await this.repository.updateUserAvatar(userId, avatarId);
 
-    return { success: true };
+    return { success: true, avatarUrl: response.avatar_url};
   }
 }

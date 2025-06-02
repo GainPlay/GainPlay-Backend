@@ -92,10 +92,15 @@ export class AvatarRepository {
     });
   }
 
-  async updateUserAvatar(id: number, data: any): Promise<user_avatars> {
-    return this.prisma.user_avatars.update({
-      data,
-      where: { id },
+  async updateUserAvatar(userId: number, avatarId: any): Promise<users> {
+    const avatar = await this.prisma.avatars.findFirst({
+      select: { image_url: true },
+      where: { id: avatarId },
+    });
+
+    return await this.prisma.users.update({
+      data: { avatar_url: avatar?.image_url ?? null },
+      where: { id: userId },
     });
   }
 
