@@ -39,6 +39,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
         name: displayName,
         password_hash: "",
         created_at: new Date(),
+        finished_onboarding: false,
         avatar_url: profile.photos?.[0]?.value || "",
       });
     }
