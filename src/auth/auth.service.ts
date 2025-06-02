@@ -49,6 +49,7 @@ export class AuthService {
       coins: 500, // Start with 500 coins so they can purchase avatars
       experience: 0,
       created_at: undefined,
+      finished_onboarding: false,
       password_hash: hashedPassword,
       avatar_url: "https://api.dicebear.com/6.x/avataaars/svg?seed=default",
     };

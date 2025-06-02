@@ -106,7 +106,16 @@ export class WorkoutService {
       }
     }
 
+    this.updateFinishOnboarding(userId);
+
     return this.findcurrentWorkout(userId);
+  }
+
+  async updateFinishOnboarding(userId: number) {
+    await this.prisma.users.update({
+      where: { id: userId },
+      data: { finished_onboarding: true },
+    });
   }
 
   async findAll(userId: number) {

@@ -17,6 +17,7 @@ model users {
   level                  Int?           @default(1)
   experience             Int?           @default(0)
   streak                 Int?           @default(0)
+  finished_onboarding    Boolean?       @default(false)
   created_at             DateTime?      @default(now()) @db.Timestamp(6)
   sentFriendRequests     friendships[]  @relation("SentFriendRequests")
   receivedFriendRequests friendships[]  @relation("ReceivedFriendRequests")
@@ -146,7 +147,7 @@ model workouts {
   started_at        DateTime?           @default(now()) @db.Timestamp(6)
   completed_at      DateTime?           @db.Timestamp(6)
   coins_earned      Int?
-  experience_earned  Int?
+  experience_earned Int?
   score             Int?
   workout_exercises workout_exercises[]
   users             users?              @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
