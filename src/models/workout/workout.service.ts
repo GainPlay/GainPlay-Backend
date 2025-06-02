@@ -142,6 +142,7 @@ export class WorkoutService {
             sets: exercise.exercise_sets.map(set => {
               return {
                 reps: set.reps,
+                completedReps: set.completed_reps,
                 completed: set.completed_reps >= set.reps,
               };
             }),
