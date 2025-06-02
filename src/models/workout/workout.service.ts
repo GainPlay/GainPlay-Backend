@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "database/prisma.service";
+import { BadgesService } from "@/models/badge/badges.service"; // Add this import
 import {
   calculateWorkoutRewards,
   calculateLevel,
@@ -11,6 +12,7 @@ export class WorkoutService {
   constructor(
     private prisma: PrismaService,
     private geminiService: GeminiService,
+    private badgesService: BadgesService,
   ) {}
 
   async generateAndSaveWorkout(userId: number) {
@@ -25,25 +27,27 @@ export class WorkoutService {
         },
       },
     });
-  
+
     // 2. If found, delete all related sets and exercises
     if (existingWorkout) {
-      const workoutExerciseIds = existingWorkout.workout_exercises.map((we) => we.id);
-  
+      const workoutExerciseIds = existingWorkout.workout_exercises.map(
+        we => we.id,
+      );
+
       // Delete related exercise_sets
       await this.prisma.exercise_sets.deleteMany({
         where: {
           workout_exercise_id: { in: workoutExerciseIds },
         },
       });
-  
+
       // Delete workout_exercises
       await this.prisma.workout_exercises.deleteMany({
         where: {
           id: { in: workoutExerciseIds },
         },
       });
-  
+
       // Delete the workout itself
       await this.prisma.workouts.delete({
         where: {
@@ -51,7 +55,6 @@ export class WorkoutService {
         },
       });
     }
-
 
     const generatedWorkoutExercises =
       await this.geminiService.generateWorkout(userId);
@@ -188,6 +191,7 @@ export class WorkoutService {
     levelUp: boolean;
     newLevel: number;
     progressToNextLevel: number;
+    newBadges?: any[];
   }> {
     const { coins, score, experience_earned } =
       calculateWorkoutRewards(finishedWorkout);
@@ -195,9 +199,9 @@ export class WorkoutService {
     let levelUp = false;
     let newLevel = 1;
     let progressToNextLevel = 0;
+    let userId: number;
 
     await this.prisma.$transaction(async tx => {
-      // Update the completed workout
       const workout = await tx.workouts.update({
         where: {
           id: finishedWorkout.id,
@@ -209,6 +213,8 @@ export class WorkoutService {
           completed_at: new Date().toISOString(),
         },
       });
+
+      userId = workout.user_id; // Store userId for badge checking
 
       // Get current user data
       const currentUser = await tx.users.findUnique({
@@ -270,6 +276,8 @@ export class WorkoutService {
       await this.duplicateWorkout(finishedWorkout);
     });
 
+    const newBadges = await this.badgesService.checkAndAwardBadges(userId);
+
     return {
       coins,
       score,
@@ -277,6 +285,7 @@ export class WorkoutService {
       newLevel,
       experience_earned,
       progressToNextLevel,
+      newBadges: newBadges.length > 0 ? newBadges : undefined,
     };
   }
 

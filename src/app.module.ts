@@ -19,6 +19,7 @@ import { FriendshipsModule } from "@/models/friendships/friendships.module";
 import { UserAvatarsModule } from "@/models/user_avatars/user-avatars.module";
 import { UserSettingsModule } from "@/models/user_setting/user-settings.module";
 import { ExerciseSetsModule } from "@/models/exercise_sets/exercise-sets.module";
+import { ChallengeModule } from "@/models/challenge/challenge.module";
 @Module({
   controllers: [AppController],
   providers: [
@@ -48,6 +49,7 @@ import { ExerciseSetsModule } from "@/models/exercise_sets/exercise-sets.module"
     AvatarModule,
     UserAvatarsModule,
     FriendshipsModule,
+    ChallengeModule,
   ],
 })
 export class AppModule {}

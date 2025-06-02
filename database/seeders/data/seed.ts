@@ -25,41 +25,201 @@ async function main() {
 
   // Insert badges
   console.log("Adding badges...");
-  await prisma.badges.createMany({
-    data: [
-      {
-        icon: "trophy",
-        name: "First Workout",
-        description: "Complete your first workout",
-      },
-      {
-        icon: "calendar-check",
-        name: "Consistency King",
-        description: "Complete 10 workouts in a month",
-      },
-      {
-        icon: "dumbbell",
-        name: "Strength Master",
-        description: "Lift 5000 kg total in a single workout",
-      },
-      {
-        icon: "sunrise",
-        name: "Early Bird",
-        description: "Complete 5 workouts before 8am",
-      },
-      {
-        icon: "moon",
-        name: "Night Owl",
-        description: "Complete 5 workouts after 8pm",
-      },
-      { icon: "users", name: "Social Butterfly", description: "Add 5 friends" },
-      {
-        icon: "target",
-        name: "Goal Crusher",
-        description: "Complete all your fitness goals",
-      },
-    ],
-  });
+  // Add this to your existing seed function
+
+  const badges = [
+    // Easy to achieve (1-3 workouts)
+    {
+      icon: "👟",
+      name: "First Steps",
+      description: "Complete your first workout",
+    },
+    {
+      icon: "🚀",
+      name: "Getting Started",
+      description: "Complete 3 workouts",
+    },
+    {
+      icon: "🌅",
+      name: "Early Bird",
+      description: "Complete a workout before 9 AM",
+    },
+    {
+      icon: "🦉",
+      name: "Night Owl",
+      description: "Complete a workout after 8 PM",
+    },
+
+    // Rep-based (easy to achieve)
+    {
+      icon: "🔢",
+      name: "Rep Rookie",
+      description: "Complete 100 total reps",
+    },
+    {
+      icon: "⚔️",
+      name: "Rep Warrior",
+      description: "Complete 500 total reps",
+    },
+    {
+      icon: "✨",
+      name: "Perfect Form",
+      description: "Complete a workout with 100% accuracy",
+    },
+
+    // Streak-based (short streaks)
+    {
+      icon: "🔥",
+      name: "On Fire",
+      description: "Maintain a 3-day workout streak",
+    },
+    {
+      icon: "👑",
+      name: "Consistency King",
+      description: "Maintain a 7-day workout streak",
+    },
+
+    // Exercise variety
+    {
+      icon: "🗺️",
+      name: "Explorer",
+      description: "Try 5 different exercises",
+    },
+    {
+      icon: "🧭",
+      name: "Adventurer",
+      description: "Try 10 different exercises",
+    },
+
+    // Intensity-based
+    {
+      icon: "🌡️",
+      name: "Warm Up",
+      description: "Complete an easy workout (difficulty 1-2)",
+    },
+    {
+      icon: "💪",
+      name: "Feeling Strong",
+      description: "Complete a medium workout (difficulty 3)",
+    },
+    {
+      icon: "🦾",
+      name: "Beast Mode",
+      description: "Complete a hard workout (difficulty 4-5)",
+    },
+
+    // Coin-based
+    {
+      icon: "💸",
+      name: "Coin Collector",
+      description: "Earn 50 coins total",
+    },
+    {
+      icon: "💰",
+      name: "Treasure Hunter",
+      description: "Earn 100 coins total",
+    },
+
+    // XP/Level-based
+    {
+      icon: "📈",
+      name: "Level Up",
+      description: "Reach level 2",
+    },
+    {
+      icon: "⭐",
+      name: "Rising Star",
+      description: "Reach level 5",
+    },
+
+    // Time-based
+    {
+      icon: "⚡",
+      name: "Quick Burn",
+      description: "Complete a workout in under 15 minutes",
+    },
+    {
+      icon: "🏃",
+      name: "Marathon",
+      description: "Complete a workout lasting 30+ minutes",
+    },
+
+    // Social/Fun
+    {
+      icon: "🎉",
+      name: "Weekend Warrior",
+      description: "Complete a workout on Saturday or Sunday",
+    },
+    {
+      icon: "💯",
+      name: "Monday Motivation",
+      description: "Complete a workout on Monday",
+    },
+
+    // Muscle group specific
+    {
+      icon: "🏋️",
+      name: "Upper Body Focus",
+      description: "Complete 5 upper body exercises",
+    },
+    {
+      icon: "🦵",
+      name: "Leg Day Legend",
+      description: "Complete 5 lower body exercises",
+    },
+    {
+      icon: "🎯",
+      name: "Core Crusher",
+      description: "Complete 5 core exercises",
+    },
+
+    // Special achievements
+    {
+      icon: "🎮",
+      name: "Welcome to GainPlay",
+      description: "Create your account and complete onboarding",
+    },
+    {
+      icon: "🎭",
+      name: "Avatar Collector",
+      description: "Purchase your first avatar",
+    },
+    {
+      icon: "🦋",
+      name: "Social Butterfly",
+      description: "Add your first friend",
+    },
+
+    // Milestone badges
+    {
+      icon: "💯",
+      name: "Century Club",
+      description: "Complete 100 exercise sets total",
+    },
+    {
+      icon: "🏆",
+      name: "Dedicated",
+      description: "Complete 10 workouts total",
+    },
+  ];
+
+  for (const badge of badges) {
+    // Find existing badge by name
+    const existingBadge = await prisma.badges.findFirst({
+      where: { name: badge.name },
+    });
+
+    if (existingBadge) {
+      await prisma.badges.update({
+        data: badge,
+        where: { id: existingBadge.id },
+      });
+    } else {
+      await prisma.badges.create({
+        data: badge,
+      });
+    }
+  }
 
   // Insert users
   console.log("Adding users...");
@@ -167,22 +327,30 @@ async function main() {
   console.log("Adding goals...");
   await prisma.goals.createMany({
     data: [
-      { name: "Weight Loss", description: "Lose specified amount of weight" },
+      { name: "Lose Weight", description: "Lose specified amount of weight" },
       {
-        name: "Strength Gain",
+        name: "Gain Muscle",
         description: "Increase weight lifted for specific exercises",
       },
       {
-        name: "Workout Frequency",
-        description: "Complete specified number of workouts per week",
+        name: "Improve Endurance",
+        description:
+          "Build stamina and cardiovascular fitness to power through longer workouts and daily activities with ease",
       },
       {
-        name: "Running Distance",
-        description: "Run a specified total distance",
+        name: "Increase Strength",
+        description:
+          "Develop muscle power and functional strength to lift heavier, perform better, and feel stronger in everyday life",
       },
       {
-        name: "Consistency",
-        description: "Work out consistently for a specified number of days",
+        name: "Improve Flexibility",
+        description:
+          "Enhance your range of motion and mobility to move freely, prevent injuries, and improve overall body balance",
+      },
+      {
+        name: "Maintain Health",
+        description:
+          "Stay active and consistent with regular exercise to support your overall well-being and long-term vitality",
       },
     ],
   });
