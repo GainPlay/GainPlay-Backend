@@ -66,14 +66,14 @@ export class UsersRepository {
           body_structure: settingsData.body_structure,
           workout_duration: settingsData.workout_duration,
           exercise_frequency: settingsData.exercise_frequency,
-          age: settingsData.age
-            ? parseInt(settingsData.age.toString())
+          age: settingsData.userData.age
+            ? parseInt(settingsData.userData.age.toString())
             : undefined,
-          weight: settingsData.weight
-            ? parseInt(settingsData.weight.toString())
+          weight: settingsData.userData.weight
+            ? parseInt(settingsData.userData.weight.toString())
             : undefined,
-          height: settingsData.height
-            ? parseInt(settingsData.height.toString())
+          height: settingsData.userData.height
+            ? parseInt(settingsData.userData.height.toString())
             : undefined,
         },
       });

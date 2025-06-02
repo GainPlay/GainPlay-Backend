@@ -106,7 +106,16 @@ export class WorkoutService {
       }
     }
 
+    this.updateFinishOnboarding(userId);
+
     return this.findcurrentWorkout(userId);
+  }
+
+  async updateFinishOnboarding(userId: number) {
+    await this.prisma.users.update({
+      where: { id: userId },
+      data: { finished_onboarding: true },
+    });
   }
 
   async findAll(userId: number) {
@@ -142,6 +151,7 @@ export class WorkoutService {
             sets: exercise.exercise_sets.map(set => {
               return {
                 reps: set.reps,
+                completedReps: set.completed_reps,
                 completed: set.completed_reps >= set.reps,
               };
             }),
