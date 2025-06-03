@@ -2,18 +2,18 @@ import { exercises } from "@prisma/client";
 
 // Level progression configuration
 const LEVEL_CONFIG = {
-  baseXP: 100, // XP needed for level 1
+  baseXP: 500, // XP needed for level 1
   maxLevel: 100,
-  multiplier: 1.5, // Each level requires 50% more XP than previous
+  multiplier: 1.2, // Each level requires 20% more XP than previous
 };
 
 // Reward configuration
 const REWARD_CONFIG = {
   xp: {
-    basePerRep: 1, // Base XP per rep
-    perfectSetBonus: 5, // Extra bonus for completing all target reps
-    completionBonus: 10, // Bonus for completing a set
-    difficultyMultiplier: 0.5, // Additional XP per difficulty level
+    basePerRep: 0.2, // Further reduced from 0.5
+    completionBonus: 2, // Further reduced from 5
+    perfectSetBonus: 1, // Further reduced from 3
+    difficultyMultiplier: 0.1, // Further reduced from 0.3
   },
   coins: {
     basePerRep: 0.5, // Base coins per rep
@@ -125,46 +125,55 @@ export function calculateLevel(totalExperience: number): {
   progressToNextLevel: number;
 } {
   let level = 1;
-  let xpForCurrentLevel = 0;
-  let xpForNextLevel = LEVEL_CONFIG.baseXP;
+  let cumulativeXP = 0;
+  let currentLevelRequiredXP = LEVEL_CONFIG.baseXP;
 
-  // Calculate current level
-  while (totalExperience >= xpForNextLevel && level < LEVEL_CONFIG.maxLevel) {
-    level++;
-    xpForCurrentLevel = xpForNextLevel;
-    xpForNextLevel = Math.floor(
+  // Calculate current level by checking cumulative XP thresholds
+  while (level < LEVEL_CONFIG.maxLevel) {
+    const xpNeededForNextLevel = Math.floor(
       LEVEL_CONFIG.baseXP * Math.pow(LEVEL_CONFIG.multiplier, level - 1),
     );
+
+    if (totalExperience < cumulativeXP + xpNeededForNextLevel) {
+      currentLevelRequiredXP = xpNeededForNextLevel;
+      break;
+    }
+
+    cumulativeXP += xpNeededForNextLevel;
+    level++;
   }
 
-  // Calculate progress to next level
-  const xpInCurrentLevel = totalExperience - xpForCurrentLevel;
-  const xpNeededForLevel = xpForNextLevel - xpForCurrentLevel;
+  // Calculate progress within current level
+  const xpInCurrentLevel = totalExperience - cumulativeXP;
   const progressToNextLevel = Math.min(
-    Math.floor((xpInCurrentLevel / xpNeededForLevel) * 100),
+    Math.floor((xpInCurrentLevel / currentLevelRequiredXP) * 100),
     100,
   );
 
   return {
     level,
     progressToNextLevel,
-    nextLevelXP: xpNeededForLevel,
     currentLevelXP: xpInCurrentLevel,
+    nextLevelXP: currentLevelRequiredXP,
   };
 }
 
-// Example workout rewards:
-// Easy workout (difficulty 1-2, ~50 reps): ~30-40 coins, ~80-120 XP
-// Medium workout (difficulty 3, ~75 reps): ~60-80 coins, ~150-200 XP
-// Hard workout (difficulty 4-5, ~100 reps): ~100-150 coins, ~250-350 XP
+// Example workout rewards with balanced XP:
+// Easy workout (difficulty 1-2, ~50 reps): ~30-40 coins, ~20-35 XP
+// Medium workout (difficulty 3, ~75 reps): ~60-80 coins, ~35-50 XP
+// Hard workout (difficulty 4-5, ~100 reps): ~100-150 coins, ~50-80 XP
 
 // Level progression examples:
-// Level 1: 0-100 XP
-// Level 2: 100-250 XP
-// Level 3: 250-475 XP
-// Level 4: 475-812 XP
-// Level 5: 812-1318 XP
-// etc...
+// Level 1→2: 500 XP (~10-25 perfect workouts)
+// Level 2→3: 600 XP (~12-30 perfect workouts)
+// Level 3→4: 720 XP (~14-36 perfect workouts)
+// Level 4→5: 864 XP (~17-43 perfect workouts)
+// Level 5→6: 1037 XP (~20-52 perfect workouts)
+
+// With these values:
+// - A perfect hard workout gives ~50-80 XP
+// - You need 6-10 perfect hard workouts to reach level 2
+// - Reaching level 5 requires 50-100+ workouts
 
 // Helper function to get level milestones
 export function getLevelMilestones(currentLevel: number): {
@@ -288,4 +297,3 @@ export class ExerciseFormatter {
     });
   }
 }
-
