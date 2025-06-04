@@ -71,6 +71,7 @@ export class UserGoalsService {
     const user = await this.prisma.users.findUnique({
       where: { id: userId },
       select: {
+        id: true,
         name: true,
         level: true,
         coins: true,
@@ -170,6 +171,7 @@ export class UserGoalsService {
         earned_at: ub.earned_at?.toISOString() || new Date().toISOString(),
       })),
       user: {
+        id: user.id,
         level: user.level || 1,
         coins: user.coins || 0,
         streak: user.streak || 0,

@@ -7,22 +7,22 @@ export class UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findOneByEmail(email: string): Promise<users | null> {
-   return this.prisma.users.findUnique({
+    return this.prisma.users.findUnique({
       where: { email },
       include: {
-        user_badges: {
-          select: {
-          badges:true
-        }},
         user_settings: true,
         user_goals: {
           select: {
             goals: true,
           },
         },
+        user_badges: {
+          select: {
+            badges: true,
+          },
+        },
       },
-   });
-
+    });
   }
 
   async findOneById(id: number): Promise<users | null> {
