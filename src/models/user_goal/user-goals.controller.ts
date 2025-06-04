@@ -1,3 +1,4 @@
+import { GeminiService } from "@/models/user_goal/gemini.service";
 import {
   Controller,
   Get,
@@ -15,7 +16,10 @@ import { UpdateUserGoalValueDto } from "./dto/update-user-goal-value.dto";
 
 @Controller("user-goals")
 export class UserGoalsController {
-  constructor(private readonly userGoalsService: UserGoalsService) {}
+  constructor(
+    private readonly userGoalsService: UserGoalsService,
+    private geminiService: GeminiService,
+  ) {}
 
   @Post()
   create(@Body() createUserGoalDto: CreateUserGoalDto) {
@@ -56,5 +60,11 @@ export class UserGoalsController {
   @Delete(":id")
   remove(@Param("id", ParseIntPipe) id: number) {
     return this.userGoalsService.remove(id);
+  }
+
+  @Get("user/:userId/insights")
+  async getHealthInsights(@Param("userId", ParseIntPipe) userId: number) {
+    const insights = await this.userGoalsService.getHealthInsights(userId);
+    return { insights };
   }
 }
