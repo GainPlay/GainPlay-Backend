@@ -120,7 +120,7 @@ export class WorkoutService {
 
   async findAll(userId: number) {
     const workouts = await this.prisma.workouts.findMany({
-      where: { user_id: userId },
+      where: { user_id: userId  , completed_at: { not: null } },
       select: {
         started_at: true,
         experience_earned: true,
