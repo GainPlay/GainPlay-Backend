@@ -9,32 +9,32 @@ export class FriendshipsService {
   constructor(private readonly friendshipsRepository: FriendshipsRepository) {}
 
   async create(createFriendshipDto: CreateFriendshipDto): Promise<friendships> {
-    return this.friendshipsRepository.create(createFriendshipDto);
+    return await this.friendshipsRepository.create(createFriendshipDto);
   }
 
   async findAll(userId: number): Promise<friendships[]> {
-    return this.friendshipsRepository.findAll(userId);
+    return await this.friendshipsRepository.findAll(userId);
   }
 
   async findAllDiscover(userId: number): Promise<Partial<users>[]> {
-    return this.friendshipsRepository.findAllDiscover(userId);
+    return await this.friendshipsRepository.findAllDiscover(userId);
   }
 
   async findOneByUsers(
     user_id: number,
     friend_id: number,
   ): Promise<friendships> {
-    return this.friendshipsRepository.findOneByUsers(user_id, friend_id);
+    return await this.friendshipsRepository.findOneByUsers(user_id, friend_id);
   }
 
   async update(
     id: number,
     updateFriendshipDto: UpdateFriendshipDto,
   ): Promise<friendships> {
-    return this.friendshipsRepository.update(id, updateFriendshipDto);
+    return await this.friendshipsRepository.update(id, updateFriendshipDto);
   }
 
   async remove(id: number): Promise<friendships> {
-    return this.friendshipsRepository.remove(id);
+    return await this.friendshipsRepository.remove(id);
   }
 }

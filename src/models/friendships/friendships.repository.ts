@@ -54,7 +54,7 @@ export class FriendshipsRepository {
   }
 
   async findAll(userId: number): Promise<friendships[]> {
-    return this.prisma.friendships.findMany({
+    return await this.prisma.friendships.findMany({
       where: {
         OR: [{ user_id: userId }, { friend_id: userId }],
       },
@@ -84,7 +84,7 @@ export class FriendshipsRepository {
   }
 
   async findAllDiscover(userId: number): Promise<Partial<users>[]> {
-    return this.prisma.users.findMany({
+    return await this.prisma.users.findMany({
       select: {
         ...SELECTION_FIELDS,
         coins: true,
@@ -125,37 +125,36 @@ export class FriendshipsRepository {
   async findOneByUsers(
     user_id: number,
     friend_id: number,
-  ): Promise<friendships | null> {
-    return this.prisma.friendships.findUnique({
+  ): Promise<friendships | null> {    
+    return await this.prisma.friendships.findFirst({
       where: {
-        user_id_friend_id: {
-          user_id,
-          friend_id,
-        },
+        OR: [
+          {
+            user_id,
+            friend_id,
+          },
+          {
+            user_id: friend_id,
+            friend_id: user_id,
+          },
+        ],
       },
       include: {
         sender: {
           select: {
             ...SELECTION_FIELDS,
-            user_goals: {
-              select: {
-                goals: true,
-              },
-            },
+            user_goals: { select: { goals: true } },
           },
         },
         receiver: {
           select: {
             ...SELECTION_FIELDS,
-            user_goals: {
-              select: {
-                goals: true,
-              },
-            },
+            user_goals: { select: { goals: true } },
           },
         },
       },
     });
+    
   }
 
   async update(
