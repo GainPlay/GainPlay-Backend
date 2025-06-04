@@ -20,19 +20,19 @@ export class FriendshipsController {
 
   @Post()
   async create(@Body() createFriendshipDto: CreateFriendshipDto) {
-    return this.friendshipsService.create(createFriendshipDto);
+    return await this.friendshipsService.create(createFriendshipDto);
   }
 
   @Get()
   async findAll(@Req() req) {
     const userId = req.user.id;
-    return this.friendshipsService.findAll(userId);
+    return await this.friendshipsService.findAll(userId);
   }
 
   @Get("discover")
   async findAllDiscover(@Req() req) {
     const userId = req.user.id;
-    return this.friendshipsService.findAllDiscover(userId);
+    return await this.friendshipsService.findAllDiscover(userId);
   }
 
   @Get("friendId/:friendId")
@@ -41,7 +41,7 @@ export class FriendshipsController {
     @Param("friendId", ParseIntPipe) friendId: number,
   ) {
     const userId = req.user.id;
-    return this.friendshipsService.findOneByUsers(userId, friendId);
+    return await this.friendshipsService.findOneByUsers(userId, friendId);
   }
 
   @Put(":id")
@@ -49,11 +49,11 @@ export class FriendshipsController {
     @Param("id", ParseIntPipe) id: number,
     @Body() updateFriendshipDto: UpdateFriendshipDto,
   ) {
-    return this.friendshipsService.update(id, updateFriendshipDto);
+    return await this.friendshipsService.update(id, updateFriendshipDto);
   }
 
   @Delete(":id")
   async remove(@Param("id", ParseIntPipe) id: number) {
-    return this.friendshipsService.remove(id);
+    return await this.friendshipsService.remove(id);
   }
 }
