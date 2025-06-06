@@ -1,12 +1,6 @@
-import { ChallengeService } from "@/models/challenge/challenge.service";
 import { Challenge } from "@/models/challenge/type";
-import {
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post
-} from "@nestjs/common";
+import { ChallengeService } from "@/models/challenge/challenge.service";
+import { Controller, Get, Param, ParseIntPipe, Post } from "@nestjs/common";
 
 @Controller("daily-challenge")
 export class ChallengeController {
@@ -17,11 +11,9 @@ export class ChallengeController {
     return await this.challengeService.getTodaysChallenge();
   }
 
-  @Post('complete/:userId')
-  async completeDailyChallenge(
-    @Param("userId", ParseIntPipe) userId: number,
-  ) {
-    console.log({hila: userId})
+  @Post("complete/:userId")
+  async completeDailyChallenge(@Param("userId", ParseIntPipe) userId: number) {
+    console.log({ hila: userId });
     return await this.challengeService.completeDailyChallenge(userId);
   }
 }
