@@ -8,7 +8,10 @@ export class ChallengeController {
 
   @Get()
   async getTodaysChallenge(): Promise<Challenge> {
-    return await this.challengeService.getTodaysChallenge();
+    console.log('heyyyyyyyyyyyy')
+    const b = await this.challengeService.getTodaysChallenge();
+    console.log({ b })
+    return b
   }
 
   @Post("complete/:userId")

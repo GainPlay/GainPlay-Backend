@@ -9,7 +9,9 @@ export class ChallengeService {
   ) { }
 
   async getTodaysChallenge(): Promise<Challenge> {
-    return await this.challengeRepository.getTodaysChallenge();
+    const a = await this.challengeRepository.getTodaysChallenge();
+      console.log({a})
+return a 
   }
 
   async completeDailyChallenge(userId: number) {
