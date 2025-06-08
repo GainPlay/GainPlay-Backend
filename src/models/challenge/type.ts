@@ -9,147 +9,27 @@ export type Challenge = {
 };
 
 export const challenges: Challenge[] = [
-  {
-    id: 1,
-    intervals: 5,
-    repetitions: 50,
-    exercise: "Push-ups",
-    description: "Complete 50 Push-ups Today",
-  },
-  {
-    id: 2,
-    intervals: 4,
-    repetitions: 100,
-    exercise: "Jumping Jacks",
-    description: "Do 100 Jumping Jacks",
-  },
-  {
-    id: 3,
-    intervals: 6,
-    repetitions: 60,
-    exercise: "Squats",
-    description: "Perform 60 Squats",
-  },
-  {
-    id: 4,
-    intervals: 1,
-    repetitions: 3,
-    exercise: "Plank",
-    description: "Hold a 3-Minute Plank",
-  },
-  {
-    id: 5,
-    intervals: 4,
-    repetitions: 40,
-    exercise: "Sit-ups",
-    description: "Do 40 Sit-ups",
-  },
-  {
-    id: 6,
-    intervals: 3,
-    repetitions: 30,
-    exercise: "Burpees",
-    description: "Complete 30 Burpees",
-  },
-  {
-    id: 7,
-    intervals: 1,
-    repetitions: 10,
-    exercise: "Running in Place",
-    description: "Run in Place for 10 Minutes",
-  },
-  {
-    id: 8,
-    intervals: 4,
-    repetitions: 70,
-    exercise: "High Knees",
-    description: "Perform 70 High Knees",
-  },
-  {
-    id: 9,
-    intervals: 3,
-    repetitions: 45,
-    exercise: "Mountain Climbers",
-    description: "Do 45 Mountain Climbers",
-  },
-  {
-    id: 10,
-    intervals: 3,
-    repetitions: 35,
-    exercise: "Lunges",
-    description: "Complete 35 Lunges",
-  },
-  {
-    id: 11,
-    intervals: 1,
-    repetitions: 2,
-    exercise: "Wall Sit",
-    description: "Hold Wall Sit for 2 Minutes",
-  },
-  {
-    id: 12,
-    intervals: 4,
-    repetitions: 80,
-    exercise: "Arm Circles",
-    description: "Perform 80 Arm Circles",
-  },
-  {
-    id: 13,
-    intervals: 2,
-    repetitions: 25,
-    exercise: "Leg Raises",
-    description: "Do 25 Leg Raises",
-  },
-  {
-    id: 14,
-    intervals: 2,
-    repetitions: 20,
-    exercise: "Tricep Dips",
-    description: "Complete 20 Tricep Dips",
-  },
-  {
-    id: 15,
-    intervals: 3,
-    repetitions: 15,
-    exercise: "Pull-ups",
-    description: "Do 15 Pull-ups",
-  },
-  {
-    id: 16,
-    intervals: 1,
-    repetitions: 1,
-    exercise: "Boat Pose",
-    description: "Hold Boat Pose for 1 Minute",
-  },
-  {
-    id: 17,
-    intervals: 5,
-    repetitions: 50,
-    exercise: "Calf Raises",
-    description: "Do 50 Calf Raises",
-  },
-  {
-    id: 18,
-    intervals: 3,
-    repetitions: 30,
-    exercise: "Donkey Kicks",
-    description: "Perform 30 Donkey Kicks",
-  },
-  {
-    id: 19,
-    intervals: 2,
-    repetitions: 20,
-    exercise: "Glute Bridges",
-    description: "Do 20 Glute Bridges",
-  },
-  {
-    id: 20,
-    intervals: 1,
-    repetitions: 5,
-    exercise: "Full Body Stretch",
-    description: "Stretch for 5 Minutes",
-  },
-];
+  { id: 1, intervals: 4, repetitions: 40, exercise: "Push-ups", description: "Complete 50 Push-ups Today" },
+  { id: 2, intervals: 4, repetitions: 40, exercise: "Squats", description: "Do 40 Bodyweight Squats" },
+  { id: 3, intervals: 3, repetitions: 30, exercise: "Lunges", description: "Complete 30 Lunges (15 per leg)" },
+  { id: 4, intervals: 4, repetitions: 60, exercise: "Jumping Jacks", description: "Finish 60 Jumping Jacks" },
+  { id: 5, intervals: 2, repetitions: 20, exercise: "Burpees", description: "Challenge Yourself with 20 Burpees" },
+  { id: 6, intervals: 3, repetitions: 45, exercise: "Mountain Climbers", description: "Do 45 Mountain Climbers" },
+  { id: 7, intervals: 5, repetitions: 25, exercise: "Plank (seconds)", description: "Hold Plank for 25 Seconds" },
+  { id: 8, intervals: 3, repetitions: 15, exercise: "Pull-ups", description: "Do 15 Pull-ups" },
+  { id: 9, intervals: 4, repetitions: 40, exercise: "High Knees", description: "Perform 40 High Knees" },
+  { id: 10, intervals: 3, repetitions: 30, exercise: "Sit-ups", description: "Complete 30 Sit-ups" },
+  { id: 11, intervals: 4, repetitions: 35, exercise: "Crunches", description: "Do 35 Crunches" },
+  { id: 12, intervals: 2, repetitions: 25, exercise: "Jump Squats", description: "Complete 25 Jump Squats" },
+  { id: 13, intervals: 3, repetitions: 10, exercise: "Handstand Push-ups", description: "Try 10 Handstand Push-ups" },
+  { id: 14, intervals: 5, repetitions: 60, exercise: "Flutter Kicks", description: "Perform 60 Flutter Kicks" },
+  { id: 15, intervals: 4, repetitions: 50, exercise: "Bicycle Crunches", description: "Do 50 Bicycle Crunches" },
+  { id: 16, intervals: 3, repetitions: 20, exercise: "Box Jumps", description: "Complete 20 Box Jumps" },
+  { id: 17, intervals: 2, repetitions: 30, exercise: "Tricep Dips", description: "Finish 30 Tricep Dips" },
+  { id: 18, intervals: 4, repetitions: 40, exercise: "Wall Sits (seconds)", description: "Hold Wall Sit for 40 Seconds" },
+  { id: 19, intervals: 3, repetitions: 50, exercise: "Step-ups", description: "Do 50 Step-ups" },
+  { id: 20, intervals: 5, repetitions: 60, exercise: "Skaters", description: "Perform 60 Skaters" }
+]
 
 let todayChallenge: Challenge | null = null;
 
@@ -169,14 +49,8 @@ cron.schedule("0 0 * * *", () => {
 
 // Expose current challenge (e.g. via Express or just log it)
 export function getCurrentChallenge(): Challenge | null {
-  return {
-    id: 1,
-    intervals: 5,
-    repetitions: 50,
-    exercise: "Push-ups",
-    description: "Complete 50 Push-ups Today",
-  }
-  // return todayChallenge;
+  console.log({todayChallenge})
+  return todayChallenge;
 }
 
 // Example usage

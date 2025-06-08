@@ -7,7 +7,9 @@ export class ChallengeRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async getTodaysChallenge(): Promise<Challenge> {
-    return getCurrentChallenge();
+    const c = getCurrentChallenge();
+    console.log({ c })
+    return c
   }
 
   async findOneById(userId: number) {
