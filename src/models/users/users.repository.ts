@@ -37,8 +37,8 @@ export class UsersRepository {
     return this.prisma.users.update({
       where: { id: userId },
       data: {
-        name: body.userData.name,
-        email: body.userData.email,
+        name: body.name,
+        email: body.email,
         // avatar_url: body.userData.avatar,
       },
     });
@@ -56,7 +56,6 @@ export class UsersRepository {
 
   async updateUserSettings(userId: number, settingsData: any) {
     const existingSettings = await this.getUserSettings(userId);
-
     if (existingSettings) {
       // Update existing settings
       return this.prisma.user_settings.update({
