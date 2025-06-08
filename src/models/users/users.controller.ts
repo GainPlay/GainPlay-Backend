@@ -64,6 +64,6 @@ export class UsersController {
     @Param("userId", ParseIntPipe) userId: number,
     @Body() userData: any,
   ) {
-    return this.usersService.updateUser(userId, userData);
+    return await this.usersService.updateUser(userId, userData);
   }
 }
