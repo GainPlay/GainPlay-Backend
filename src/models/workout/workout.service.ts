@@ -120,7 +120,7 @@ export class WorkoutService {
 
   async findAll(userId: number) {
     const workouts = await this.prisma.workouts.findMany({
-      where: { user_id: userId  , completed_at: { not: null } },
+      where: { user_id: userId, completed_at: { not: null } },
       select: {
         started_at: true,
         experience_earned: true,
@@ -262,10 +262,6 @@ export class WorkoutService {
           where: { id: workout.user_id },
           data: { coins: { increment: levelUpBonus } },
         });
-
-        console.log(
-          `User leveled up to ${newLevel}! Bonus: ${levelUpBonus} coins`,
-        );
       }
 
       // Update all sets with completed reps
