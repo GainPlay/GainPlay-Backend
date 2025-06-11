@@ -1,32 +1,31 @@
-import { ChallengeRepository } from "@/models/challenge/challenge.repository";
-import { Challenge } from "@/models/challenge/type";
 import { Injectable } from "@nestjs/common";
+import { Challenge } from "@/models/challenge/type";
+import { ChallengeRepository } from "@/models/challenge/challenge.repository";
 
 @Injectable()
 export class ChallengeService {
-  constructor(
-    private readonly challengeRepository: ChallengeRepository,
-  ) { }
+  constructor(private readonly challengeRepository: ChallengeRepository) {}
 
   async getTodaysChallenge(): Promise<Challenge> {
-    const a = await this.challengeRepository.getTodaysChallenge();
-      console.log({a})
-return a 
+    return await this.challengeRepository.getTodaysChallenge();
   }
 
   async completeDailyChallenge(userId: number) {
     const user = await this.challengeRepository.findOneById(userId);
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
     const coinsGain = 50;
     const newCoins = user.coins + coinsGain;
 
-    const updatedUser = await this.challengeRepository.updateUserAfterChallenge(userId, newCoins);
+    const updatedUser = await this.challengeRepository.updateUserAfterChallenge(
+      userId,
+      newCoins,
+    );
 
     return {
-      message: 'Challenge completed!',
       user: updatedUser,
+      message: "Challenge completed!",
     };
   }
 }

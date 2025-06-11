@@ -260,10 +260,6 @@ export class WorkoutService {
           where: { id: workout.user_id },
           data: { coins: { increment: levelUpBonus } },
         });
-
-        console.log(
-          `User leveled up to ${newLevel}! Bonus: ${levelUpBonus} coins`,
-        );
       }
 
       // Update all sets with completed reps
