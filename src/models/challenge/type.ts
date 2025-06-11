@@ -130,13 +130,9 @@ todayChallenge = generateDailyChallenge();
 // 🔁 Schedule to run at 00:00 every day
 cron.schedule("0 0 * * *", () => {
   todayChallenge = generateDailyChallenge();
-  console.log("New daily challenge generated:", todayChallenge);
 });
 
 // Expose current challenge (e.g. via Express or just log it)
 export function getCurrentChallenge(): Challenge | null {
   return todayChallenge;
 }
-
-// Example usage
-console.log("Current Challenge:", getCurrentChallenge());

@@ -13,13 +13,13 @@ import { AvatarModule } from "@/models/avatar/avatar.module";
 import { WorkoutModule } from "@/models/workout/workout.module";
 import { validationSchema } from "src/config/validation.schema";
 import { GlobalAuthGuard } from "@/auth/guards/globalAuth.guard";
+import { ChallengeModule } from "@/models/challenge/challenge.module";
 import { UserGoalsModule } from "@/models/user_goal/user-goals.module";
 import { UserBadgesModule } from "@/models/user_badges/user-badges.module";
 import { FriendshipsModule } from "@/models/friendships/friendships.module";
 import { UserAvatarsModule } from "@/models/user_avatars/user-avatars.module";
 import { UserSettingsModule } from "@/models/user_setting/user-settings.module";
 import { ExerciseSetsModule } from "@/models/exercise_sets/exercise-sets.module";
-import { ChallengeModule } from "@/models/challenge/challenge.module";
 @Module({
   controllers: [AppController],
   providers: [
