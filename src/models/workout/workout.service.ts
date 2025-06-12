@@ -1,10 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "database/prisma.service";
-import { BadgesService } from "@/models/badge/badges.service"; // Add this import
-import {
-  calculateWorkoutRewards,
-  calculateLevel,
-} from "@/models/workout/utils/workoutUtils";
+import { BadgesService } from "@/models/badge/badges.service";
+import { calculateWorkoutRewards } from "@/models/workout/utils/workoutUtils";
 import { GeminiService } from "./gemini.service";
 
 @Injectable()
@@ -236,11 +233,12 @@ export class WorkoutService {
       const newTotalExperience =
         (currentUser.experience || 0) + experience_earned;
 
-      // Calculate new level
-      const levelInfo = calculateLevel(newTotalExperience);
-      newLevel = levelInfo.level;
-      progressToNextLevel = levelInfo.progressToNextLevel;
+      // Calculate new level using simple formula: level = floor(total_xp / 100)
+      newLevel = Math.floor(newTotalExperience / 100) || 1; // Minimum level is 1
       levelUp = newLevel > oldLevel;
+
+      // Calculate progress to next level (0-99)
+      progressToNextLevel = newTotalExperience % 100;
 
       // Update user XP, coins, and level
       await tx.users.update({
