@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Challenge } from "@/models/challenge/type";
 import { ChallengeRepository } from "@/models/challenge/challenge.repository";
-import { calculateLevel } from "@/models/workout/utils/workoutUtils";
 
 @Injectable()
 export class ChallengeService {
@@ -19,16 +18,15 @@ export class ChallengeService {
 
     const coinsGain = 50;
     const newCoins = user.coins + coinsGain;
-    const newTotalExperience = (user.experience || 0) + 100;
-    
+    const newTotalExperience = (user.experience || 0) + 10;
+
     // Calculate new level
-    const levelInfo = calculateLevel(newTotalExperience);
-    const newLevel = levelInfo.level || 1;
-    
+    const newLevel = Math.floor(newTotalExperience / 100) || 1;
+
     const updatedUser = await this.challengeRepository.updateUserAfterChallenge(
       userId,
       newCoins,
-      newLevel
+      newLevel,
     );
 
     return {

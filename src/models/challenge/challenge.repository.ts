@@ -14,7 +14,11 @@ export class ChallengeRepository {
     return this.prisma.users.findUnique({ where: { id: userId } });
   }
 
-  async updateUserAfterChallenge(userId: number, coins: number, newLevel: number) {
+  async updateUserAfterChallenge(
+    userId: number,
+    coins: number,
+    newLevel: number,
+  ) {
     return this.prisma.users.update({
       where: { id: userId },
       data: {
