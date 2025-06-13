@@ -23,8 +23,8 @@ export class UsersController {
   }
 
   @Get(":id")
-  findOne(@Param("id", ParseIntPipe) id: number): Promise<users> {
-    return this.usersService.findById(id);
+  findOne(@Param("id", ParseIntPipe) id: number): Promise<(Partial<users> & { workouts_length: number })> {
+    return this.usersService.findOneByIdExpanded(id);
   }
 
   @Get(":email/mail")

@@ -29,6 +29,35 @@ export class UsersRepository {
     return this.prisma.users.findUnique({ where: { id } });
   }
 
+  async findOneByIdExpanded(id: number): Promise<(Partial<users> & { workouts_length: number }) | null> {
+    const user = await this.prisma.users.findUnique({
+      where: { id },
+      select: {
+      id: true,
+      name: true,
+      email: true,
+      avatar_url: true,
+      coins: true,
+      level: true,
+      experience: true,
+      streak: true,
+      finished_onboarding: true,
+      created_at: true,
+      user_goals: { include: { goals: true } },
+      user_badges: { include: { badges: true } },
+      user_settings: true,
+      workouts: { select: { id: true }, where: { completed_at: { not: null } } }, // fetch workouts to count
+      },
+    });
+
+    if (!user) return null;
+
+    return {
+      ...user,
+      workouts_length: user.workouts ? user.workouts.length : 0,
+    };
+  }
+
   async create(userData: Omit<users, "id">): Promise<users> {
     return this.prisma.users.create({ data: userData });
   }

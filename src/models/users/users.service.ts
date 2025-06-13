@@ -40,6 +40,14 @@ export class UsersService {
     return user;
   }
 
+  async findOneByIdExpanded(id: number): Promise<(Partial<users> & { workouts_length: number })> {
+    const user = await this.usersRepository.findOneByIdExpanded(id);
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    return user;
+  }
+
   async createUser(userData: Omit<users, "id">): Promise<users> {
     return this.usersRepository.create(userData);
   }
