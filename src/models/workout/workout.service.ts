@@ -3,6 +3,8 @@ import { PrismaService } from "database/prisma.service";
 import { BadgesService } from "@/models/badge/badges.service";
 import { calculateWorkoutRewards } from "@/models/workout/utils/workoutUtils";
 import { GeminiService } from "./gemini.service";
+import { MIN_STREAK_SCORE } from "@/models/workout/consts/workout.consts";
+
 
 @Injectable()
 export class WorkoutService {
@@ -199,6 +201,7 @@ export class WorkoutService {
     newLevel: number;
     progressToNextLevel: number;
     newBadges?: any[];
+    newStreak?: number;
   }> {
     const { coins, score, experience_earned } =
       calculateWorkoutRewards(finishedWorkout);
@@ -207,6 +210,7 @@ export class WorkoutService {
     let newLevel = 1;
     let progressToNextLevel = 0;
     let userId: number;
+    let newStreak = 0;
 
     await this.prisma.$transaction(async tx => {
       const workout = await tx.workouts.update({
@@ -226,7 +230,7 @@ export class WorkoutService {
       // Get current user data
       const currentUser = await tx.users.findUnique({
         where: { id: workout.user_id },
-        select: { level: true, experience: true },
+        select: { level: true, experience: true , streak: true },
       });
 
       const oldLevel = currentUser.level || 1;
@@ -240,6 +244,9 @@ export class WorkoutService {
       // Calculate progress to next level (0-99)
       progressToNextLevel = newTotalExperience % 100;
 
+      // Calculate new streak
+      newStreak = score >= MIN_STREAK_SCORE ? currentUser.streak + 1 : 0;
+
       // Update user XP, coins, and level
       await tx.users.update({
         where: {
@@ -249,6 +256,7 @@ export class WorkoutService {
           level: newLevel,
           coins: { increment: coins },
           experience: { increment: experience_earned },
+          streak: newStreak,
         },
       });
 
@@ -290,6 +298,7 @@ export class WorkoutService {
       experience_earned,
       progressToNextLevel,
       newBadges: newBadges.length > 0 ? newBadges : undefined,
+      newStreak: newStreak,
     };
   }
 
