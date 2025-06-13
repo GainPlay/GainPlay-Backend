@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Req,
 } from "@nestjs/common";
 import { UserGoalsService } from "./user-goals.service";
 import { CreateUserGoalDto } from "./dto/create-user-goal.dto";
@@ -29,6 +30,12 @@ export class UserGoalsController {
   @Get()
   findAll() {
     return this.userGoalsService.findAll();
+  }
+
+  @Get("user/insights")
+  async getHealthInsights(@Req() req) {
+    const insights = await this.userGoalsService.getHealthInsights(req.user.id);
+    return { insights };
   }
 
   @Get("user/:userId")
@@ -60,11 +67,5 @@ export class UserGoalsController {
   @Delete(":id")
   remove(@Param("id", ParseIntPipe) id: number) {
     return this.userGoalsService.remove(id);
-  }
-
-  @Get("user/:userId/insights")
-  async getHealthInsights(@Param("userId", ParseIntPipe) userId: number) {
-    const insights = await this.userGoalsService.getHealthInsights(userId);
-    return { insights };
   }
 }
