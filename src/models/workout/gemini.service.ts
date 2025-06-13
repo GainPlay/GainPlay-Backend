@@ -97,6 +97,7 @@ export class GeminiService {
       - Consider the muscle groups and difficulty levels when selecting exercises
       - Balance the workout to avoid overtraining specific muscle groups
       - Prioritize exercises with difficulty levels between ${Math.max(1, userFitnessLevel - 1)} and ${Math.min(5, userFitnessLevel + 1)}
+      - Max of 10 exercises per workout
       
       **Output only the JSON array. Do not include explanations.**
     `;
