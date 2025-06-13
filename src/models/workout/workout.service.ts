@@ -3,7 +3,8 @@ import { PrismaService } from "database/prisma.service";
 import { BadgesService } from "@/models/badge/badges.service";
 import { calculateWorkoutRewards } from "@/models/workout/utils/workoutUtils";
 import { GeminiService } from "./gemini.service";
-import { MIN_STREAK_SCORE } from "@/models/users/constants/user.consts";
+import { MIN_STREAK_SCORE } from "@/models/workout/consts/workout.consts";
+
 
 @Injectable()
 export class WorkoutService {

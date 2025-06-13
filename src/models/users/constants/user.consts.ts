@@ -1,1 +1,0 @@
-export const MIN_STREAK_SCORE = 10;
