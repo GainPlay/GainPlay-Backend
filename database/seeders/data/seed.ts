@@ -683,24 +683,209 @@ async function main() {
         description: "Stationary running exercise",
       },
     ],
-  });
-
-  // Avatars
+  }); // Avatars
   const styles = [
     "adventurer",
-    "adventurer-neutral",
+    "big-smile",
     "avataaars",
     "big-ears",
-    "big-ears-neutral",
     "bottts",
-    "croodles",
-    "fun-emoji",
-    "lorelei",
-    "micah",
-    "miniavs",
     "personas",
-    "pixel-art",
   ];
+
+  const firstNames = [
+    // Fitness & Strength themed
+    "Flex",
+    "Power",
+    "Muscle",
+    "Iron",
+    "Steel",
+    "Titan",
+    "Vigor",
+    "Energy",
+    "Boost",
+    "Peak",
+    "Core",
+    "Pump",
+    "Burn",
+    "Crush",
+    "Beast",
+    "Alpha",
+    "Zen",
+    "Flow",
+    "Balance",
+    "Harmony",
+
+    // Yoga & Wellness themed
+    "Namaste",
+    "Chakra",
+    "Lotus",
+    "Serenity",
+    "Peace",
+    "Bliss",
+    "Soul",
+    "Spirit",
+    "Karma",
+    "Bodhi",
+    "Om",
+    "Prana",
+    "Yogi",
+    "Sage",
+    "Mindful",
+    "Calm",
+    "Pure",
+    "Light",
+    "Dawn",
+    "Sunrise",
+
+    // Cardio & Movement themed
+    "Sprint",
+    "Rush",
+    "Dash",
+    "Pulse",
+    "Rhythm",
+    "Beat",
+    "Tempo",
+    "Stride",
+    "Pace",
+    "Motion",
+    "Swift",
+    "Flash",
+    "Bolt",
+    "Thunder",
+    "Lightning",
+    "Storm",
+    "Blaze",
+    "Fire",
+    "Flame",
+    "Phoenix",
+
+    // Motivational & Achievement themed
+    "Champion",
+    "Victor",
+    "Triumph",
+    "Glory",
+    "Honor",
+    "Pride",
+    "Success",
+    "Win",
+    "Goal",
+    "Dream",
+    "Hope",
+    "Faith",
+    "Brave",
+    "Bold",
+    "Strong",
+    "Mighty",
+    "Fierce",
+    "Wild",
+    "Free",
+    "True",
+  ];
+
+  const lastNames = [
+    // Fitness & Training terms
+    "Trainer",
+    "Coach",
+    "Lifter",
+    "Builder",
+    "Crusher",
+    "Warrior",
+    "Fighter",
+    "Champion",
+    "Master",
+    "Guru",
+    "Sensei",
+    "Pro",
+    "Elite",
+    "Legend",
+    "Hero",
+    "Titan",
+    "Giant",
+    "Force",
+    "Power",
+    "Strength",
+
+    // Yoga & Wellness terms
+    "Yogi",
+    "Zen",
+    "Sage",
+    "Monk",
+    "Mystic",
+    "Healer",
+    "Guide",
+    "Teacher",
+    "Mentor",
+    "Wisdom",
+    "Peace",
+    "Harmony",
+    "Balance",
+    "Flow",
+    "Grace",
+    "Spirit",
+    "Soul",
+    "Light",
+    "Energy",
+    "Aura",
+
+    // Movement & Athletics
+    "Runner",
+    "Sprinter",
+    "Jumper",
+    "Climber",
+    "Swimmer",
+    "Cyclist",
+    "Dancer",
+    "Mover",
+    "Athlete",
+    "Player",
+    "Performer",
+    "Achiever",
+    "Striker",
+    "Blazer",
+    "Racer",
+    "Chaser",
+    "Hunter",
+    "Seeker",
+    "Finder",
+    "Winner",
+
+    // Body & Fitness parts
+    "Core",
+    "Flex",
+    "Muscle",
+    "Pulse",
+    "Beat",
+    "Burn",
+    "Pump",
+    "Lift",
+    "Push",
+    "Pull",
+    "Grip",
+    "Hold",
+    "Stretch",
+    "Bend",
+    "Twist",
+    "Turn",
+    "Move",
+    "Step",
+    "Jump",
+    "Leap",
+  ];
+  // Function to get random name
+  const getRandomName = (usedNames = new Set()) => {
+    let name;
+    do {
+      const firstName =
+        firstNames[Math.floor(Math.random() * firstNames.length)];
+      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      name = `${firstName} ${lastName}`;
+    } while (usedNames.has(name));
+    usedNames.add(name);
+    return name;
+  };
+
+  const usedNames = new Set();
 
   // Free avatars (given to all users) - Common rarity
   const freeAvatars = [
@@ -713,13 +898,13 @@ async function main() {
     {
       price: 0,
       rarity: "common",
-      name: "Starter Hero",
+      name: getRandomName(usedNames),
       image_url: "https://api.dicebear.com/6.x/adventurer/svg?seed=gainplay1",
     },
     {
       price: 0,
       rarity: "common",
-      name: "Fitness Buddy",
+      name: getRandomName(usedNames),
       image_url: "https://api.dicebear.com/6.x/big-ears/svg?seed=fitness",
     },
   ];
@@ -729,28 +914,27 @@ async function main() {
 
   // Generate 3 avatars for each style with different rarities
   styles.forEach((style, styleIndex) => {
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= 6; i++) {
       const seed = `gainplay-${style}-${i}`;
 
       // Determine rarity and price based on avatar number and style
       let rarity = "common";
       let basePrice = 100;
 
-      if (i === 1) {
+      if (i % 3 === 1) {
         rarity = "common";
         basePrice = 100;
-      } else if (i === 2) {
+      } else if (i % 3 === 2) {
         rarity = "rare";
         basePrice = 200;
-      } else if (i === 3) {
+      } else if (i % 3 === 0) {
         rarity = "epic";
         basePrice = 350;
       }
-
       purchasableAvatars.push({
         rarity: rarity,
+        name: getRandomName(usedNames),
         price: basePrice + styleIndex * 20, // Style variation in price
-        name: `${style.charAt(0).toUpperCase() + style.slice(1)} ${i}`,
         image_url: `https://api.dicebear.com/6.x/${style}/svg?seed=${seed}`,
       });
     }
@@ -761,28 +945,28 @@ async function main() {
     {
       price: 500,
       rarity: "legendary",
-      name: "Fitness Pro",
+      name: getRandomName(usedNames),
       image_url:
         "https://api.dicebear.com/6.x/avataaars/svg?seed=fitnesspro&clothesColor=3c4f5c&clothes=overall&hairColor=2c1b18&facialHairColor=2c1b18&facialHair=beardMajestic&eyes=surprised&eyebrows=raisedExcited",
     },
     {
       price: 550,
-      name: "Gym Master",
       rarity: "legendary",
+      name: getRandomName(usedNames),
       image_url:
         "https://api.dicebear.com/6.x/avataaars/svg?seed=gymmaster&clothesColor=ff0000&clothes=hoodie&top=shortCurly&hairColor=000000&facialHairColor=000000&facialHair=beardLight&eyes=default&eyebrows=default",
     },
     {
       price: 600,
       rarity: "legendary",
-      name: "Cardio King",
+      name: getRandomName(usedNames),
       image_url:
         "https://api.dicebear.com/6.x/avataaars/svg?seed=cardioking&clothesColor=0000ff&clothes=shirtScoopNeck&top=shortWaved&hairColor=a52a2a&facialHairColor=a52a2a&eyes=happy&eyebrows=default",
     },
     {
       price: 650,
-      name: "Yoga Guru",
       rarity: "legendary",
+      name: getRandomName(usedNames),
       image_url:
         "https://api.dicebear.com/9.x/notionists/svg?seed=legendary&backgroundColor=ffffff&backgroundType=gradientLinear&brows=variant01,variant02,variant12&lips=variant01,variant16,variant30&nose=variant01,variant18&glassesProbability=50",
     },
