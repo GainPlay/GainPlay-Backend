@@ -1,9 +1,9 @@
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { users as User } from "@prisma/client";
 import { PassportStrategy } from "@nestjs/passport";
 import { UsersService } from "@/models/users/users.service";
 import { AvatarService } from "@/models/avatar/avatar.service";
-import { BadRequestException, Injectable } from "@nestjs/common";
 import { Strategy, VerifyCallback } from "passport-google-oauth20";
 
 @Injectable()
@@ -31,9 +31,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     const email = emails[0].value;
 
     const existingUser = await this.usersService.findByEmail(email);
-    if (existingUser) {
-      throw new BadRequestException("email already exists");
-    }
 
     const newUser: Omit<User, "id"> = {
       level: 1,
@@ -52,6 +49,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
 
     await this.avatarService.assignDefaultAvatarToUser(generatedUser.id);
 
-    done(null, generatedUser);
+    done(null, existingUser || generatedUser);
   }
 }
