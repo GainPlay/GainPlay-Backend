@@ -1,9 +1,9 @@
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { users as User } from "@prisma/client";
 import { PassportStrategy } from "@nestjs/passport";
 import { UsersService } from "@/models/users/users.service";
 import { AvatarService } from "@/models/avatar/avatar.service";
-import { BadRequestException, Injectable } from "@nestjs/common";
 import { Strategy, VerifyCallback } from "passport-google-oauth20";
 
 @Injectable()
@@ -31,27 +31,28 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     const email = emails[0].value;
 
     const existingUser = await this.usersService.findByEmail(email);
+
     if (existingUser) {
-      throw new BadRequestException("email already exists");
+      return done(null, existingUser);
+    } else {
+      const newUser: Omit<User, "id"> = {
+        level: 1,
+        streak: 0,
+        coins: 500,
+        email: email,
+        experience: 0,
+        name: displayName,
+        password_hash: "",
+        created_at: undefined,
+        finished_onboarding: false,
+        avatar_url: "https://api.dicebear.com/6.x/avataaars/svg?seed=default",
+      };
+
+      const generatedUser = await this.usersService.createUser(newUser);
+
+      await this.avatarService.assignDefaultAvatarToUser(generatedUser.id);
+
+      done(null, generatedUser);
     }
-
-    const newUser: Omit<User, "id"> = {
-      level: 1,
-      streak: 0,
-      coins: 500,
-      email: email,
-      experience: 0,
-      name: displayName,
-      password_hash: "",
-      created_at: undefined,
-      finished_onboarding: false,
-      avatar_url: "https://api.dicebear.com/6.x/avataaars/svg?seed=default",
-    };
-
-    const generatedUser = await this.usersService.createUser(newUser);
-
-    await this.avatarService.assignDefaultAvatarToUser(generatedUser.id);
-
-    done(null, generatedUser);
   }
 }
