@@ -32,23 +32,27 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
 
     const existingUser = await this.usersService.findByEmail(email);
 
-    const newUser: Omit<User, "id"> = {
-      level: 1,
-      streak: 0,
-      coins: 500,
-      email: email,
-      experience: 0,
-      name: displayName,
-      password_hash: "",
-      created_at: undefined,
-      finished_onboarding: false,
-      avatar_url: "https://api.dicebear.com/6.x/avataaars/svg?seed=default",
-    };
+    if (existingUser) {
+      return done(null, existingUser);
+    } else {
+      const newUser: Omit<User, "id"> = {
+        level: 1,
+        streak: 0,
+        coins: 500,
+        email: email,
+        experience: 0,
+        name: displayName,
+        password_hash: "",
+        created_at: undefined,
+        finished_onboarding: false,
+        avatar_url: "https://api.dicebear.com/6.x/avataaars/svg?seed=default",
+      };
 
-    const generatedUser = await this.usersService.createUser(newUser);
+      const generatedUser = await this.usersService.createUser(newUser);
 
-    await this.avatarService.assignDefaultAvatarToUser(generatedUser.id);
+      await this.avatarService.assignDefaultAvatarToUser(generatedUser.id);
 
-    done(null, existingUser || generatedUser);
+      done(null, generatedUser);
+    }
   }
 }
